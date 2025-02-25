@@ -1,5 +1,8 @@
 <?php
 
+$highlightColor =  "bg-indigo-600 text-white";
+$bgcolor = "bg-gray-100";
+
 function dd($value)
 {
     echo "<pre>";
@@ -11,4 +14,9 @@ function dd($value)
 
 function urlIs($value) {
     return $_SERVER['REQUEST_URI'] === $value;
+}
+
+function login() {
+    if (isset($_SESSION['user'])) {
+        }
 }

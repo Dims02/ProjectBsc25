@@ -1,13 +1,21 @@
 <?php
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+require "db.php";
 
 $routes = [
-    "/" => "controllers/index.php",
-    "/surveys" => "controllers/surveys.php",
-    "/contacts" => "controllers/contacts.php",
-    "/about" => "controllers/about.php",
-    "/404" => "controllers/404.php"
+    "/" => "controllers/landing.php",
+    "/dashboard" => "controllers/headers/index.php",
+    "/surveys" => "controllers/headers/surveys/surveys.php",
+    "/contacts" => "controllers/cheaders/ontacts.php",
+    "/about" => "controllers/headers/about.php",
+    "/404" => "controllers/404.php",
+    "/profile" => "controllers/headers/profile.php",
+    "/login" => "controllers/session/login.php",
+    "/register" => "controllers/session/register.php",
+    "/admin" => "controllers/admin.php",
+    "/logout" => "controllers/session/logout.php",
+
 ];
 
 function routeToController($uri, $routes) {
