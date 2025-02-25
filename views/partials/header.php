@@ -8,7 +8,6 @@
 
   <link rel="icon" href="media/ubiround.png" type="image/png">
 
-
 </head>
 <body class="h-full">
   <div class="min-h-full">

@@ -1,3 +1,5 @@
+<?php
+$tabname = "404"; ?>
 <?php require('partials/header.php') ?>
 <?php require('partials/nav.php') ?>
 

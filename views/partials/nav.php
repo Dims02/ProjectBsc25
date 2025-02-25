@@ -61,7 +61,7 @@
             <a href="/about" class="<?= urlIs('/about') ? $highlightColor : 'text-gray-300' ?> block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 hover:text-white">About</a>
             <a href="/contacts" class="<?= urlIs('/contacts') ? $highlightColor : 'text-gray-300' ?> block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 hover:text-white">Contact us</a>
           </div>
-          <div class="border-t border-gray-700 px-4 py-4">
+          <div class="border-t border-gray-700 px-4 py-4 ">
             <a href="/login" class="block bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-500 text-center">
               Sign In
             </a>

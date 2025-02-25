@@ -12,7 +12,7 @@ $surveys = getAllSurveys();
         <div class="bg-white shadow-md rounded-lg p-6">
           <h3 class="text-lg font-semibold text-gray-900"><?= htmlspecialchars($survey->title) ?></h3>
           <p class="text-gray-600 mt-2"><?= htmlspecialchars($survey->description) ?></p>
-          <a href="survey.php?id=<?= $survey->id ?>" class="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-500">
+          <a href="survey?id=<?= $survey->id ?>" class="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-500">
             Take Survey
           </a>
         </div>

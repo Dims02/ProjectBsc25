@@ -4,10 +4,10 @@ $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 require "db.php";
 
 $routes = [
-    "/" => "controllers/landing.php",
+    "/" => "controllers/headers/landing.php",
     "/dashboard" => "controllers/headers/index.php",
-    "/surveys" => "controllers/headers/surveys/surveys.php",
-    "/contacts" => "controllers/cheaders/ontacts.php",
+    "/surveys" => "controllers/surveys/surveys.php",
+    "/contacts" => "controllers/headers/contacts.php",
     "/about" => "controllers/headers/about.php",
     "/404" => "controllers/404.php",
     "/profile" => "controllers/headers/profile.php",

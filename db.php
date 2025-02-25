@@ -22,7 +22,7 @@ class User {
         $this->name = $name;
         $this->surname = $surname;
         $this->email = $email;
-        $this->password = password_hash($password, PASSWORD_DEFAULT); // Secure password hashing
+        $this->password = password_hash($password, PASSWORD_DEFAULT); 
         $this->country = $country;
         $this->role = $role;
         $this->created_at = date('Y-m-d H:i:s');
@@ -47,7 +47,7 @@ class Survey {
 
 class QuestionGroup {
     public $id;
-    public $survey_id; // Which survey does it belong to?
+    public $survey_id;
     public $questions = [];
 
     public function __construct($id, $survey_id) {
@@ -65,7 +65,7 @@ class Question {
     public $group_id; // Which question group does it belong to?
     public $text;
     public $type; // 'text', 'multiple_choice', 'boolean'
-    public $options = []; // If multiple-choice, store options
+    public $options = []; 
     public $answer;
 
     public function __construct($id, $group_id, $text, $type, $options = []) {
@@ -74,6 +74,20 @@ class Question {
         $this->text = $text;
         $this->type = $type;
         $this->options = $options;
+    }
+}
+
+class Answer {
+    public $id;
+    public $question_id;
+    public $user_id;
+    public $answer;
+
+    public function __construct($id, $question_id, $user_id, $answer) {
+        $this->id = $id;
+        $this->question_id = $question_id;
+        $this->user_id = $user_id;
+        $this->answer = $answer;
     }
 }
 
@@ -88,10 +102,10 @@ function verifyUser($email = null, $password = null) {
 	return null;
 }
 
-function isAdmin($email) {
+function isAdmin($id) {
 	global $pdo;
-	$statement = $pdo->prepare("SELECT role FROM users WHERE email = :email");
-	$statement->execute(['email' => $email]);
+	$statement = $pdo->prepare("SELECT role FROM users WHERE id = :id");
+	$statement->execute(['id' => $id]);
 	$user = $statement->fetch(PDO::FETCH_OBJ);
 	return $user->role === 'admin';
 }
