@@ -15,6 +15,7 @@ $routes = [
     "/register" => "controllers/session/register.php",
     "/admin" => "controllers/admin.php",
     "/logout" => "controllers/session/logout.php",
+    "/survey" => "controllers/surveys/survey.php",
 
 ];
 
