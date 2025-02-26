@@ -4,13 +4,6 @@
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
   <h1 class="text-3xl font-bold text-gray-900 mb-6">Admin Dashboard - Manage Surveys</h1>
 
-  <!-- Create Survey Button -->
-  <div class="mb-4">
-    <a href="create_survey.php" class="<?= $highlightColor; ?> px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80">
-      + Create New Survey
-    </a>
-  </div>
-
   <!-- Survey List -->
   <div class="bg-white shadow-md rounded-lg p-6">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">All Surveys</h2>
@@ -46,7 +39,7 @@
                  class="border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-600 hover:text-white">View</a>
               <a href="edit_survey.php?id=<?= $survey->id; ?>" 
                  class="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-600 hover:text-white ml-2">Edit</a>
-              <form action="delete_survey.php" method="POST" class="inline-block" 
+              <form action="delete" method="POST" class="inline-block" 
                     onsubmit="return confirm('Are you sure you want to delete this survey?');">
                 <input type="hidden" name="survey_id" value="<?= $survey->id; ?>">
                 <button type="submit" 
@@ -59,7 +52,18 @@
         <?php endforeach; ?>
       </tbody>
     </table>
-  </div>
+    
+    <form action="create" method="POST" class="mb-4 mt-4">
+  <button type="submit" class="<?= $highlightColor; ?> px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80">
+    + Create New Survey
+  </button>
+</form>
+
+</form>
+
+
+
+
 </main>
 
 <?php require "partials/footer.php"; ?>

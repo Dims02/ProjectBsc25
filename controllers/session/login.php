@@ -9,10 +9,10 @@ $password = $_POST['password'] ?? '';
 $role = $_POST['role'] ?? 'user';
 
 if (!empty($email) && !empty($password)) {
-    if (verifyUser($email, $password)) {
-        $_SESSION['email'] = $email;
-        $_SESSION['role'] = isAdmin($email) ? 'admin' : 'user';
-        $_SESSION['id'] = getUserIdByEmail($email);
+    $user_id = verifyUser($email, $password);
+    if ($user_id) {
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['role'] = isAdmin($user_id) ? 'admin' : 'user';
         header("Location: /dashboard");
         exit;
     } else {

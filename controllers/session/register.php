@@ -14,7 +14,8 @@ if (!empty($email) && !empty($password)) {
 		echo "Email already exists";
 	} else {
 		createNewUser($email, $password);
-		$_SESSION['email'] = $email;
+		$_SESSION['user_id'] = getUserIdByEmail($email);
+		header("Location: /dashboard");
 		echo "registered";
 	}
 }

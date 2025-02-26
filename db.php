@@ -36,8 +36,7 @@ class Survey {
     public $user_id; // Who created it?
     public $created_at;
 
-    public function __construct($id, $title, $description, $user_id) {
-        $this->id = $id;
+    public function __construct($title, $description, $user_id) {
         $this->title = $title;
         $this->description = $description;
         $this->user_id = $user_id;
@@ -191,14 +190,13 @@ function getSurvey ($id) {
 	return $statement->fetch(PDO::FETCH_OBJ);
 }
 
-function createSurvey(Survey $survey) {
+function createSurvey($user_id, $timestamp){
     global $pdo;
-    $statement = $pdo->prepare("INSERT INTO surveys (title, description, user_id, created_at) VALUES (:title, :description, :user_id, :created_at)");
+    $statement = $pdo->prepare("INSERT INTO surveys (title, user_id, created_at) VALUES (:title, :user_id, :created_at)");
     $statement->execute([
-        'title'       => $survey->title,
-        'description' => $survey->description,
-        'user_id'     => $survey->user_id,
-        'created_at'  => $survey->created_at
+        'title' => "New Survey",
+        'user_id' => $user_id,
+        'created_at' => $timestamp
     ]);
 }
 
@@ -233,4 +231,83 @@ function getQuestionsByGroupId($group_id) {
     return $statement->fetchAll(PDO::FETCH_OBJ);
 }
 
+function getNextUnansweredGroup($survey_id, $user_id) {
+    global $pdo;
+    $sql = "SELECT qg.id AS id 
+            FROM question_groups qg WHERE qg.survey_id = :survey_id  AND qg.id NOT IN (
+                SELECT q.id FROM questions q JOIN responses r ON q.id = r.question_id WHERE r.user_id = :user_id) LIMIT 1";
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['survey_id' => $survey_id, 'user_id' => $user_id]);
+    return $statement->fetch(PDO::FETCH_OBJ);
+}
 
+
+function getQuestionsByGroupIdAndSurveyId($group_id, $survey_id) {
+    global $pdo;
+    $sql = "SELECT q.* FROM questions q JOIN question_groups qg ON q.group_id = qg.id WHERE qg.id = :group_id AND qg.survey_id = :survey_id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['group_id' => $group_id, 'survey_id' => $survey_id]);
+    return $statement->fetchAll(PDO::FETCH_OBJ);
+}
+
+function saveAnswer($question_id, $user_id, $answer) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id FROM responses WHERE question_id = :question_id AND user_id = :user_id");
+    $stmt->execute([
+        'question_id' => $question_id,
+        'user_id'     => $user_id
+    ]);
+    $existing = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    if ($existing) {
+        $stmt = $pdo->prepare("UPDATE responses SET answer = :answer WHERE id = :id");
+        $stmt->execute([
+            'answer' => $answer,
+            'id'     => $existing->id
+        ]);
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO responses (question_id, user_id, answer) VALUES (:question_id, :user_id, :answer)");
+        $stmt->execute([
+            'question_id' => $question_id,
+            'user_id'     => $user_id,
+            'answer'      => $answer
+        ]);
+    }
+}
+
+function surveyAnswered($survey_id, $user_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM questions q JOIN responses r ON q.id = r.question_id WHERE q.survey_id = :survey_id AND r.user_id = :user_id");
+    $stmt->execute([
+        'survey_id' => $survey_id,
+        'user_id'   => $user_id
+    ]); 
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    return $result->total > 0;
+}
+
+function surveyCountAnswers ($survey_id, $user_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM questions q JOIN responses r ON q.id = r.question_id WHERE q.survey_id = :survey_id AND r.user_id = :user_id");
+    $stmt->execute([
+        'survey_id' => $survey_id,
+        'user_id'   => $user_id
+    ]);
+
+}
+
+function countTotalQuestions ($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM questions WHERE survey_id = :survey_id");
+    $stmt->execute(['survey_id' => $survey_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    return $result->total;
+}
+
+function getRecentSurveys($limit = 5) {
+    global $pdo;
+    $statement = $pdo->prepare("SELECT * FROM surveys ORDER BY created_at DESC LIMIT :limit");
+    $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_OBJ);
+}

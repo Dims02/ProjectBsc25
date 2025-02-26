@@ -3,8 +3,10 @@
 $heading = "Profile";
 $tabname = "Profile";
 $bgcolor = "bg-gray-100";
+$pos = "max-w-7xl";
 
-$user = getUserInfoById($_SESSION['id']);
+dd($_SESSION);
+$user = getUserInfoById($_SESSION['user_id']);
 
 $entity  = $user->entity ?? '';
 $name    = $user->name ?? '';
@@ -19,7 +21,7 @@ $country = $_POST['country'] ?? $country;
 require "./views/headers/profileView.php";
 
 $userData = (object)[
-    'id'      => $_SESSION['id'],
+    'id'      => $_SESSION['user_id'],
     'entity'  => $entity,
     'name'    => $name,
     'surname' => $surname,

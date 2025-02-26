@@ -30,7 +30,7 @@
         <?php endif; ?>
               <?php endif; ?> 
 
-        <?php if (isset($_SESSION['email'])) : ?>
+        <?php if (isset($_SESSION['user_id'])) : ?>
           <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition">Sign Out</a>
         <?php else : ?>
           <a href="/register" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-500 transition">Register</a>

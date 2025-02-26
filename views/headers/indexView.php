@@ -7,15 +7,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Total Surveys Taken</h2>
-            <p class="text-3xl font-bold text-indigo-600">5</p>
+            <p class="text-3xl font-bold text-indigo-600"><?php $NumSurveyTaken?></p>
         </div>
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Ongoing Surveys</h2>
-            <p class="text-3xl font-bold text-blue-600">2</p>
+            <p class="text-3xl font-bold text-blue-600"><?php $NumSurveyTaking?></p>
         </div>
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Average Compliance Rate</h2>
-            <p class="text-3xl font-bold text-green-600">80%</p>
+            <p class="text-3xl font-bold text-green-600"><?php $PercentCorrect?></p>
         </div>
     </div>
 
@@ -46,15 +46,6 @@
                 <div>
                     <p class="text-gray-900 font-semibold">Cybersecurity Awareness Survey</p>
                     <p class="text-gray-600 text-sm">Completed on: 2024-02-10</p>
-                </div>
-                <a href="#" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
-                    View Results
-                </a>
-            </li>
-            <li class="flex items-center justify-between bg-gray-50 p-4 rounded-md">
-                <div>
-                    <p class="text-gray-900 font-semibold">Company Data Security Evaluation</p>
-                    <p class="text-gray-600 text-sm">Completed on: 2024-01-25</p>
                 </div>
                 <a href="#" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
                     View Results

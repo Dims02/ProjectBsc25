@@ -6,7 +6,7 @@ require "db.php";
 $routes = [
     "/" => "controllers/headers/landing.php",
     "/dashboard" => "controllers/headers/index.php",
-    "/surveys" => "controllers/surveys/surveys.php",
+    "/surveys" => "controllers/headers/surveys.php",
     "/contacts" => "controllers/headers/contacts.php",
     "/about" => "controllers/headers/about.php",
     "/404" => "controllers/404.php",
@@ -16,6 +16,10 @@ $routes = [
     "/admin" => "controllers/admin.php",
     "/logout" => "controllers/session/logout.php",
     "/survey" => "controllers/surveys/survey.php",
+    "/submit" => "controllers/surveys/submit.php",
+    "/delete" => "controllers/surveys/delete.php",
+    "/create" => "controllers/surveys/create.php",
+    "/thankyou" => "views/surveys/thankyou.php",
 
 ];
 
