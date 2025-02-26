@@ -48,14 +48,12 @@ class QuestionGroup {
     public $id;
     public $survey_id;
     public $questions = [];
+    public $recommendation;
 
     public function __construct($id, $survey_id) {
         $this->id = $id;
         $this->survey_id = $survey_id;
-    }
-
-    public function addQuestion(Question $question) {
-        $this->questions[] = $question;
+        $this->recommendation = $recommendation;
     }
 }
 
@@ -192,9 +190,10 @@ function getSurvey ($id) {
 
 function createSurvey($user_id, $timestamp){
     global $pdo;
-    $statement = $pdo->prepare("INSERT INTO surveys (title, user_id, created_at) VALUES (:title, :user_id, :created_at)");
+    $statement = $pdo->prepare("INSERT INTO surveys (title, description, user_id, created_at) VALUES (:title, :description, :user_id, :created_at)");
     $statement->execute([
         'title' => "New Survey",
+        'description' => "This is a new survey, you should give me a description",
         'user_id' => $user_id,
         'created_at' => $timestamp
     ]);
@@ -309,5 +308,28 @@ function getRecentSurveys($limit = 5) {
     $statement = $pdo->prepare("SELECT * FROM surveys ORDER BY created_at DESC LIMIT :limit");
     $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
     $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_OBJ);
+}
+
+function getNumberOfGroups($survey_id) {
+    global $pdo;
+    $statement = $pdo->prepare("SELECT COUNT(*) AS total FROM question_groups WHERE survey_id = :survey_id");
+    $statement->execute(['survey_id' => $survey_id]);
+    $result = $statement->fetch(PDO::FETCH_OBJ);
+    return $result->total;
+}
+
+function getRecommendationByGroupId($group_id) {
+    global $pdo;
+    $statement = $pdo->prepare("SELECT recommendation FROM question_groups WHERE id = :group_id");
+    $statement->execute(['group_id' => $group_id]);
+    $result = $statement->fetch(PDO::FETCH_OBJ);
+    return $result->recommendation;
+}
+
+function getPossibleResponsesByQuestionId($question_id) {
+    global $pdo;
+    $statement = $pdo->prepare("SELECT * FROM responses WHERE question_id = :question_id");
+    $statement->execute(['question_id' => $question_id]);
     return $statement->fetchAll(PDO::FETCH_OBJ);
 }

@@ -3,7 +3,7 @@
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <main>
-  <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
     <div class="bg-white shadow-md rounded-lg p-6">
       <h2 class="text-xl font-semibold text-gray-900">Our Mission</h2>
       <p class="mt-2 text-gray-600">

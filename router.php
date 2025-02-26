@@ -19,6 +19,7 @@ $routes = [
     "/submit" => "controllers/surveys/submit.php",
     "/delete" => "controllers/surveys/delete.php",
     "/create" => "controllers/surveys/create.php",
+    "/edit" => "controllers/surveys/edit.php",
     "/thankyou" => "views/surveys/thankyou.php",
 
 ];
