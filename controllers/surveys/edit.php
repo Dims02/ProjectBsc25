@@ -15,14 +15,15 @@ $survey = getSurvey($survey_id);
 $questionGroups = getQuestionGroupsBySurveyId($survey_id);
 
 if (!$survey) {
-    echo "No survey found with ID: " . htmlspecialchars($survey_id);
+    echo "No survey found with ID: " . htmlspecialchars($survey_id, ENT_QUOTES, 'UTF-8');
     exit;
 }
 
-$currentGroupId = $_GET['currentGroupId'] ?? null;
-if ($currentGroupId) {
+$currentGroup = null;
+$groupID = $_GET['groupID'] ?? null;
+if ($groupID) {
     foreach ($questionGroups as $group) {
-        if ($group->id == $currentGroupId) {
+        if ($group->id == $groupID) {
             $currentGroup = $group;
             break;
         }
@@ -36,7 +37,7 @@ if (!isset($currentGroup)) {
             $currentGroup = $questionGroups[0];
         }
     } else {
-		$errormsg = "This survey has no questions.";
+        $errormsg = "This survey has no questions.";
         $currentGroup = null;
     }
 }
@@ -48,21 +49,16 @@ if ($currentGroup) {
     $currentIndex = array_search($currentGroup->id, $groupIds); 
 
     $questions = getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id);
+    foreach ($questions as $question) {
+        $question->responses = getPossibleResponsesByQuestionId($question->id);
+    }
+    $currentGroup->recommendation = getRecommendationByGroupId($currentGroup->id);
 } else {
     $currentIndex = null;
     $questions = [];
 }
 
-$questions = getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id);
-foreach ($questions as $question) {
-    $question->responses = getPossibleResponsesByQuestionId($question->id);
-}
-
-//how can I get the recommendation for the current group?
-$currentGroup->recommendation = getRecommendationByGroupId($currentGroup->id);
-
-
-$heading = "Editing Survey: " . htmlspecialchars($survey->title);
+$heading = "Editing Survey: " . htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8');
 $tabname = "Edit Survey";
 $bgcolor = "bg-gray-100";
 $pos = "max-w-7xl";

@@ -6,4 +6,5 @@
   <title><?= $tabname ?></title> 
   <script src = "https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="media/ubiround.png" type="image/png">
+  
 </head>

@@ -20,12 +20,12 @@ if (!$survey) {
     exit;
 }
 
-// Determine the current group by its ID passed via GET parameter "currentGroupId".
+// Determine the current group by its ID passed via GET parameter "groupID".
 // If none is provided, use getNextUnansweredGroup() or default to the first group.
-$currentGroupId = $_GET['currentGroupId'] ?? null;
-if ($currentGroupId) {
+$groupID = $_GET['groupID'] ?? null;
+if ($groupID) {
     foreach ($questionGroups as $group) {
-        if ($group->id == $currentGroupId) {
+        if ($group->id == $groupID) {
             $currentGroup = $group;
             break;
         }
@@ -53,4 +53,3 @@ $bgcolor = "bg-gray-100";
 $pos = "max-w-7xl";
 require "./views/surveys/surveyView.php";
 ?>
-

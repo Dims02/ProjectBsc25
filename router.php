@@ -1,7 +1,11 @@
 <?php
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-require "db.php";
+
+foreach (glob("db_functions/*.php") as $filename)
+{
+    require_once($filename);
+}
 
 $routes = [
     "/" => "controllers/headers/landing.php",
@@ -21,6 +25,7 @@ $routes = [
     "/create" => "controllers/surveys/create.php",
     "/edit" => "controllers/surveys/edit.php",
     "/thankyou" => "views/surveys/thankyou.php",
+    "/updateQuestions" => "controllers/surveys/updateQuestions.php",
 
 ];
 

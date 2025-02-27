@@ -1,9 +1,9 @@
 <body class="h-full">
   <div class="min-h-full">
-    <?$highlightColor = "bg-indigo-600 text-white";?>
-    <nav class="bg-gray-800">
+  <?$highlightColor = "bg-indigo-600 text-white";?>
+    <nav class="bg-gray-800 sticky top-0 z-50">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 items-center justify-between">
+        <div class="flex h-14 items-center justify-between">
           <div class="flex items-center">
             <div class="shrink-0">
               <a href="/">
@@ -77,3 +77,11 @@
 
 <!-- Add Alpine.js -->
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<main style="
+  background-image: url('media/mainbg.png');
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+">
+  <!-- Your content goes here -->

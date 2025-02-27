@@ -3,7 +3,7 @@
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <main>
-  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" >
     <div class="bg-white shadow-md rounded-lg p-6">
       <h2 class="text-xl font-semibold text-gray-900">Our Mission</h2>
       <p class="mt-2 text-gray-600">
@@ -49,12 +49,12 @@
       </p>
     </div>
 
-    <div class="mt-8 text-center">
+    <div class="mt-8 text-center pb-6" >
       <a href="/surveys" class="<?= $highlightColor; ?> px-5 py-2 rounded-md text-lg hover:bg-opacity-80">
         Explore Surveys
       </a>
     </div>
   </div>
-</main>
+</main >
 
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>

@@ -50,5 +50,5 @@
     </div>
   </div>
 </main>
-
+<div class="pb-6"></div>
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>

@@ -41,7 +41,7 @@
     <!-- Recent Surveys Section -->
     <div class="mt-8 bg-white shadow-md rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-900">Recent Surveys</h2>
-        <ul class="mt-4 space-y-3">
+        <ul class="mt-4 space-y-3 ">
             <li class="flex items-center justify-between bg-gray-50 p-4 rounded-md">
                 <div>
                     <p class="text-gray-900 font-semibold">Cybersecurity Awareness Survey</p>
@@ -95,5 +95,5 @@
         }
     });
 </script>
-
+<div class="pb-6"></div>
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>

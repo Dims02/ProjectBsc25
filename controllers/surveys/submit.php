@@ -32,7 +32,7 @@ if ($action === 'next') {
     if ($next_group_index < count($questionGroups)) {
         // Redirect to the survey page with the next group's ID as a GET parameter.
         $next_group_id = $questionGroups[$next_group_index]->id;
-        header("Location: survey?id=" . urlencode($survey_id) . "&currentGroupId=" . urlencode($next_group_id));
+        header("Location: edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($next_group_id));
         exit;
     } else {
         // If there's no next group, fallback to the thank-you page.
@@ -45,7 +45,7 @@ if ($action === 'next') {
     exit;
 } else {
     // Fallback: redirect back to the survey page
-    header("Location: survey?id=" . urlencode($survey_id));
+    header("Location: edit?id=" . urlencode($survey_id));
     exit;
 }
 
