@@ -11,12 +11,11 @@ if (!$survey_id) {
     exit;
 }
 
-
 $survey = getSurvey($survey_id);
 $questionGroups = getQuestionGroupsBySurveyId($survey_id);
 
 if (!$survey) {
-    echo "No survey found with ID: " . htmlspecialchars($survey_id);
+    echo "No survey found with ID: " . htmlspecialchars($survey_id, ENT_QUOTES, 'UTF-8');
     exit;
 }
 

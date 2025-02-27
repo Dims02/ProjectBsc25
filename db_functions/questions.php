@@ -16,10 +16,9 @@ function getPossibleResponsesByQuestionId($question_id) {
 
 function updateQuestion($question) {
     global $pdo;
-    $statement = $pdo->prepare("UPDATE questions SET text = :text, type = :type, group_id = :group_id WHERE id = :id");
+    $statement = $pdo->prepare("UPDATE questions SET text = :text, group_id = :group_id WHERE id = :id");
     $statement->execute([
         ':text'     => $question->text,
-        ':type'     => $question->type,
         ':group_id' => $question->group_id,
         ':id'       => $question->id
     ]);
