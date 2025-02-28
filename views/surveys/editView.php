@@ -1,12 +1,12 @@
 <?php require_once __DIR__ . '/../partials/header.php'; ?>
 <?php require_once __DIR__ . '/../partials/nav.php'; ?>
-<?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20">
-  <div class="max-w-7xl mx-auto ">
+  <div class="max-w-7xl mx-auto">
     <!-- Combined Survey & Question Group Edit Form -->
     <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-gray-800 rounded shadow" id="survey-form">
+      
       <!-- Hidden fields -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
       <?php if ($currentGroup): ?>
@@ -14,26 +14,26 @@
       <?php endif; ?>
 
       <!-- Survey Details Card -->
-      <div class="mb-6 bg-white shadow rounded p-4">
-        <h2 class="text-2xl font-semibold mb-4">Survey Details</h2>
+      <div class="mb-6 bg-gray-800 shadow rounded p-4">
+        <h2 class="text-2xl font-semibold text-white mb-4">Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8')?></h2>
         <div class="mb-4">
-          <label for="title" class="block text-gray-700 font-medium">Survey Title</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>"
-            placeholder="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>"
+          <label for="title" class="block text-white font-medium">Survey Title</label>
+          <input 
+            type="text" 
+            name="title" 
+            id="title" 
+            value="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
+            placeholder="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
             class="w-full p-2 border border-gray-300 rounded"
           >
         </div>
         <div class="mb-4">
-          <label for="description" class="block text-gray-700 font-medium">Description</label>
-          <textarea
-            name="description"
-            id="description"
-            rows="2"
-            placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>"
+          <label for="description" class="block text-white font-medium">Description</label>
+          <textarea 
+            name="description" 
+            id="description" 
+            rows="2" 
+            placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
             class="w-full p-2 border border-gray-300 rounded"
           ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
@@ -56,42 +56,40 @@
             <?php endfor; ?>
           </div>
         </div>
-        <!-- Add Question Group Button -->
-        <div>
+        <!-- Right side: Add and Remove Group buttons -->
+        <div class="flex space-x-4">
           <button type="submit" name="action" value="addGroup" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-600">
             Add Question Group
           </button>
+          <?php if ($currentGroup): ?>
+          <button type="button" id="remove-group" class="bg-red-500 text-white px-4 py-2 rounded">
+            Remove Group
+          </button>
+          <?php endif; ?>
         </div>
       </div>
       
       <?php if ($currentGroup): ?>
       <!-- Group Details Card -->
-      <div class="mb-6 bg-white shadow rounded p-4">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-2xl font-semibold">Group Details</h2>
-          <!-- Remove Group Button -->
-          <button type="button" id="remove-group" class="bg-red-500 text-white px-4 py-2 rounded">
-            Remove Group
-          </button>
-        </div>
+      <div class="mb-6 bg-gray-800 shadow rounded p-4">
         <div class="mb-4">
-          <label for="group_title" class="block text-gray-700 font-medium">Question Group Title</label>
-          <input
-            type="text"
-            name="group_title"
-            id="group_title"
-            value="<?= (isset($currentGroup->title) && !empty($currentGroup->title)) ? htmlspecialchars($currentGroup->title, ENT_QUOTES, 'UTF-8') : '' ?>"
-            placeholder="Enter group title"
+          <label for="group_title" class="block text-white font-medium">Question Group Title</label>
+          <input 
+            type="text" 
+            name="group_title" 
+            id="group_title" 
+            value="<?= (isset($currentGroup->title) && !empty($currentGroup->title)) ? htmlspecialchars($currentGroup->title, ENT_QUOTES, 'UTF-8') : '' ?>" 
+            placeholder="Enter group title" 
             class="w-full p-2 border border-gray-300 rounded"
           >
         </div>
         <div class="mb-4">
-          <label for="recommendation" class="block text-gray-700 font-medium">Recommendation</label>
-          <textarea
-            id="recommendation"
-            name="recommendation"
-            rows="2"
-            placeholder="Enter recommendation..."
+          <label for="recommendation" class="block text-white font-medium">Recommendation</label>
+          <textarea 
+            id="recommendation" 
+            name="recommendation" 
+            rows="2" 
+            placeholder="Enter recommendation..." 
             class="w-full p-2 border border-gray-300 rounded"
           ><?= htmlspecialchars($currentGroup->recommendation, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
@@ -100,18 +98,18 @@
       <!-- Questions Card -->
       <div class="mb-6">
         <?php $i = 1; foreach ($questions as $question): ?>
-          <div class="question-card mb-4 bg-white shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+          <div class="question-card mb-4 bg-gray-800 shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
             <!-- Display the Question -->
-            <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-gray-700 font-medium mb-2">
+            <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-white font-medium mb-2">
               Question <?= $i ?>
             </label>
-            <input
-              type="text"
-              id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>"
-              name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]"
-              value="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>"
-              placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>"
-              class="w-full p-2 border border-gray-300 rounded"
+            <input 
+              type="text" 
+              id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+              name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
+              value="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
+              placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
+              class="w-full p-2 border border-gray-700 rounded"
             >
             <!-- Remove Question Button -->
             <button type="button" class="remove-question bg-red-500 text-white px-2 py-1 rounded mt-2" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
@@ -124,15 +122,15 @@
                 <?php if ($options && count($options) > 0): ?>
                   <?php $j = 1; foreach ($options as $option): ?>
                     <div class="option-row mb-2 flex items-center" data-option-id="<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>">
-                      <label for="option-<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-gray-600 font-medium mr-2">
+                      <label for="option-<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-white font-medium mr-2">
                         Option <?= $j ?>
                       </label>
-                      <input
-                        type="text"
-                        id="option-<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>"
-                        name="options[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]"
-                        value="<?= htmlspecialchars($option->option_text, ENT_QUOTES, 'UTF-8') ?>"
-                        placeholder="Option text"
+                      <input 
+                        type="text" 
+                        id="option-<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>" 
+                        name="options[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
+                        value="<?= htmlspecialchars($option->option_text, ENT_QUOTES, 'UTF-8') ?>" 
+                        placeholder="Option text" 
                         class="w-1/3 p-2 border border-gray-300 rounded mr-2"
                       >
                       <button type="button" class="remove-option bg-red-500 text-white px-2 py-1 rounded">
@@ -142,7 +140,7 @@
                   <?php $j++; endforeach; ?>
                 <?php endif; ?>
               </div>
-              <button type="button" class="add-option bg-green-500 text-white px-3 py-1 rounded mt-2" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+              <button type="button" class="add-option bg-indigo-600 text-white px-3 py-1 rounded mt-2" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 Add Option
               </button>
             </div>
@@ -259,10 +257,6 @@
         hiddenInput.name = 'removed_group';
         hiddenInput.value = groupId;
         document.getElementById('survey-form').appendChild(hiddenInput);
-        var groupSection = this.closest('div.mb-6');
-        if (groupSection) {
-          groupSection.parentNode.removeChild(groupSection);
-        }
       }
     });
   });
