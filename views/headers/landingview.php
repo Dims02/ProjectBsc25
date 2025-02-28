@@ -21,7 +21,7 @@
         <div class="flex lg:flex-1">
           <a href="/" class="-m-1.5 p-1.5">
             <span class="sr-only">UBI</span>
-            <img class="h-12 w-auto" src="media/ubiround.png" alt="UBI Logo">
+            <img class="h-12 w-auto" src="media/ubi2.png" alt="UBI Logo">
           </a>
         </div>
         <div class="flex lg:hidden">
@@ -52,7 +52,7 @@
           <h1 class="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl" style="text-shadow: 2px 2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff, -2px -2px 0 #fff;">
             Ensuring Compliance
           </h1>
-          <p class="mt-8 text-lg font-medium text-gray-700 sm:text-2xl" style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
+          <p class="mt-8 text-lg font-medium text-gray-900 sm:text-2xl" style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
             Secure & Resilient Digital Infrastructure
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">

@@ -7,15 +7,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Total Surveys Taken</h2>
-            <p class="text-3xl font-bold text-indigo-600"><?php $NumSurveyTaken?></p>
+            <p class="text-3xl font-bold text-indigo-600"><?= $NumSurveyTaken?></p>
         </div>
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Ongoing Surveys</h2>
-            <p class="text-3xl font-bold text-blue-600"><?php $NumSurveyTaking?></p>
+            <p class="text-3xl font-bold text-blue-600"><?= $NumSurveyTaking?></p>
         </div>
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Average Compliance Rate</h2>
-            <p class="text-3xl font-bold text-green-600"><?php $PercentCorrect?></p>
+            <p class="text-3xl font-bold text-green-600"><?= $PercentCorrect?></p>
         </div>
     </div>
 
