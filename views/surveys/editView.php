@@ -98,7 +98,7 @@
       <!-- Questions Card -->
       <div class="mb-6">
         <?php $i = 1; foreach ($questions as $question): ?>
-          <div class="question-card mb-4 bg-gray-800 shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+          <div class="question-card mb-4 bg-gray-800 shadow rounded p-4 border border-gray-700" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
             <!-- Display the Question -->
             <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-white font-medium mb-2">
               Question <?= $i ?>
