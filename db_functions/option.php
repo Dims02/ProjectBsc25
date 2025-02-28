@@ -23,3 +23,9 @@ function insertOption($question_id, $option_text) {
 		'option_text' => $option_text
 	]);
 }
+
+function deleteOption($option_id) {
+	global $pdo;
+	$statement = $pdo->prepare("DELETE FROM options WHERE id = :id");
+	$statement->execute(['id' => $option_id]);
+}

@@ -6,12 +6,6 @@ function getQuestionGroupsBySurveyId($survey_id) {
     return $statement->fetchAll(PDO::FETCH_OBJ);
 }
 
-function getQuestionsByGroupId($group_id) {
-    global $pdo;
-    $statement = $pdo->prepare("SELECT * FROM questions WHERE group_id = :group_id");
-    $statement->execute(['group_id' => $group_id]);
-    return $statement->fetchAll(PDO::FETCH_OBJ);
-}
 
 function getNextUnansweredGroup($survey_id, $user_id) {
     global $pdo;
@@ -21,8 +15,7 @@ function getNextUnansweredGroup($survey_id, $user_id) {
     $statement = $pdo->prepare($sql);
     $statement->execute(['survey_id' => $survey_id, 'user_id' => $user_id]);
     return $statement->fetch(PDO::FETCH_OBJ);
-} //if this returns bool false, then there are no more questions to answer
-
+}
 
 function getQuestionsByGroupIdAndSurveyId($group_id, $survey_id) {
     global $pdo;
@@ -40,7 +33,6 @@ function getNumberOfGroups($survey_id) {
     return $result->total;
 }
 
-
 function getRecommendationByGroupId($group_id) {
     global $pdo;
     $statement = $pdo->prepare("SELECT recommendation FROM question_groups WHERE id = :group_id");
@@ -49,18 +41,19 @@ function getRecommendationByGroupId($group_id) {
     return $result->recommendation;
 }
 
-function updateQuestionGroup ($group) {
+// Updated function: Remove description from the update
+function updateQuestionGroup($group_id, $title, $recommendation) {
     global $pdo;
-    $statement = $pdo->prepare("UPDATE question_groups SET title = :title, description = :description, recommendation = :recommendation WHERE id = :id");
+    $statement = $pdo->prepare("UPDATE question_groups SET title = :title, recommendation = :recommendation WHERE id = :id");
     $statement->execute([
-        'title'          => $group->title,
-        'description'    => $group->description,
-        'recommendation' => $group->recommendation,
-        'id'             => $group->id
+        'title'          => $title,
+        'recommendation' => $recommendation,
+        'id'             => $group_id
     ]);
 }
 
-function updateGroupRecommendation ($group_id, $recommendation) {
+
+function updateGroupRecommendation($group_id, $recommendation) {
     global $pdo;
     $statement = $pdo->prepare("UPDATE question_groups SET recommendation = :recommendation WHERE id = :group_id");
     $statement->execute([
@@ -68,3 +61,48 @@ function updateGroupRecommendation ($group_id, $recommendation) {
         'group_id'       => $group_id
     ]);
 }
+
+// Updated function: Remove description from new question group creation
+function newQuestionGroup($survey_id, $title, $recommendation) {
+    global $pdo;
+    $stmt = $pdo->prepare("INSERT INTO question_groups (survey_id, title, recommendation) VALUES (:survey_id, :title, :recommendation)");
+    $stmt->execute([
+        'survey_id'      => $survey_id,
+        'title'          => $title,
+        'recommendation' => $recommendation
+    ]);
+    return $pdo->lastInsertId();
+}
+
+
+function getQuestionGroup($group_id) {
+    global $pdo;
+    $statement = $pdo->prepare("SELECT * FROM question_groups WHERE id = :id");
+    $statement->execute(['id' => $group_id]);
+    return $statement->fetch(PDO::FETCH_OBJ);
+}
+
+function getQuestionGroupTitle($group_id) {
+    global $pdo;
+    $statement = $pdo->prepare("SELECT title FROM question_groups WHERE id = :id");
+    $statement->execute(['id' => $group_id]);
+    $result = $statement->fetch(PDO::FETCH_OBJ);
+    return $result->title;
+}
+
+function deleteQuestionGroup($group_id) {
+    global $pdo;
+    // Get all questions for the group.
+    $questions = getQuestionsByGroupId($group_id);
+    if ($questions) {
+        foreach ($questions as $question) {
+            deleteQuestion($question->id); // This function should delete the question's options first.
+        }
+    }
+    // Now delete the group.
+    $stmt = $pdo->prepare("DELETE FROM question_groups WHERE id = :id");
+    $stmt->execute(['id' => $group_id]);
+}
+
+
+

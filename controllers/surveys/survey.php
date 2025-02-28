@@ -21,6 +21,7 @@ if (!$survey) {
 
 // Determine the current group by its ID passed via GET parameter "groupID".
 // If none is provided, use getNextUnansweredGroup() or default to the first group.
+$currentGroup = false;
 $groupID = $_GET['groupID'] ?? null;
 if ($groupID) {
     foreach ($questionGroups as $group) {
@@ -31,9 +32,9 @@ if ($groupID) {
     }
 }
 
-if (!isset($currentGroup)) {
+if (!$currentGroup) {
     $currentGroup = getNextUnansweredGroup($survey_id, $_SESSION['user_id']);
-    if (!$currentGroup) {
+    if (!$currentGroup && count($questionGroups) > 0) {
         $currentGroup = $questionGroups[0];
     }
 }
@@ -41,12 +42,21 @@ if (!isset($currentGroup)) {
 // Compute the index of the current group within the $questionGroups array.
 $groupIds = array_map(function($grp) {
     return $grp->id;
-}, $questionGroups); 
-$currentIndex = array_search($currentGroup->id, $groupIds); 
+}, $questionGroups);
 
-$questions = getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id);
+if ($currentGroup) {
+    $currentIndex = array_search($currentGroup->id, $groupIds);
+    $questions = getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id);
+} else {
+    // No valid current group exists
+    $currentIndex = false;
+    $questions = [];
+}
 
-
+// Ensure $questions is an array even if no questions are returned.
+if (!$questions) {
+    $questions = [];
+}
 
 $heading = "Survey: " . $survey->title;
 $tabname = "Survey";

@@ -16,7 +16,7 @@
 
   <!-- Main Content Container with Background Image -->
   <div class="flex-grow" style="background-image: url('media/bgf.png'); background-size: cover; background-position: center;">
-    <header class="absolute inset-x-0 top-0 z-50 bg-white shadow-md">
+    <header class="absolute inset-x-0 top-0 z-50 bg-gray-800 shadow-md">
       <nav class="flex items-center justify-between p-1 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
           <a href="/" class="-m-1.5 p-1.5">
@@ -32,14 +32,14 @@
             </svg>
           </button>
         </div>
-        <div class="hidden lg:flex lg:gap-x-12" style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
-          <a href="/dashboard" class="text-xl font-semibold text-gray-900">Dashboard</a>
-          <a href="/surveys" class="text-xl font-semibold text-gray-900">Surveys</a>
-          <a href="/about" class="text-xl font-semibold text-gray-900">About Us</a>
-          <a href="/contacts" class="text-xl font-semibold text-gray-900">Contact Us</a>
+        <div class="hidden lg:flex lg:gap-x-12">
+          <a href="/dashboard" class="text-xl font-semibold text-white">Dashboard</a>
+          <a href="/surveys" class="text-xl font-semibold text-white">Surveys</a>
+          <a href="/about" class="text-xl font-semibold text-white">About Us</a>
+          <a href="/contacts" class="text-xl font-semibold text-white">Contact Us</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/login" class="text-xl font-semibold text-gray-900" style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
+          <a href="/login" class="text-xl font-semibold text-white">
             Log in <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
