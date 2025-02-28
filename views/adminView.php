@@ -35,7 +35,7 @@
               <?= htmlspecialchars($survey->created_at); ?>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
-              <a href="view_survey.php?id=<?= $survey->id; ?>" 
+              <a href="survey?id=<?= $survey->id; ?>" 
                  class="border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-600 hover:text-white">View</a>
               <a href="edit?id=<?= $survey->id; ?>" 
                  class="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-600 hover:text-white ml-2">Edit</a>

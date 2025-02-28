@@ -36,6 +36,16 @@ function updateSurvey(Survey $survey) {
     ]);
 }
 
+function updateSurveyDetails($id, $title, $description) {
+    global $pdo;
+    $statement = $pdo->prepare("UPDATE surveys SET title = :title, description = :description WHERE id = :id");
+    $statement->execute([
+        'title'       => $title,
+        'description' => $description,
+        'id'          => $id
+    ]);
+}
+
 function deleteSurvey($id) {
     global $pdo;
     $statement = $pdo->prepare("DELETE FROM surveys WHERE id = :id");

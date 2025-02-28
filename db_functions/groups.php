@@ -59,3 +59,12 @@ function updateQuestionGroup ($group) {
         'id'             => $group->id
     ]);
 }
+
+function updateGroupRecommendation ($group_id, $recommendation) {
+    global $pdo;
+    $statement = $pdo->prepare("UPDATE question_groups SET recommendation = :recommendation WHERE id = :group_id");
+    $statement->execute([
+        'recommendation' => $recommendation,
+        'group_id'       => $group_id
+    ]);
+}

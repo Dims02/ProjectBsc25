@@ -62,11 +62,10 @@ class Question {
     public $group_id;
     public $text;
 
-    public function __construct($id, $group_id, $text, $type) {
+    public function __construct($id, $group_id, $text) {
 		$this->id = $id;
         $this->group_id = $group_id;
         $this->text = $text;
-		$this->type = $type;
     }
 }
 

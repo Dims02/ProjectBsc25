@@ -46,9 +46,11 @@ $currentIndex = array_search($currentGroup->id, $groupIds);
 
 $questions = getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id);
 
+
+
 $heading = "Survey: " . $survey->title;
 $tabname = "Survey";
 $bgcolor = "bg-gray-100";
-$pos = "max-w-7xl";
+$pos = "max-w-5xl";
 require "./views/surveys/surveyView.php";
 ?>

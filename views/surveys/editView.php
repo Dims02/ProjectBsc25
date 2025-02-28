@@ -5,68 +5,69 @@
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20">
   <div class="max-w-7xl mx-auto">
-    <!-- Survey Edit Form -->
-    <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow">
+    <!-- Combined Survey Edit & Questions Update Form -->
+    <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow" id="survey-form">
+      <!-- Hidden fields -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
-      <div class="mb-4">
-        <label for="title" class="block text-gray-700 font-medium">Survey Title</label>
-        <input 
-          type="text" 
-          name="title" 
-          id="title" 
-          value="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
-          placeholder="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
-          class="w-full p-2 border border-gray-300 rounded"
-        >
-      </div>
-      <div class="mb-4">
-        <label for="description" class="block text-gray-700 font-medium">Description</label>
-        <textarea 
-          name="description" 
-          id="description" 
-          rows="2" 
-          placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
-          class="w-full p-2 border border-gray-300 rounded"
-        ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
-      </div>
-      <div class="flex justify-end">
-        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
-          Update Survey
-        </button>
-      </div>
-    </form>
+      <?php if ($currentGroup): ?>
+        <input type="hidden" name="group_id" value="<?= htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') ?>">
+      <?php endif; ?>
 
-    <!-- Question Group Navigation -->
-    <div class="mb-6 flex items-center justify-between">
-      <div>
-        <h3 class="text-2xl font-semibold mb-4">Question Groups</h3>
-        <div class="flex space-x-4">
-          <?php $numGroups = getNumberOfGroups($survey->id); ?>
-          <?php for($i = 1; $i <= $numGroups; $i++): ?>
-            <?php 
-              $group = $questionGroups[$i - 1];
-            ?>
-            <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&groupID=<?= htmlspecialchars($group->id, ENT_QUOTES, 'UTF-8') ?>"
-               class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->id == $group->id) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-800' ?>">
-               <?= $i ?>
-            </a>
-          <?php endfor; ?>
+      <!-- Survey Details Section -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Survey Details</h2>
+        <div class="mb-4">
+          <label for="title" class="block text-gray-700 font-medium">Survey Title</label>
+          <input 
+            type="text" 
+            name="title" 
+            id="title" 
+            value="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
+            placeholder="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
+            class="w-full p-2 border border-gray-300 rounded"
+          >
+        </div>
+        <div class="mb-4">
+          <label for="description" class="block text-gray-700 font-medium">Description</label>
+          <textarea 
+            name="description" 
+            id="description" 
+            rows="2" 
+            placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
+            class="w-full p-2 border border-gray-300 rounded"
+          ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
       </div>
-      <!-- Add Question Group Button -->
-      <div>
-        <a href="/addQuestionGroup?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Add Question Group
-        </a>
-      </div>
-    </div>
 
-    <!-- Edit Questions, Options/Responses, and Recommendation for the Current Group -->
-    <?php if ($currentGroup): ?>
-      <form action="/updateQuestions" method="POST" class="p-4 bg-white rounded shadow" id="questions-form">
-        <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
-        <input type="hidden" name="group_id" value="<?= htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') ?>">
-        
+      <!-- Question Group Navigation -->
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h3 class="text-2xl font-semibold mb-4">Question Groups</h3>
+          <div class="flex space-x-4">
+            <?php $numGroups = getNumberOfGroups($survey->id); ?>
+            <?php for($i = 1; $i <= $numGroups; $i++): ?>
+              <?php 
+                $group = $questionGroups[$i - 1];
+              ?>
+              <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&groupID=<?= htmlspecialchars($group->id, ENT_QUOTES, 'UTF-8') ?>"
+                 class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->id == $group->id) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-800' ?>">
+                 <?= $i ?>
+              </a>
+            <?php endfor; ?>
+          </div>
+        </div>
+        <!-- Add Question Group Button -->
+        <div>
+          <a href="/addQuestionGroup?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Add Question Group
+          </a>
+        </div>
+      </div>
+
+      <?php if ($currentGroup): ?>
+      <!-- Questions & Options Section -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Edit Questions & Options</h2>
         <!-- Recommendation Field -->
         <div class="mb-4">
           <label for="recommendation" class="block text-gray-700 font-medium">Recommendation</label>
@@ -95,10 +96,7 @@
               class="w-full p-2 border border-gray-300 rounded"
             >
             
-            <!-- Removed Option Type Dropdown (All questions are multiple choice) -->
-            <input type="hidden" name="optionType[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" value="multiple">
-
-            <!-- Multiple Choice Options Container (always visible) -->
+            <!-- Multiple Choice Options Container -->
             <div id="mc-options-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="mb-2 ml-4">
               <div class="option-container">
                 <?php $options = getOptionsByQuestionId($question->id); ?>
@@ -132,18 +130,20 @@
             Add Question
           </button>
         </div>
-
-        <div class="flex justify-end">
-          <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
-            Update Questions
-          </button>
-        </div>
-      </form>
-    <?php else: ?>
-      <div class="p-4 bg-red-100 text-red-600 rounded">
-        <?= isset($errormsg) ? htmlspecialchars($errormsg, ENT_QUOTES, 'UTF-8') : 'No question group available.' ?>
       </div>
-    <?php endif; ?>
+      <?php else: ?>
+        <div class="p-4 bg-red-100 text-red-600 rounded">
+          <?= isset($errormsg) ? htmlspecialchars($errormsg, ENT_QUOTES, 'UTF-8') : 'No question group available.' ?>
+        </div>
+      <?php endif; ?>
+
+      <!-- Final Submit Button for Updating Everything -->
+      <div class="flex justify-end">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+          Update Survey
+        </button>
+      </div>
+    </form>
   </div>
 </main>
 
@@ -154,8 +154,6 @@
   <div class="question-block mb-4 border-b pb-4 new-question">
     <label class="block text-gray-700 font-medium">New Question</label>
     <input type="text" name="newQuestions[]" value="" placeholder="Enter question text" class="w-full p-2 border border-gray-300 rounded">
-    <!-- Hidden input for option type -->
-    <input type="hidden" name="newOptionType[]" value="multiple">
     <!-- Multiple Choice Options Container (always visible for new questions) -->
     <div class="mb-2 ml-4 new-mc-options">
       <div class="option-container"></div>
@@ -197,8 +195,8 @@
     document.getElementById('add-question').addEventListener('click', function() {
       var template = document.getElementById('new-question-template');
       var clone = template.content.cloneNode(true);
-      // Append the new question block to the questions form.
-      document.getElementById('questions-form').appendChild(clone);
+      // Append the new question block to the survey form.
+      document.getElementById('survey-form').appendChild(clone);
     });
   });
 </script>

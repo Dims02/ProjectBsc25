@@ -4,11 +4,13 @@
 
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20">
-  <div class="max-w-7xl mx-auto">
+  <div class="max-w-5xl mx-auto">
     <form action="submit" method="POST" class="space-y-8">
       <!-- Hidden inputs to carry survey id and current group index -->
-      <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey_id, ENT_QUOTES, 'UTF-8') ?>">
+      <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
+      <input type="hidden" name="group_id" value="<?= htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') ?>">
       <input type="hidden" name="group_index" value="<?= htmlspecialchars($currentIndex, ENT_QUOTES, 'UTF-8') ?>">
+
       
       <div class="mb-6">
         <?php foreach ($questions as $question): ?>

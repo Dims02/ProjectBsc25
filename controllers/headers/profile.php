@@ -5,7 +5,6 @@ $tabname = "Profile";
 $bgcolor = "bg-gray-100";
 $pos = "max-w-7xl";
 
-dd($_SESSION);
 $user = getUserInfoById($_SESSION['user_id']);
 
 $entity  = $user->entity ?? '';
