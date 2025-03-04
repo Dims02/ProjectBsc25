@@ -2,30 +2,33 @@
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 
+require_once 'config.php';
+global $pdo;
+
 foreach (glob("db_functions/*.php") as $filename)
 {
     require_once($filename);
 }
 
 $routes = [
-    "/" => "controllers/headers/landing.php",
-    "/dashboard" => "controllers/headers/index.php",
-    "/surveys" => "controllers/headers/surveys.php",
-    "/contacts" => "controllers/headers/contacts.php",
-    "/about" => "controllers/headers/about.php",
-    "/404" => "controllers/404.php",
-    "/profile" => "controllers/headers/profile.php",
-    "/login" => "controllers/session/login.php",
-    "/register" => "controllers/session/register.php",
-    "/admin" => "controllers/admin.php",
-    "/logout" => "controllers/session/logout.php",
-    "/survey" => "controllers/surveys/survey.php",
-    "/submit" => "controllers/surveys/submit.php",
-    "/delete" => "controllers/surveys/delete.php",
-    "/create" => "controllers/surveys/create.php",
-    "/edit" => "controllers/surveys/edit.php",
-    "/thankyou" => "views/surveys/thankyou.php",
-    "/submitChanges" => "controllers/surveys/submitChanges.php",
+    "/"             => "controllers/headers/landing.php",
+    "/dashboard"    => "controllers/headers/index.php",
+    "/surveys"      => "controllers/headers/surveys.php",
+    "/contacts"     => "controllers/headers/contacts.php",
+    "/about"        => "controllers/headers/about.php",
+    "/404"          => "controllers/404.php",
+    "/profile"      => "controllers/headers/profile.php",
+    "/login"        => "controllers/session/login.php",
+    "/register"     => "controllers/session/register.php",
+    "/admin"        => "controllers/admin.php",
+    "/logout"       => "controllers/session/logout.php",
+    "/survey"       => "controllers/surveys/survey.php",
+    "/submit"       => "controllers/surveys/submit.php",
+    "/delete"       => "controllers/surveys/delete.php",
+    "/create"       => "controllers/surveys/create.php",
+    "/edit"         => "controllers/surveys/edit.php",
+    "/thankyou"     => "views/surveys/thankyou.php",
+    "/submitChanges"=> "controllers/surveys/submitChanges.php",
     "/updateSurvey" => "controllers/surveys/updateSurvey.php",
 
 ];

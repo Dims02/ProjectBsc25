@@ -1,24 +1,19 @@
 <?php
-
 $heading = "Register";
 $tabname = "Register";
-$bgcolor = "bg-gray-100";
+$pos = "max-w-7xl";
 
-require "./views/session/registerView.php";
-
-$email = isset($_POST['email']) ? $_POST['email'] : '';
-$password = isset($_POST['password']) ? $_POST['password'] : '';
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
 
 if (!empty($email) && !empty($password)) {
-	if(checkUserExists($email)) {
-		echo "Email already exists";
-	} else {
-		createNewUser($email, $password);
-		$_SESSION['user_id'] = getUserIdByEmail($email);
-		header("Location: /dashboard");
-		echo "registered";
-	}
+    $result = registerUser($email, $password);
+    if ($result === true) {
+        header("Location: /dashboard");
+        exit;
+    } else {
+        echo $result;
+    }
 }
-
-
-
+require "./views/session/registerView.php";
+?>

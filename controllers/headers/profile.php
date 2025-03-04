@@ -1,32 +1,53 @@
 <?php
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../db_functions/user.php';
+global $pdo;
 
-$heading = "Profile";
-$tabname = "Profile";
-$bgcolor = "bg-gray-100";
-$pos = "max-w-7xl";
+// Check if the JWT exists and is valid.
+if (!isset($_COOKIE['jwt']) || !verifyJWT($_COOKIE['jwt'])) {
+    header("Location: /login");
+    exit;
+}
 
-$user = getUserInfoById($_SESSION['user_id']);
+// Retrieve the current user using the JWT.
+$user = getUserFromJWT($pdo);
 
+// If no user is found, redirect to login.
+if (!$user) {
+    header("Location: /login");
+    exit;
+}
+
+// Process profile update if the form is submitted.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $entity  = $_POST['entity']  ?? $user->entity;
+    $name    = $_POST['name']    ?? $user->name;
+    $surname = $_POST['surname'] ?? $user->surname;
+    $country = $_POST['country'] ?? $user->country;
+    
+    $userData = (object)[
+        'id'      => $user->id,
+        'entity'  => $entity,
+        'name'    => $name,
+        'surname' => $surname,
+        'country' => $country
+    ];
+    
+    updateUser($userData);
+    
+    // Refresh user data after the update.
+    $user = getUserFromJWT($pdo);
+}
+
+// Set variables for the view.
 $entity  = $user->entity ?? '';
 $name    = $user->name ?? '';
 $surname = $user->surname ?? '';
 $country = $user->country ?? '';
+$heading = "Profile";
+$tabname = "Profile";
+$pos = "max-w-7xl";
+$highlightColor = $highlightColor ?? "bg-indigo-600 text-white";
 
-$entity  = $_POST['entity']  ?? $entity;
-$name    = $_POST['name']    ?? $name;
-$surname = $_POST['surname'] ?? $surname;
-$country = $_POST['country'] ?? $country;
-
-require "./views/headers/profileView.php";
-
-$userData = (object)[
-    'id'      => $_SESSION['user_id'],
-    'entity'  => $entity,
-    'name'    => $name,
-    'surname' => $surname,
-    'country' => $country
-];
-
-updateUser($userData);
-
-
+require_once __DIR__ . '/../../views/headers/profileView.php';
+?>

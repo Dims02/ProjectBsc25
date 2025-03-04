@@ -19,8 +19,6 @@
       </thead>
       <tbody>
         <?php
-        // Use the getAllSurveys() function from db.php to fetch surveys
-        $surveys = getAllSurveys();
         foreach ($surveys as $survey): ?>
           <tr class="border border-gray-300">
             <td class="border border-gray-300 px-4 py-2 text-center">
@@ -28,7 +26,7 @@
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
               <?php 
-                $user = getUserInfoById($survey->user_id);
+                $user = getUserFromId($survey->user_id);
                 echo htmlspecialchars(!empty($user->entity)? $user->entity . ' - ' . ($user->name . ' ' . $user->surname) : ($user->name . ' ' . $user->surname));?>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">

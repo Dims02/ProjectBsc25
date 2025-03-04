@@ -1,12 +1,14 @@
 <?php
-
 $heading = "Admin Dashboard";
 $tabname = "Admin Dashboard";
-$bgcolor = "bg-gray-100";
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+if (!isAdminFromJWT()) {
     header("Location: /");
     exit;
 }
 
+
+$surveys = getAllSurveys();
+
 require "views/adminView.php"; 
+?>

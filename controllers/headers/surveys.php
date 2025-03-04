@@ -2,6 +2,9 @@
 
 $heading = "Available Surveys";
 $tabname = "Surveys";
-$bgcolor = "bg-gray-100";
 $pos = "max-w-7xl";
+
+$surveys = getAllSurveys();
+
+
 require "./views/headers/surveysView.php";

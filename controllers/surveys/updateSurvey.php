@@ -1,5 +1,4 @@
 <?php
-session_start();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: /surveys");
     exit;
@@ -16,6 +15,11 @@ $questionsData      = $_POST['questions']          ?? []; // Existing questions:
 $newQuestionsData   = $_POST['newQuestions']       ?? []; // New questions: [index => questionText]
 $optionsData        = $_POST['options']            ?? []; // Existing options: options[question_id][option_id] = option_text
 $newOptionsData     = $_POST['newOptions']         ?? []; // New options: newOptions[question_id][] = option_text
+
+// NEW: Correct checkboxes for options.
+$correctOptions     = $_POST['correctOptions']     ?? []; // Existing: correctOptions[question_id][option_id] = "1" if checked
+$newCorrectOptions  = $_POST['newCorrectOptions']  ?? []; // New: newCorrectOptions[question_id][] = "1" if checked
+
 $user_id            = $_SESSION['user_id']         ?? null;
 
 // Removed items.
@@ -30,21 +34,16 @@ if (!$survey_id || !$user_id) {
     exit;
 }
 
-// If action is "addGroup", insert a new question group with empty title and recommendation.
 if ($action === 'addGroup') {
-    // newQuestionGroup should insert and return the new group ID.
     $newGroupId = newQuestionGroup($survey_id, '', '');
     header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($newGroupId) . "&success=Group+Created");
     exit;
 }
 
-// For normal updates, we expect group_id to be provided.
 if (!$group_id) {
     header("Location: /surveys");
     exit;
 }
-
-// 1. Process removals BEFORE updating
 
 // 1a. Delete removed options.
 if (is_array($removed_options) && !empty($removed_options)) {
@@ -68,7 +67,7 @@ if (!empty($removed_group)) {
 }
 
 // 2. Update Survey Details.
-updateSurveyDetails($survey_id, $title, $description);
+updateSurvey($survey_id, $title, $description);
 
 // 3. Update the current Question Group.
 updateQuestionGroup($group_id, $questionGroupTitle, $recommendation);
@@ -92,7 +91,9 @@ if (is_array($newQuestionsData)) {
 if (is_array($optionsData)) {
     foreach ($optionsData as $question_id => $opts) {
         foreach ($opts as $option_id => $option_text) {
-            updateOption($option_id, trim($option_text));
+            // Determine if this option is marked correct.
+            $correct = isset($correctOptions[$question_id][$option_id]) ? 1 : 0;
+            updateOption($option_id, trim($option_text), $correct);
         }
     }
 }
@@ -100,9 +101,10 @@ if (is_array($optionsData)) {
 // 6. Insert new options for questions.
 if (is_array($newOptionsData)) {
     foreach ($newOptionsData as $question_id => $opts) {
-        foreach ($opts as $option_text) {
+        foreach ($opts as $index => $option_text) {
             if (trim($option_text) !== '') {
-                insertOption($question_id, trim($option_text));
+                $correct = isset($newCorrectOptions[$question_id][$index]) ? 1 : 0;
+                insertOption($question_id, trim($option_text), $correct);
             }
         }
     }

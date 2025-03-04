@@ -1,24 +1,26 @@
 <?php
-
 $heading = "Sign In";
 $tabname = "Sign In";
-$bgcolor = "bg-gray-100";
+$pos = "max-w-7xl";
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
-$role = $_POST['role'] ?? 'user';
+
+// if user is logged in, redirect to dashboard
+if (isLoggedIn()) {
+    header("Location: /dashboard");
+    exit;
+}
 
 if (!empty($email) && !empty($password)) {
-    $user_id = verifyUser($email, $password);
-    if ($user_id) {
-        $_SESSION['user_id'] = $user_id;
-        $_SESSION['role'] = isAdmin($user_id) ? 'admin' : 'user';
+    $result = loginUser($email, $password);
+    if ($result === true) {
         header("Location: /dashboard");
         exit;
     } else {
-        $error = "Invalid email or password";
+        $error = $result;
+        header("Location: /register");
     }
 }
-
 require "./views/session/loginView.php";
-
+?>

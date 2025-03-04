@@ -1,31 +1,25 @@
 <?php
-$port = 3306;
-$dbname = "surveydb";
-$charset = "utf8mb4";
-$dsn = "mysql:host=localhost;port=$port;dbname=$dbname;charset=$charset";
-$pdo = new PDO($dsn, "root", "");
+
 
 class User {
     public $id;
-    public $entity;
-    public $name;
-    public $surname;
     public $email;
     public $password;
-    public $country;
-    public $role = "user"; 
+    public $role;
     public $created_at;
+    // Optional properties
+    public $name;
+    public $surname;
+    public $entity;
+    public $country;
 
-    public function __construct($id, $name, $email, $password, $country, $role = "user") {
-        $this->id = $id;
-        $this->entity = $entity;
-        $this->name = $name;
-        $this->surname = $surname;
-        $this->email = $email;
-        $this->password = password_hash($password, PASSWORD_DEFAULT); 
-        $this->country = $country;
-        $this->role = $role;
-        $this->created_at = date('Y-m-d H:i:s');
+    // Constructor for mandatory fields
+    public function __construct($id, $email, $password, $role, $created_at) {
+        $this->id         = $id;
+        $this->email      = $email;
+        $this->password   = $password; 
+        $this->role       = $role;
+        $this->created_at = $created_at;
     }
 }
 

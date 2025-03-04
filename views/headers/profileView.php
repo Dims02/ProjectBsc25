@@ -14,7 +14,7 @@
         <label for="entity" class="block text-sm font-medium text-gray-900">Entity (if applicable)</label>
         <div class="mt-2">
           <input type="text" name="entity" id="entity" placeholder="Your Organization" 
-                 value="<?= isset($entity) ? htmlspecialchars($entity) : '' ?>"
+                 value="<?= htmlspecialchars($entity) ?>"
                  class="block w-full rounded-md bg-white border border-gray-300 px-3 py-1.5 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
         </div>
       </div>
@@ -27,7 +27,7 @@
             <input type="text" name="name" 
                    id="name" 
                    autocomplete="given-name" 
-                   placeholder="<?= ($name === '') ? "forename" : htmlspecialchars($name)?>" 
+                   placeholder="forename" 
                    value="<?= htmlspecialchars($name) ?>"
                    class="block w-full rounded-md bg-white border border-gray-300 px-3 py-1.5 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
           </div>
@@ -39,7 +39,7 @@
             <input type="text" name="surname" 
                    id="surname" 
                    autocomplete="family-name" 
-                   placeholder="<?= ($surname === '') ? "surname" : htmlspecialchars($surname)?>" 
+                   placeholder="surname" 
                    value="<?= htmlspecialchars($surname) ?>"
                    class="block w-full rounded-md bg-white border border-gray-300 px-3 py-1.5 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
           </div>
@@ -53,14 +53,14 @@
           <select id="country" name="country" autocomplete="country-name" 
                   class="block w-full appearance-none rounded-md bg-white border border-gray-300 py-1.5 pr-8 pl-3 text-base text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             <?php
-              // A trimmed list of European and major countries
+              // A trimmed list of European and major countries.
               $countries = [
                 "Austria", "Belgium", "Denmark", "Finland", "France", "Germany", "Ireland", 
                 "Italy", "Netherlands", "Norway", "Portugal", "Spain", "Sweden", "Switzerland", 
                 "United Kingdom", "United States", "Canada", "Australia"
               ];
               foreach ($countries as $c) {
-                $selected = (isset($country) && $country === $c) ? 'selected' : '';
+                $selected = ($country === $c) ? 'selected' : '';
                 echo "<option value=\"" . htmlspecialchars($c) . "\" $selected>" . htmlspecialchars($c) . "</option>";
               }
             ?>

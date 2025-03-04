@@ -5,7 +5,7 @@
 <main class="flex-grow p-4 pb-20">
   <div class="max-w-7xl mx-auto">
     <!-- Combined Survey & Question Group Edit Form -->
-    <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-gray-800 rounded shadow" id="survey-form">
+    <form id="survey-form" action="/updateSurvey" method="POST" class="mb-8 p-4 bg-gray-800 rounded shadow">
       
       <!-- Hidden fields -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
@@ -133,7 +133,9 @@
                         placeholder="Option text" 
                         class="w-1/3 p-2 border border-gray-300 rounded mr-2"
                       >
-                      <button type="button" class="remove-option bg-red-500 text-white px-2 py-1 rounded">
+                      <label class="text-white mr-2">Correct?</label>
+                      <input type="checkbox" name="correctOptions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" value="1" <?= ($option->correct ? 'checked' : '') ?>>
+                      <button type="button" class="remove-option bg-red-500 text-white px-2 py-1 rounded ml-2">
                         Remove
                       </button>
                     </div>
@@ -199,7 +201,9 @@
         newRow.innerHTML = 
           '<label class="block text-gray-600 font-medium mr-2">Option ' + newIndex + '</label>' +
           '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-1/3 p-2 border border-gray-300 rounded mr-2">' +
-          '<button type="button" class="remove-option bg-red-500 text-white px-2 py-1 rounded">Remove</button>';
+          '<label class="text-gray-600 mr-2">Correct?</label>' +
+          '<input type="checkbox" name="newCorrectOptions[' + questionId + '][]" value="1">' +
+          '<button type="button" class="remove-option bg-red-500 text-white px-2 py-1 rounded ml-2">Remove</button>';
         container.appendChild(newRow);
       });
     });
