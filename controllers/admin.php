@@ -7,7 +7,6 @@ if (!isAdminFromJWT()) {
     exit;
 }
 
-
 $surveys = getAllSurveys();
 
 require "views/adminView.php"; 

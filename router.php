@@ -30,6 +30,7 @@ $routes = [
     "/thankyou"     => "views/surveys/thankyou.php",
     "/submitChanges"=> "controllers/surveys/submitChanges.php",
     "/updateSurvey" => "controllers/surveys/updateSurvey.php",
+    "/reco"         => "controllers/reco.php",
 
 ];
 

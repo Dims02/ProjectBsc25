@@ -85,7 +85,7 @@ function createNewUser($email, $password) {
     $statement->execute([
         'email'    => $email,
         'password' => password_hash($password, PASSWORD_DEFAULT),
-        'role'     => $role
+        'role'     => 'user'
     ]);
 }
 
