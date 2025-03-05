@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/../partials/header.php'; ?>
-<?php require_once __DIR__ . '/../partials/nav.php'; ?>  
+<?php require_once __DIR__ . '/../partials/nav.php'; ?>
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -7,15 +7,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Total Surveys Taken</h2>
-            <p class="text-3xl font-bold text-indigo-600"><?= $NumSurveyTaken?></p>
+            <p class="text-3xl font-bold text-indigo-600"><?= htmlspecialchars($NumSurveyTaken, ENT_QUOTES, 'UTF-8') ?></p>
         </div>
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Ongoing Surveys</h2>
-            <p class="text-3xl font-bold text-blue-600"><?= $NumSurveyTaking?></p>
+            <p class="text-3xl font-bold text-blue-600"><?= htmlspecialchars($NumSurveyTaking, ENT_QUOTES, 'UTF-8') ?></p>
         </div>
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 class="text-lg font-semibold text-gray-900">Average Compliance Rate</h2>
-            <p class="text-3xl font-bold text-green-600"><?= $PercentCorrect?></p>
+            <p class="text-3xl font-bold text-green-600"><?= htmlspecialchars($PercentCorrect, ENT_QUOTES, 'UTF-8') ?></p>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
         <!-- Completion Rate Chart -->
         <div class="bg-white shadow-md rounded-lg p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Survey Completion Rate</h2>
-            <div class="h-64"> <!-- Fixed height -->
+            <div class="h-64">
                 <canvas id="completionChart"></canvas>
             </div>
         </div>
@@ -32,7 +32,7 @@
         <!-- Survey Progress Chart -->
         <div class="bg-white shadow-md rounded-lg p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Survey Progress</h2>
-            <div class="h-64"> <!-- Fixed height -->
+            <div class="h-64">
                 <canvas id="progressChart"></canvas>
             </div>
         </div>
@@ -41,16 +41,22 @@
     <!-- Recent Surveys Section -->
     <div class="mt-8 bg-white shadow-md rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-900">Recent Surveys</h2>
-        <ul class="mt-4 space-y-3 ">
-            <li class="flex items-center justify-between bg-gray-50 p-4 rounded-md">
-                <div>
-                    <p class="text-gray-900 font-semibold">Cybersecurity Awareness Survey</p>
-                    <p class="text-gray-600 text-sm">Completed on: 2024-02-10</p>
-                </div>
-                <a href="/reco?survey_id=13" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
-                    View Results
-                </a>
-            </li>
+        <ul class="mt-4 space-y-3">
+            <?php if (!empty($recentSurveys)): ?>
+                <?php foreach ($recentSurveys as $survey): ?>
+                    <li class="flex items-center justify-between bg-gray-50 p-4 rounded-md">
+                        <div>
+                            <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
+                            <p class="text-gray-600 text-sm">Completed on: <?= htmlspecialchars($survey->completed_date, ENT_QUOTES, 'UTF-8') ?></p>
+                        </div>
+                        <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= htmlspecialchars($highlightColor, ENT_QUOTES, 'UTF-8') ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
+                            View Results
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li class="text-gray-600">No completed surveys found.</li>
+            <?php endif; ?>
         </ul>
     </div>
 </main>
@@ -74,7 +80,7 @@
         }
     });
 
-    // Survey Progress Chart (Sample)
+    // Survey Progress Chart
     const ctx2 = document.getElementById('progressChart').getContext('2d');
     new Chart(ctx2, {
         type: 'bar',
@@ -95,5 +101,6 @@
         }
     });
 </script>
+
 <div class="pb-6"></div>
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>

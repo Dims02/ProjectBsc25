@@ -4,6 +4,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if(!isLoggedIn()) {
+    header("Location: /login");
+    exit;
+}
+
+
+if(!isAdminFromJWT()) {
+    header("Location: /login");
+    exit;
+}
+
 $survey_id          = $_POST['survey_id']          ?? null;
 $group_id           = $_POST['group_id']           ?? null;
 $title              = $_POST['title']              ?? getSurvey($survey_id)->title;

@@ -50,4 +50,7 @@ function deleteSurvey($id) {
     $stmt->execute(['id' => $id]);
     return $stmt->rowCount();
 }
+
+
+
 ?>

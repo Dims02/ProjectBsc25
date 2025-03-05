@@ -2,7 +2,7 @@
 $heading = "Admin Dashboard";
 $tabname = "Admin Dashboard";
 
-if (!isAdminFromJWT()) {
+if (!isAdminFromJWT() || !isLoggedIn()) {
     header("Location: /");
     exit;
 }

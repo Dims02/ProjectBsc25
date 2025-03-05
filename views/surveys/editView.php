@@ -4,7 +4,9 @@
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20 ">
   
-  <!-- Survey Details Card -->
+  
+  <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow  bg-opacity-50" id="survey-form">
+    <!-- Survey Details Card -->
   <div class="mb-6 bg-white shadow rounded p-4 border ">
         <h2 class="text-2xl font-semibold text-black mb-4 ">
           Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
@@ -33,7 +35,7 @@
       </div>
   <div class="max-w-7xl mx-auto">
     <!-- Combined Survey & Question Group Edit Form -->
-    <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow  bg-opacity-50" id="survey-form">
+    
       
       <!-- Hidden fields -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
@@ -137,11 +139,19 @@
                         placeholder="Option text" 
                         class="w-1/3 p-2 border border-gray-300 rounded mr-2 text-black"
                       >
-                      <!-- Small cross icon for removal -->
+                      <label class="text-gray-600 mr-2">Correct?</label>
+                      <input 
+                        type="checkbox" 
+                        name="correctOptions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
+                        value="1" 
+                        <?= $option->correct ? 'checked' : '' ?>
+                      >
+                      <!-- Small cross icon for removal, pushed to the far right -->
                       <button type="button" class="remove-option text-red-500 font-bold text-xl ml-auto">
                         &times;
                       </button>
                     </div>
+
                   <?php $j++; endforeach; ?>
                 <?php endif; ?>
               </div>
@@ -173,8 +183,9 @@
       <div class="flex justify-end">
 
       </div>
-    </form>
+    
   </div>
+  </form>
 </main>
 
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>

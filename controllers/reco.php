@@ -1,7 +1,6 @@
 <?php
 global $pdo;
-// Ensure user is authenticated.
-if (!isset($_COOKIE['jwt']) || !verifyJWT($_COOKIE['jwt'])) {
+if(!isLoggedIn()) {
     header("Location: /login");
     exit;
 }

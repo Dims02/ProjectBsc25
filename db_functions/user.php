@@ -20,7 +20,6 @@ function getUserFromJWT() {
     }
 }
 
-
 function getUserFromId($id) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
@@ -230,7 +229,6 @@ function logoutUser() {
     setcookie('jwt', '', time() - 3600, '/');
 }
 
-
 function isLoggedIn() {
     if (!isset($_COOKIE['jwt'])) {
         return false;
@@ -256,4 +254,50 @@ function isAdminFromJWT() {
     
     return $decoded->role === 'admin';
 }
+
+function userAnsweredSurveyFully($userId, $surveyId) {
+    global $pdo;
+    
+    // Get the total number of questions in the survey by joining with question_groups.
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) AS total 
+        FROM questions q
+        INNER JOIN question_groups qg ON q.group_id = qg.id
+        WHERE qg.survey_id = :survey_id
+    ");
+    $stmt->execute(['survey_id' => $surveyId]);
+    $totalQuestions = (int)$stmt->fetch(PDO::FETCH_OBJ)->total;
+    
+    // Get the number of responses provided by the user for questions in that survey.
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) AS answered 
+        FROM responses r
+        INNER JOIN questions q ON r.question_id = q.id
+        INNER JOIN question_groups qg ON q.group_id = qg.id
+        WHERE r.user_id = :user_id 
+          AND qg.survey_id = :survey_id
+    ");
+    $stmt->execute(['user_id' => $userId, 'survey_id' => $surveyId]);
+    $answered = (int)$stmt->fetch(PDO::FETCH_OBJ)->answered;
+    
+    // The survey is fully answered if the number of responses matches the total number of questions.
+    return ($totalQuestions > 0 && $answered === $totalQuestions);
+}
+
+function getFullyAnsweredSurveyIds($userId) {
+    // Assuming getAllSurveys() retrieves surveys with property 'id'
+    $surveys = getAllSurveys();
+    $fullyAnsweredIds = [];
+    
+    foreach ($surveys as $survey) {
+        if (userAnsweredSurveyFully($userId, $survey->id)) {
+            $fullyAnsweredIds[] = $survey->id;
+        }
+    }
+    
+    return $fullyAnsweredIds;
+}
+
+
+
 

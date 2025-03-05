@@ -2,6 +2,11 @@
 // Check that the request method is POST and the survey_id is provided
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['survey_id'])) {
 
+    if(!isLoggedIn()) {
+        header("Location: /login");
+        exit;
+    }
+
 	if(!isAdminFromJWT()) {
         echo "You are not authorized.";
 		exit;

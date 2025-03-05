@@ -3,8 +3,7 @@ require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../db_functions/user.php';
 global $pdo;
 
-// Check if the JWT exists and is valid.
-if (!isset($_COOKIE['jwt']) || !verifyJWT($_COOKIE['jwt'])) {
+if(!isLoggedIn()) {
     header("Location: /login");
     exit;
 }

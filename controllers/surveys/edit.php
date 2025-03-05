@@ -1,5 +1,10 @@
 <?php
 
+if(!isLoggedIn()) {
+    header("Location: /login");
+    exit;
+}
+
 if(!isAdminFromJWT()) {
     header("Location: /login");
     exit;

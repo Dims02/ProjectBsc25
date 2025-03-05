@@ -1,6 +1,6 @@
 <?php
 
-if (!isset($_SESSION['user_id'])) {
+if(!isLoggedIn()) {
     header("Location: /login");
     exit;
 }

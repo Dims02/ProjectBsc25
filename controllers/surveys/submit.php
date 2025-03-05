@@ -5,6 +5,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if(!isLoggedIn()) {
+    header("Location: /login");
+    exit;
+}
+
 // Retrieve posted data
 $survey_id   = $_POST['survey_id']   ?? null;
 $group_index = $_POST['group_index'] ?? null;
