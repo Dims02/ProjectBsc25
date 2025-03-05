@@ -21,4 +21,4 @@
   </div>
 </main>
 
-<?php require_once __DIR__ . '/../partials/footer.php'; ?>
+<?php require "partials/footer.php"; ?>

@@ -3,7 +3,6 @@
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 
 require_once 'config.php';
-global $pdo;
 
 foreach (glob("db_functions/*.php") as $filename)
 {

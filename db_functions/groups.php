@@ -97,5 +97,18 @@ function deleteQuestionGroup($group_id) {
     $stmt->execute(['id' => $group_id]);
     return $stmt->rowCount();
 }
-
+ function getFirstGroupId($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id FROM question_groups WHERE survey_id = :survey_id ORDER BY id ASC LIMIT 1");
+    $stmt->execute(['survey_id' => $survey_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    return $result ? $result->id : null;
+}
+function getLastGroupId($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id FROM question_groups WHERE survey_id = :survey_id ORDER BY id DESC LIMIT 1");
+    $stmt->execute(['survey_id' => $survey_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    return $result ? $result->id : null;
+}
 ?>

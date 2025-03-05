@@ -5,10 +5,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $survey_id          = $_POST['survey_id']          ?? null;
-$group_index        = $_POST['group_index']        ?? null;
 $group_id           = $_POST['group_id']           ?? null;
 $title              = $_POST['title']              ?? getSurvey($survey_id)->title;
-$questionGroupTitle = $_POST['group_title']        ?? getQuestionGroupTitle($group_id);
+$questionGroupTitle = $_POST['group_title']        ?? getQuestionGroup($group_id)->title;
 $description        = $_POST['description']        ?? getSurvey($survey_id)->description;
 $recommendation     = $_POST['recommendation']     ?? '';
 $questionsData      = $_POST['questions']          ?? []; // Existing questions: [question_id => questionText]
@@ -62,7 +61,7 @@ if (is_array($removed_questions) && !empty($removed_questions)) {
 // 1c. If a group removal was requested, delete the group and redirect immediately.
 if (!empty($removed_group)) {
     deleteQuestionGroup($removed_group);
-    header("Location: /edit?id=" . urlencode($survey_id));
+    header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . getLastGroupId($survey_id));
     exit;
 }
 
@@ -82,7 +81,8 @@ foreach ($questionsData as $question_id => $questionText) {
 if (is_array($newQuestionsData)) {
     foreach ($newQuestionsData as $newQuestionText) {
         if (trim($newQuestionText) !== '') {
-            insertQuestion($group_id, trim($newQuestionText));
+            $newQuestionId = insertQuestion($group_id, trim($newQuestionText));
+            
         }
     }
 }
@@ -111,6 +111,6 @@ if (is_array($newOptionsData)) {
 }
 
 // 7. Redirect back to the edit page with a success flag.
-header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&success=1");
+header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id));
 exit;
 ?>

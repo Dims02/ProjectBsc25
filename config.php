@@ -13,3 +13,5 @@ $highlightColor =  "bg-indigo-600 text-white";
 $bgcolor = "bg-gray-100";
 
 define('JWT_SECRET_KEY', 'this_is_a_secret_key');
+
+global $pdo;

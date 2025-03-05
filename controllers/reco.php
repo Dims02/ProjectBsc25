@@ -1,4 +1,5 @@
 <?php
+global $pdo;
 // Ensure user is authenticated.
 if (!isset($_COOKIE['jwt']) || !verifyJWT($_COOKIE['jwt'])) {
     header("Location: /login");
@@ -60,5 +61,5 @@ foreach ($questionGroups as $group) {
 }
 
 // Pass data to the view.
-require_once __DIR__ . '/../../views/recoView.php';
+require_once  'views/recoView.php';
 ?>

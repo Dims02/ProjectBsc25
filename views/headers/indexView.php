@@ -47,7 +47,7 @@
                     <p class="text-gray-900 font-semibold">Cybersecurity Awareness Survey</p>
                     <p class="text-gray-600 text-sm">Completed on: 2024-02-10</p>
                 </div>
-                <a href="#" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
+                <a href="/reco?survey_id=13" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
                     View Results
                 </a>
             </li>

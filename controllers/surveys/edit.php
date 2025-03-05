@@ -1,13 +1,13 @@
 <?php
 
-if (!isset($_SESSION['user_id'])) {
+if(!isAdminFromJWT()) {
     header("Location: /login");
     exit;
 }
 
 $survey_id = $_GET['id'] ?? null;
 if (!$survey_id) {
-    header("Location: /surveys");
+    header("Location: /admin");
     exit;
 }
 
