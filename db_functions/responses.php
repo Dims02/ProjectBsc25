@@ -65,4 +65,51 @@ function getOptionsByQuestionId($question_id) {
     $stmt->execute(['question_id' => $question_id]);
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
+
+function getIncorrectResponses($userId, $survey_id) {
+    global $pdo;
+    $incorrectResponses = [];
+
+    // Retrieve all question groups.
+    // (You may want to filter these by a survey or some other parameter.)
+    $questionGroups = getQuestionGroupsBySurveyId($survey_id);
+
+    foreach ($questionGroups as $group) {
+        // Get all questions for the group.
+        $questions = getQuestionsByGroupId($group->id);
+
+        foreach ($questions as $question) {
+            // Retrieve the user's answer.
+            $stmt = $pdo->prepare("SELECT answer FROM responses WHERE question_id = :question_id AND user_id = :user_id");
+            $stmt->execute(['question_id' => $question->id, 'user_id' => $userId]);
+            $response = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if ($response) {
+                // Get the correct option for this question.
+                $options = getOptionsByQuestionId($question->id);
+                $correctAnswer = null;
+                foreach ($options as $option) {
+                    if ($option->correct) {
+                        $correctAnswer = $option->option_text;
+                        break;
+                    }
+                }
+
+                // Compare user's answer with the correct answer.
+                if ($correctAnswer !== null && trim($response->answer) !== trim($correctAnswer)) {
+                    $incorrectResponses[] = [
+                        'question'       => $question->text,
+                        'your_answer'    => $response->answer,
+                        'correct_answer' => $correctAnswer,
+                        // For recommendations, use the group's recommendation or a default message.
+                        'recommendation' => $group->recommendation ?? "Review this topic for more details."
+                    ];
+                }
+            }
+        }
+    }
+    
+    return $incorrectResponses;
+}
+
 ?>

@@ -6,6 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: /login");
         exit;
     }
+    if(!isAdminFromJWT()) {
+        echo "You are not authorized.";
+		exit;
+	}
 
     $user_id = $_SESSION['user_id'];
     $timestamp = date('Y-m-d H:i:s');

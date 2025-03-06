@@ -1,9 +1,8 @@
 <?php require "partials/header.php"; ?>
 <?php require "partials/nav.php"; ?>
+<?php require "partials/banner.php"; ?>
 
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-  <h1 class="text-3xl font-bold text-gray-900 mb-6">Admin Dashboard - Manage Surveys</h1>
-
   <!-- Survey List -->
   <div class="bg-white shadow-md rounded-lg p-6">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">All Surveys</h2>

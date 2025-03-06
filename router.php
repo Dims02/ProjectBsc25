@@ -30,6 +30,8 @@ $routes = [
     "/submitChanges"=> "controllers/surveys/submitChanges.php",
     "/updateSurvey" => "controllers/surveys/updateSurvey.php",
     "/reco"         => "controllers/reco.php",
+    "/export"       => "export.php",
+    "/test"         => "testlatex.php",
 
 ];
 

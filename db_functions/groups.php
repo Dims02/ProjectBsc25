@@ -111,4 +111,14 @@ function getLastGroupId($survey_id) {
     $result = $stmt->fetch(PDO::FETCH_OBJ);
     return $result ? $result->id : null;
 }
+
+function getExportRecommendation($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id, title, recommendation FROM question_groups WHERE survey_id = :survey_id");
+    $stmt->execute(['survey_id' => $survey_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
 ?>

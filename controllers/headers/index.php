@@ -25,11 +25,9 @@ $heading = "Welcome to your dashboard";
 $tabname = "Dashboard";
 $pos = "max-w-7xl";
 $NumSurveyTaken = count($fullyAnsweredIds);
-$NumSurveyTaking = 0;
-$PercentCorrect = "100%";
+$NumSurveyTaking = ;
+$PercentCorrect = getOverallCorrectnessPercentage($user_id) . "%";
 
-// Set a default highlight color for buttons/links.
-$highlightColor = "bg-indigo-600";
 
 // Load the dashboard view.
 require "views/headers/indexView.php";

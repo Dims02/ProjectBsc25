@@ -11,6 +11,7 @@ $pdo = new PDO($dsn, "root", "");
 
 $highlightColor =  "bg-indigo-600 text-white";
 $bgcolor = "bg-gray-100";
+$global_button_color = "bg-gray-800";
 
 define('JWT_SECRET_KEY', 'this_is_a_secret_key');
 
