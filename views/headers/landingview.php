@@ -39,9 +39,11 @@
           <a href="/contacts" class="text-xl font-semibold text-white">Contact Us</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+        <?php if (!isLoggedIn()): ?>
           <a href="/login" class="text-xl font-semibold text-white">
             Log in <span aria-hidden="true">&rarr;</span>
           </a>
+        <?php endif; ?>
         </div>
       </nav>
     </header>
