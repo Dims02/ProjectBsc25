@@ -73,7 +73,7 @@
         </div>
       </div>
 
-            
+      <?php ?>
       <?php if ($currentGroup): ?>
       <!-- Group Details Card -->
       <div id="group-details-card" class="mb-6 bg-white shadow rounded p-4 border">

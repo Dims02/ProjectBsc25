@@ -16,6 +16,8 @@ if (!$survey_id) {
     exit;
 }
 
+$userId = getUserFromJWT()->id;
+
 $survey = getSurvey($survey_id);
 $questionGroups = getQuestionGroupsBySurveyId($survey_id);
 
@@ -37,7 +39,7 @@ if ($groupID) {
 
 if (!isset($currentGroup)) {
     if (!empty($questionGroups)) {
-        $currentGroup = getNextUnansweredGroup($survey_id, $_SESSION['user_id']);
+        $currentGroup = getNextUnansweredGroup($survey_id, $userId );
         if (!$currentGroup) {
             $currentGroup = $questionGroups[0];
         }
@@ -46,6 +48,7 @@ if (!isset($currentGroup)) {
         $currentGroup = null;
     }
 }
+
 
 if ($currentGroup) {
     $groupIds = array_map(function($grp) {
@@ -57,12 +60,13 @@ if ($currentGroup) {
     foreach ($questions as $question) {
         $question->responses = getPossibleResponsesByQuestionId($question->id);
     }
+    $currentGroup->title = getQuestionGroup($currentGroup->id)->title;
     $currentGroup->recommendation = getRecommendationByGroupId($currentGroup->id);
+
 } else {
     $currentIndex = null;
     $questions = [];
 }
-
 $heading = "Editing Survey: " . htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8');
 $tabname = "Edit Survey";
 $bgcolor = "bg-gray-100";

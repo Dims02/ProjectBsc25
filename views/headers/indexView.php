@@ -49,9 +49,9 @@
                             <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
                             <p class="text-gray-600 text-sm">Completed on: <?= htmlspecialchars($survey->completed_date, ENT_QUOTES, 'UTF-8') ?></p>
                         </div>
-                        <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= htmlspecialchars($highlightColor, ENT_QUOTES, 'UTF-8') ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
-                            View Results
-                        </a>
+                        <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
+                View Results
+                </a>
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -63,43 +63,63 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Survey Completion Rate Chart
-    const ctx1 = document.getElementById('completionChart').getContext('2d');
-    new Chart(ctx1, {
-        type: 'doughnut',
-        data: {
-            labels: ['Completed', 'Incomplete'],
-            datasets: [{
-                data: [80, 20],
-                backgroundColor: ['#4CAF50', '#E57373']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Doughnut Chart: Survey Completion for a specific survey ---
+    const surveyCompletion = <?php echo $surveyCompletion; ?>;
+    const completed = surveyCompletion;
+    const incomplete = 100 - surveyCompletion;
 
-    // Survey Progress Chart
-    const ctx2 = document.getElementById('progressChart').getContext('2d');
-    new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: ['Survey 1', 'Survey 2', 'Survey 3', 'Survey 4'],
-            datasets: [{
-                label: 'Completion %',
-                data: [100, 80, 50, 25],
-                backgroundColor: 'rgba(54, 162, 235, 0.8)'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, max: 100 }
+    const canvas1 = document.getElementById('completionChart');
+    if (canvas1) {
+        const ctx1 = canvas1.getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'Incomplete'],
+                datasets: [{
+                    data: [completed, incomplete],
+                    backgroundColor: ['#4CAF50', '#E57373']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
             }
-        }
-    });
+        });
+    } else {
+        console.error("Canvas 'completionChart' not found.");
+    }
+
+    // --- Bar Chart: Survey Completion for all surveys ---
+    const surveyProgressData = <?php echo json_encode($allSurveyCompletions); ?>;
+    const surveyLabels = Object.keys(surveyProgressData);
+    const surveyPercentages = Object.values(surveyProgressData);
+
+    const canvas2 = document.getElementById('progressChart');
+    if (canvas2) {
+        const ctx2 = canvas2.getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: surveyLabels,
+                datasets: [{
+                    label: 'Completion %',
+                    data: surveyPercentages,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+    } else {
+        console.error("Canvas 'progressChart' not found.");
+    }
+});
 </script>
 
 <div class="pb-6"></div>

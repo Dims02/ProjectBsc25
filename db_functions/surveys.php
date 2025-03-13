@@ -94,7 +94,7 @@ function getOverallCorrectnessPercentage($user_id) {
 
     return $result->total_answers > 0
         ? round(($result->correct_answers / $result->total_answers) * 100, 2)
-        : 0;
+        : 100;
 }
 
 function getUnfinishedSurveysCount($user_id) {
@@ -131,5 +131,77 @@ function getUnfinishedSurveysCount($user_id) {
     
     return $unfinishedCount;
 }
+
+function getAllSurveysCompletionPercentages($user_id) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("
+        SELECT 
+            s.id AS survey_id,
+            s.title AS survey_title,
+            (
+                SELECT COUNT(*) 
+                FROM questions q
+                JOIN question_groups g ON q.group_id = g.id
+                WHERE g.survey_id = s.id
+            ) AS totalQuestions,
+            (
+                SELECT COUNT(*) 
+                FROM responses r
+                JOIN questions q ON r.question_id = q.id
+                JOIN question_groups g ON q.group_id = g.id
+                WHERE g.survey_id = s.id AND r.user_id = :user_id
+            ) AS answeredQuestions
+        FROM surveys s
+    ");
+    
+    $stmt->execute(['user_id' => $user_id]);
+    $surveys = $stmt->fetchAll(PDO::FETCH_OBJ);
+    
+    $completionPercentages = [];
+    foreach ($surveys as $survey) {
+        if ($survey->totalQuestions > 0) {
+            $completionPercentages[$survey->survey_title] = round(($survey->answeredQuestions / $survey->totalQuestions) * 100, 2);
+        } else {
+            $completionPercentages[$survey->survey_title] = 100;
+        }
+    }
+
+    return $completionPercentages;
+}
+
+
+function getSurveyCompletenessPercentage($survey_id, $user_id) {
+    global $pdo;
+    
+    // Get total questions in the survey
+    $stmt = $pdo->prepare("
+        SELECT 
+            (SELECT COUNT(*) 
+             FROM questions q
+             JOIN question_groups g ON q.group_id = g.id
+             WHERE g.survey_id = :survey_id
+            ) AS totalQuestions,
+            (SELECT COUNT(*) 
+             FROM responses r
+             JOIN questions q ON r.question_id = q.id
+             JOIN question_groups g ON q.group_id = g.id
+             WHERE g.survey_id = :survey_id AND r.user_id = :user_id
+            ) AS answeredQuestions
+    ");
+    
+    $stmt->execute([
+        'survey_id' => $survey_id,
+        'user_id'   => $user_id
+    ]);
+    
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    if ($result && $result->totalQuestions > 0) {
+        return round(($result->answeredQuestions / $result->totalQuestions) * 100, 2);
+    }
+    return 0;
+}
+
 
 ?>
