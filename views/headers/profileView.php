@@ -7,7 +7,20 @@
     
     <!-- Form Card -->
     <div class="bg-white shadow-md rounded-lg p-6">
-      <h2 class="text-2xl font-semibold text-gray-900 mb-4">Personal Information</h2>
+      <h2 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+        Personal Information
+        <!-- Info icon with tooltip -->
+        <span class="ml-2 relative group">
+          <!-- Inline Info Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-3a1 1 0 112 0 1 1 0 01-2 0zm1 2a1 1 0 00-.993.883L9 10v4a1 1 0 001.993.117L11 14v-4a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+          <!-- Tooltip Box -->
+          <div class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-56 p-2 bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+            We treat your data in strict compliance with GDPR. We do not share your data with third parties.
+          </div>
+        </span>
+      </h2>
       
       <!-- Entity Section -->
       <div class="mb-6">
@@ -55,8 +68,8 @@
             <?php
               // A trimmed list of European and major countries.
               $countries = [
-                "Austria", "Belgium", "Denmark", "Finland", "France", "Germany", "Ireland", 
-                "Italy", "Netherlands", "Norway", "Portugal", "Spain", "Sweden", "Switzerland", 
+                "Portugal","Austria", "Belgium", "Denmark", "Finland", "France", "Germany", "Ireland", 
+                "Italy", "Netherlands", "Norway", "Spain", "Sweden", "Switzerland", 
                 "United Kingdom", "United States", "Canada", "Australia"
               ];
               foreach ($countries as $c) {

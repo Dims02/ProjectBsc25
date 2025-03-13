@@ -17,8 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <?php
-        foreach ($surveys as $survey): ?>
+        <?php foreach ($surveys as $survey): ?>
           <tr class="border border-gray-300">
             <td class="border border-gray-300 px-4 py-2 text-center">
               <?= htmlspecialchars($survey->title); ?>
@@ -26,16 +25,29 @@
             <td class="border border-gray-300 px-4 py-2 text-center">
               <?php 
                 $user = getUserFromId($survey->user_id);
-                echo htmlspecialchars(!empty($user->entity)? $user->entity . ' - ' . ($user->name . ' ' . $user->surname) : ($user->name . ' ' . $user->surname));?>
+                if ($user && isset($user->name) && isset($user->surname)) {
+                  echo htmlspecialchars(
+                    !empty($user->entity)
+                      ? $user->entity . ' - ' . ($user->name . ' ' . $user->surname)
+                      : ($user->name . ' ' . $user->surname)
+                  );
+                } else {
+                  echo "Unknown";
+                }
+              ?>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
               <?= htmlspecialchars($survey->created_at); ?>
             </td>
             <td class="border border-gray-300 px-4 py-2 text-center">
               <a href="survey?id=<?= $survey->id; ?>" 
-                 class="border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-600 hover:text-white">View</a>
+                 class="border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-600 hover:text-white">
+                View
+              </a>
               <a href="edit?id=<?= $survey->id; ?>" 
-                 class="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-600 hover:text-white ml-2">Edit</a>
+                 class="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-600 hover:text-white ml-2">
+                Edit
+              </a>
               <form action="delete" method="POST" class="inline-block" 
                     onsubmit="return confirm('Are you sure you want to delete this survey?');">
                 <input type="hidden" name="survey_id" value="<?= $survey->id; ?>">
@@ -51,16 +63,11 @@
     </table>
     
     <form action="create" method="POST" class="mb-4 mt-4">
-  <button type="submit" class="<?= $highlightColor; ?> px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80">
-    + Create New Survey
-  </button>
-</form>
-
-</form>
-
-
-
-
+      <button type="submit" class="<?= $highlightColor; ?> px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80">
+        + Create New Survey
+      </button>
+    </form>
+  </div>
 </main>
 
 <?php require "partials/footer.php"; ?>
