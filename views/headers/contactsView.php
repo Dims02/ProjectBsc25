@@ -20,7 +20,7 @@
       <h2 class="text-xl font-semibold text-gray-900">Contact Form</h2>
       <p class="mt-2 text-gray-600">You can also send us a message using the form below:</p>
 
-      <form action="contact_form_handler.php" method="POST" class="mt-4">
+      <form action="thankyou.php" method="POST" class="mt-4">
         <div class="grid grid-cols-1 gap-4">
           <div>
             <label for="name" class="block text-sm font-medium text-gray-900">Name</label>
