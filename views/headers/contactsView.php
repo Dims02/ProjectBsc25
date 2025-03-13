@@ -41,7 +41,7 @@
           </div>
 
           <div class="text-right">
-            <button type="submit" class="px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80 <?= $highlightColor; ?>">
+            <button href = "thankyou" type="submit" class="px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80 <?= $highlightColor; ?>">
               Send Message
             </button>
           </div>
