@@ -2,7 +2,6 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// ... rest of your functions
 
 function dd($value)
 {
@@ -17,10 +16,6 @@ function urlIs($value) {
     return $_SERVER['REQUEST_URI'] === $value;
 }
 
-function login() {
-    if (isset($_SESSION['user'])) {
-        }
-}
 
 function generateJWT($payload) {
     return \Firebase\JWT\JWT::encode($payload, JWT_SECRET_KEY, 'HS256');

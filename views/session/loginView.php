@@ -2,7 +2,6 @@
 <?php require_once __DIR__ . '/../partials/nav.php'; ?>  
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
-
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img class="mx-auto h-15 w-auto" src="media/ubiround.png" alt="Your Company">
@@ -38,11 +37,7 @@
           <label for="password" class="block text-sm font-medium text-gray-900">
             Password
           </label>
-          <div class="text-sm">
-            <a href="/contacts" class="font-semibold text-indigo-600 hover:text-indigo-500">
-              Forgot password?
-            </a>
-          </div>
+
         </div>
         <div class="mt-2">
           <input

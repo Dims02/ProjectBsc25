@@ -44,10 +44,9 @@
         <ul class="mt-4 space-y-3">
             <?php if (!empty($recentSurveys)): ?>
                 <?php foreach ($recentSurveys as $survey): ?>
-                    <li class="flex items-center justify-between bg-gray-50 p-4 rounded-md">
+                    <li class="flex items-center justify-between bg-gray-200 p-4 rounded-md">
                         <div>
                             <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
-                            <p class="text-gray-600 text-sm">Completed on: <?= htmlspecialchars($survey->completed_date, ENT_QUOTES, 'UTF-8') ?></p>
                         </div>
                         <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
                 View Results

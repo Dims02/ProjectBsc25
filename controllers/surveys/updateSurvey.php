@@ -47,13 +47,8 @@ if (!$survey_id || !$user_id) {
 if ($action === 'addGroup') {
     $newGroupId = newQuestionGroup($survey_id, '', '');
     header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($newGroupId) . "&success=Group+Created");
-    exit;
 }
 
-if (!$group_id) {
-    header("Location: /surveys");
-    exit;
-}
 
 // 1a. Delete removed options.
 if (is_array($removed_options) && !empty($removed_options)) {
@@ -80,7 +75,9 @@ if (!empty($removed_group)) {
 updateSurvey($survey_id, $title, $description);
 
 // 3. Update the current Question Group.
-updateQuestionGroup($group_id, $questionGroupTitle, $recommendation);
+if ($group_id) {
+    updateQuestionGroup($group_id, $questionGroupTitle, $recommendation);
+}
 
 // 4. Update each existing question.
 foreach ($questionsData as $question_id => $questionText) {

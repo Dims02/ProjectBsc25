@@ -2,7 +2,7 @@
 <?php require_once __DIR__ . '/../partials/nav.php'; ?>
 
 <!-- Main Content -->
-<main class="flex-grow p-4 pb-20 ">
+<main class="flex-grow p-4 pb-20 max-w-7xl mx-auto">
   
   
   <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow  bg-opacity-50" id="survey-form">
@@ -177,13 +177,17 @@
         <div class="p-2 bg-red-100 text-red-600 rounded">
           <?= isset($errormsg) ? htmlspecialchars($errormsg, ENT_QUOTES, 'UTF-8') : 'No question group available.' ?>
         </div>
+        <div id="add-question-wrapper" class="flex items-center justify-end pt-3">
+          <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+            Update Survey
+          </button>
+        </div>
+        
       <?php endif; ?>
 
       <!-- Final Submit Button -->
       <div class="flex justify-end">
-
       </div>
-    
   </div>
   </form>
 </main>

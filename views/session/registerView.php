@@ -8,6 +8,9 @@
     <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
       Register a new account
     </h2>
+    <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-red-600">
+    <?= isset($error) ? $error : '' ?>
+    </h2>
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
