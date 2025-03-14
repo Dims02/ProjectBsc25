@@ -1,5 +1,5 @@
 <?php
-$heading = "Register";
+$heading = "";
 $tabname = "Register";
 $pos = "max-w-7xl";
 

@@ -1,5 +1,5 @@
 <?php
-$heading = "Sign Out";
+$heading = "";
 $tabname = "Sign Out";
 $pos = "max-w-7xl";
 // Clear session and JWT cookie

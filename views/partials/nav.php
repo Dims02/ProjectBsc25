@@ -87,7 +87,7 @@ $highlightColor = "bg-indigo-600 text-white";
 <!-- Add Alpine.js -->
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <main style="
-  background-image: url('media/mainbg.png');
+  background-image: url('media/bg5.jpg');
   min-height: 100vh;
   background-size: cover;
   background-position: center;
