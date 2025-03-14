@@ -43,6 +43,18 @@ if ($action === 'next') {
         header("Location: /thankyou");
         exit;
     }
+} elseif ($action === 'previous') { 
+    // Decrement group index
+    $prev_group_index = (int)$group_index - 1;
+    if ($prev_group_index >= 0) {
+        $prev_group_id = $questionGroups[$prev_group_index]->id;
+        header("Location: /survey?id=" . urlencode($survey_id) . "&groupID=" . urlencode($prev_group_id));
+        exit;
+    } else {
+        // No previous group; redirect to the current survey page
+        header("Location: /survey?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id));
+        exit;
+    }
 } elseif ($action === 'submit') {
     // Final submission; redirect to thank-you page
     header("Location: /thankyou");

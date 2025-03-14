@@ -13,7 +13,7 @@ if ($decodedJWT !== false) {
 $highlightColor = "bg-indigo-600 text-white";
 ?>
 
-<nav class="bg-gray-800  top-0 z-50">
+<nav class="bg-gray-800 sticky top-0 z-50">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-14 items-center justify-between">
       <div class="flex items-center">
@@ -25,7 +25,7 @@ $highlightColor = "bg-indigo-600 text-white";
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-4">
             <a href="/dashboard" class="<?= urlIs('/dashboard') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-            <a href="/surveys" class="<?= urlIs('/surveys') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Survey</a>
+            <a href="/surveys" class="<?= urlIs('/surveys') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Surveys</a>
             <a href="/about" class="<?= urlIs('/about') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
             <a href="/contacts" class="<?= urlIs('/contacts') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact us</a>
           </div>
