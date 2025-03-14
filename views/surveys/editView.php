@@ -95,7 +95,7 @@
             name="recommendation" 
             rows="2" 
             placeholder="Enter recommendation..." 
-            class="w-full p-2 border border-gray-300 rounded"
+            class="w-full p-2 border border-gray-300 rounded auto-resize"
           ><?= htmlspecialchars($currentGroup->recommendation, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
       </div>
@@ -113,14 +113,13 @@
                 &times;
               </button>
             </div>
-            <input 
-              type="text" 
+            <textarea 
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
-              value="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
               placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
-              class="w-full p-2 border border-gray-300 rounded mt-2"
-            >
+              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize"
+            ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textarea>
+
             <!-- Options Container -->
             <div id="mc-options-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="ml-4 pt-4">
               <div class="option-container">
@@ -312,4 +311,20 @@
       });
     }
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select all textareas with the auto-resize class.
+    var textareas = document.querySelectorAll('textarea.auto-resize');
+    textareas.forEach(function(textarea) {
+        // Function to adjust the height of a textarea.
+        function autoExpand() {
+            textarea.style.height = 'auto'; // Reset height
+            textarea.style.height = textarea.scrollHeight + 'px'; // Set to scrollHeight
+        }
+        // Adjust height on page load.
+        autoExpand();
+        // Add event listener to adjust height on input.
+        textarea.addEventListener('input', autoExpand);
+    });
+});
 </script>

@@ -258,31 +258,35 @@ function isAdminFromJWT() {
 function userAnsweredSurveyFully($userId, $surveyId) {
     global $pdo;
     
-    // Get the total number of questions in the survey by joining with question_groups.
+    // Count only answerable questions (those with at least one option)
     $stmt = $pdo->prepare("
         SELECT COUNT(*) AS total 
         FROM questions q
         INNER JOIN question_groups qg ON q.group_id = qg.id
         WHERE qg.survey_id = :survey_id
+          AND EXISTS (SELECT 1 FROM options o WHERE o.question_id = q.id)
     ");
     $stmt->execute(['survey_id' => $surveyId]);
     $totalQuestions = (int)$stmt->fetch(PDO::FETCH_OBJ)->total;
     
-    // Get the number of responses provided by the user for questions in that survey.
+    // Count the number of distinct answerable questions the user has answered
     $stmt = $pdo->prepare("
-        SELECT COUNT(*) AS answered 
+        SELECT COUNT(DISTINCT r.question_id) AS answered 
         FROM responses r
         INNER JOIN questions q ON r.question_id = q.id
         INNER JOIN question_groups qg ON q.group_id = qg.id
         WHERE r.user_id = :user_id 
           AND qg.survey_id = :survey_id
+          AND EXISTS (SELECT 1 FROM options o WHERE o.question_id = q.id)
     ");
     $stmt->execute(['user_id' => $userId, 'survey_id' => $surveyId]);
     $answered = (int)$stmt->fetch(PDO::FETCH_OBJ)->answered;
     
-    // The survey is fully answered if the number of responses matches the total number of questions.
+    // The survey is fully answered if the user has provided answers
+    // to every question that is answerable.
     return ($totalQuestions > 0 && $answered === $totalQuestions);
 }
+
 
 function getFullyAnsweredSurveyIds($userId) {
     // Assuming getAllSurveys() retrieves surveys with property 'id'

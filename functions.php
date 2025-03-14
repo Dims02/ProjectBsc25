@@ -32,4 +32,5 @@ function verifyJWT($token) {
         return false;
     }
 }
+
 ?>

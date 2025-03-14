@@ -1,3 +1,4 @@
+
 <?php require_once __DIR__ . '/../partials/header.php'; ?>
 <?php require_once __DIR__ . '/../partials/nav.php'; ?>  
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
@@ -8,13 +9,15 @@
     <h2 class="mt-5 text-center text-2xl font-bold tracking-tight text-gray-900">
       Register a new account
     </h2>
-    <h2 class="mt-5 text-center text-2xl font-bold tracking-tight text-red-600">
-    <?= isset($error) ? $error : '' ?>
-    </h2>
+    <?php if (!empty($error)) : ?>
+      <h2 class="mt-5 text-center text-2xl font-bold tracking-tight text-red-600">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
+      </h2>
+    <?php endif; ?>
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form class="space-y-6" action="#" method="POST">
+    <form class="space-y-6" method="POST" action="#">
       <div>
         <label for="email" class="block text-sm font-medium text-gray-900">
           Email address
@@ -32,12 +35,9 @@
       </div>
 
       <div>
-        <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm font-medium text-gray-900">
-            Password
-          </label>
-
-        </div>
+        <label for="password" class="block text-sm font-medium text-gray-900">
+          Password
+        </label>
         <div class="mt-2">
           <input
             type="password"
@@ -50,10 +50,21 @@
         </div>
       </div>
 
+      <!-- Honeypot field (hidden from users) -->
+      <div style="display: none;">
+        <label for="website">Website</label>
+        <input
+          type="text"
+          name="website"
+          id="website"
+          value=""
+          autocomplete="off"
+        >
+      </div>
+
       <div>
         <button
           type="submit"
-		  href="/register"
           class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-indigo-600"
         >
           Register
@@ -66,11 +77,8 @@
       <a href="/login" class="inline-block rounded-md border border-indigo-600 px-4 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition">
         Login instead
       </a>
-      <div>
-      </div>
     </div>
   </div>
 </div>
 
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>
-

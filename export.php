@@ -25,7 +25,7 @@ global $pdo;
 
 // Retrieve recommendations.
 if ($surveyId) {
-    $results = getExportRecommendation($surveyId);
+    $results = getExportRecommendation($surveyId, $user->id);
 } else {
     header("Location: /surveys");
     exit;
@@ -38,19 +38,24 @@ if ($type === 'pdf') {
     $latexTemplate = include 'latex_template.php';
     
     // Build recommendations LaTeX string
-    $recs = "";
-    foreach ($results as $row) {
-        $title = addslashes($row['title']);
-        $rec   = addslashes($row['recommendation']);
-        $recs .= "\\subsection*{Title: $title}\n";
-        $recs .= "$rec \\\\[1em]\n";
-        $recs .= "\\hrule\n\\vspace{1em}\\n";
+    if (empty($results)) {
+        // If there are no recommendations, set a compliance message.
+        $recs = "The entity is fully compliant with the directive.";
+    } else {
+        $recs = "";
+        foreach ($results as $row) {
+            $title = addslashes($row['title']);
+            $rec   = addslashes($row['recommendation']);
+            $recs .= "\\subsection*{Title: $title}\n";
+            $recs .= "$rec \\\\[1em]\n";
+            $recs .= "\\hrule\n\\vspace{1em}\n";
+        }
     }
     
     // Define placeholders to be replaced in template
     $placeholders = [
         '%SURVEY_TITLE%'    => addslashes($survey->title),
-        '%DOCUMENT_AUTHOR%' => addslashes($user->name . (!empty($user->entity) ? " ({$user->entity})" : '')),
+        '%DOCUMENT_AUTHOR%' => addslashes($user->name . (!empty($user->entity) ? " ({$user->entity})" : 'Unknown')),
         '%DOCUMENT_DATE%'   => date('d F Y'),
         '%RECOMMENDATIONS%' => $recs,
         '%LOGO_PATH%'       => 'media/ubiOriginal.jpg',  // make sure the path is correct

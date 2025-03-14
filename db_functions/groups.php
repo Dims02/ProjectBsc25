@@ -112,12 +112,32 @@ function getLastGroupId($survey_id) {
     return $result ? $result->id : null;
 }
 
-function getExportRecommendation($survey_id) {
+function getExportRecommendation($survey_id, $user_id) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id, title, recommendation FROM question_groups WHERE survey_id = :survey_id");
-    $stmt->execute(['survey_id' => $survey_id]);
+    $stmt = $pdo->prepare("
+        SELECT qg.id, qg.title, qg.recommendation
+        FROM question_groups qg
+        WHERE qg.survey_id = :survey_id
+          AND EXISTS (
+              SELECT 1
+              FROM questions q
+              JOIN responses r ON r.question_id = q.id
+              WHERE q.group_id = qg.id
+                AND r.user_id = :user_id
+                AND r.answer NOT IN (
+                    SELECT option_text 
+                    FROM options 
+                    WHERE question_id = q.id AND correct = 1
+                )
+          )
+    ");
+    $stmt->execute([
+        'survey_id' => $survey_id,
+        'user_id'   => $user_id
+    ]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 
