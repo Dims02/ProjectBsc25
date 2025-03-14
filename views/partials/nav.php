@@ -93,4 +93,3 @@ $highlightColor = "bg-indigo-600 text-white";
   background-position: center;
   background-repeat: no-repeat;
 ">
-  <!-- Your content goes here -->
