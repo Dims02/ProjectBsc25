@@ -13,7 +13,7 @@ if ($decodedJWT !== false) {
 $highlightColor = "bg-indigo-600 text-white";
 ?>
 
-<nav class="bg-gray-800 sticky top-0 z-50">
+<nav class="bg-gray-800  top-0 z-50">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-14 items-center justify-between">
       <div class="flex items-center">

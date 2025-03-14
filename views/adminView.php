@@ -32,7 +32,7 @@
                       : ($user->name . ' ' . $user->surname)
                   );
                 } else {
-                  echo "Unknown";
+                  echo "Deleted User";
                 }
               ?>
             </td>
