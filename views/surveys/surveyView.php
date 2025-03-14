@@ -25,7 +25,7 @@
           <?php foreach ($questions as $question): ?>
             <div class="mb-4 bg-white shadow rounded-lg p-4">
               <label class="block text-lg font-medium text-gray-700 mb-2">
-                <?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>
+                <?= $question->text ?>
               </label>
               <?php 
                 $options = getOptionsByQuestionId($question->id);

@@ -43,7 +43,6 @@ if (!$survey_id || !$user_id) {
     header("Location: /surveys");
     exit;
 }
-
 if ($action === 'addGroup') {
     $newGroupId = newQuestionGroup($survey_id, '', '');
     header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($newGroupId) . "&success=Group+Created");
@@ -73,18 +72,15 @@ if (!empty($removed_group)) {
 
 // 2. Update Survey Details.
 updateSurvey($survey_id, $title, $description);
-
 // 3. Update the current Question Group.
 if ($group_id) {
     updateQuestionGroup($group_id, $questionGroupTitle, $recommendation);
 }
-
 // 4. Update each existing question.
 foreach ($questionsData as $question_id => $questionText) {
     $question = new Question($question_id, $group_id, trim($questionText));
     updateQuestion($question);
 }
-
 // 4.5. Insert new questions.
 if (is_array($newQuestionsData)) {
     foreach ($newQuestionsData as $newQuestionText) {
