@@ -27,7 +27,6 @@
           <textarea 
             name="description" 
             id="description" 
-            rows="2" 
             placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
             class="w-full p-2 border border-gray-300 rounded"
           ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
@@ -93,7 +92,6 @@
           <textarea 
             id="recommendation" 
             name="recommendation" 
-            rows="2" 
             placeholder="Enter recommendation..." 
             class="w-full p-2 border border-gray-300 rounded auto-resize"
           ><?= htmlspecialchars($currentGroup->recommendation, ENT_QUOTES, 'UTF-8') ?></textarea>
