@@ -28,7 +28,7 @@
             name="description" 
             id="description" 
             placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
-            class="w-full p-2 border border-gray-300 rounded"
+            class="w-full p-2 border border-gray-300 rounded auto-resize"
           ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
       </div>
@@ -336,6 +336,7 @@ tinymce.init({
       tinycomments_mode: 'embedded',
       tinycomments_author: 'Author name',
       autoresize_min_height: 50,
+      height: "200",
       mergetags_list: [
         { value: 'First.Name', title: 'First Name' },
         { value: 'Email', title: 'Email' },

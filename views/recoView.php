@@ -18,10 +18,10 @@
     <?php if (!empty($incorrectResponses)): ?>
       <?php foreach ($incorrectResponses as $item): ?>
         <div class="bg-white shadow rounded p-6 mb-4">
-          <h2 class="text-xl font-semibold mb-2">Question: <?= htmlspecialchars($item['question'], ENT_QUOTES, 'UTF-8') ?></h2>
-          <p class="mb-1"><strong>Your Answer:</strong> <?= htmlspecialchars($item['your_answer'], ENT_QUOTES, 'UTF-8') ?></p>
-          <p class="mb-1"><strong>Correct Answer:</strong> <?= htmlspecialchars($item['correct_answer'], ENT_QUOTES, 'UTF-8') ?></p>
-          <p class="mb-1 text-indigo-600"><strong>Recommendation:</strong> <?= htmlspecialchars($item['recommendation'], ENT_QUOTES, 'UTF-8') ?></p>
+          <h2 class="text-xl font-semibold mb-2">Question: <?= $item['question'] ?></h2>
+          <p class="mb-1"><strong>Your Answer:</strong> <?= $item['your_answer'] ?></p>
+          <p class="mb-1"><strong>Correct Answer:</strong> <?= $item['correct_answer'] ?></p>
+          <p class="mb-1 text-indigo-600"><strong>Recommendation:</strong> <?= $item['recommendation'] ?></p>
         </div>
       <?php endforeach; ?>
     <?php else: ?>
