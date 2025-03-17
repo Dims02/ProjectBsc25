@@ -111,12 +111,12 @@
                 &times;
               </button>
             </div>
-            <textarea 
+            <textareatiny 
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
               placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
               class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize"
-            ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textarea>
+            ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textareatiny>
 
             <!-- Options Container -->
             <div id="mc-options-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="ml-4 pt-4">
@@ -327,7 +327,7 @@
 });
 
 tinymce.init({
-      selector: 'textarea',  // Use the ID of your textarea or a selector that targets it
+      selector: 'textareatiny',  // Use the ID of your textarea or a selector that targets it
       plugins: [
         // Core editing features
         'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize','autosave',
