@@ -327,7 +327,7 @@
 });
 
 tinymce.init({
-      selector: 'textarea:not(.no-tinymce)',  // Use the ID of your textarea or a selector that targets it
+      selector: 'textarea:not(.no-tiny)',  // Use the ID of your textarea or a selector that targets it
       plugins: [
         // Core editing features
         'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize','autosave',
