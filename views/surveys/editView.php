@@ -28,7 +28,7 @@
             name="description" 
             id="description" 
             placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
-            class="w-full p-2 border border-gray-300 rounded auto-resize"
+            class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
           ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
       </div>
@@ -115,7 +115,7 @@
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
               placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
-              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize no-tiny"
+              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize "
             ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textarea>
 
             <!-- Options Container -->
