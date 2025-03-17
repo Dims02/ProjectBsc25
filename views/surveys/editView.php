@@ -93,7 +93,7 @@
             id="recommendation" 
             name="recommendation" 
             placeholder="Enter recommendation..." 
-            class="w-full p-2 border border-gray-300 rounded auto-resize"
+            class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
           ><?= htmlspecialchars($currentGroup->recommendation, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
       </div>
@@ -115,7 +115,7 @@
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
               placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
-              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize"
+              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize no-tiny"
             ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textarea>
 
             <!-- Options Container -->
@@ -327,7 +327,7 @@
 });
 
 tinymce.init({
-      selector: 'textarea',  // Use the ID of your textarea or a selector that targets it
+      selector: 'textarea:not(.no-tinymce)',  // Use the ID of your textarea or a selector that targets it
       plugins: [
         // Core editing features
         'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize','autosave',
