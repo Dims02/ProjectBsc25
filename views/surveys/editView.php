@@ -336,7 +336,7 @@ tinymce.init({
       tinycomments_mode: 'embedded',
       tinycomments_author: 'Author name',
       autoresize_min_height: 50,
-      height: "200",
+      height: "300",
       mergetags_list: [
         { value: 'First.Name', title: 'First Name' },
         { value: 'Email', title: 'Email' },
