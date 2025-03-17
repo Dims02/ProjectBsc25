@@ -69,9 +69,8 @@ if ($type === 'pdf') {
     $texFile = $tempDir . DIRECTORY_SEPARATOR . 'export_' . time() . '.tex';
     $pdfFile = str_replace('.tex', '.pdf', $texFile);
     file_put_contents($texFile, $latexCode);
-    
-    // Compile with pdflatex
-    $pdflatexPath = '"C:\Users\dimat\AppData\Local\Programs\MiKTeX\miktex\bin\x64\pdflatex.exe"';
+
+    $pdflatexPath = '"fpdf186/pdflatex.exe"';
     $command = $pdflatexPath . " -interaction=nonstopmode -output-directory=" . escapeshellarg($tempDir) . " " . escapeshellarg($texFile) . " 2>&1";
     $outputLatex = shell_exec($command);
     

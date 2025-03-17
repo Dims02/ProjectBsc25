@@ -9,6 +9,8 @@ $charset = "utf8mb4";
 $dsn = "mysql:host=localhost;port=$port;dbname=$dbname;charset=$charset";
 $pdo = new PDO($dsn, "root", "");
 
+$pdflatexPath = '"C:\Users\dimat\AppData\Local\Programs\MiKTeX\miktex\bin\x64\pdflatex.exe"';
+
 $highlightColor =  "bg-indigo-600 text-white";
 $bgcolor = "bg-gray-100";
 $global_button_color = "bg-gray-800";
