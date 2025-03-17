@@ -3,7 +3,7 @@ if (!isLoggedIn()) {
     header("Location: /login");
     exit;
 }
-
+require_once "config.php";
 $surveyId = isset($_GET['survey_id']) ? (int)$_GET['survey_id'] : null;
 $type     = isset($_GET['type']) ? $_GET['type'] : 'json';
 
