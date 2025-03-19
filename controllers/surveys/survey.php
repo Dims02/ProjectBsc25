@@ -19,13 +19,13 @@ if (!$survey) {
     exit;
 }
 
-// Determine the current group by its ID passed via GET parameter "groupID".
+// Determine the current group by its page passed via GET parameter "page".
 // If none is provided, use getNextUnansweredGroup() or default to the first group.
 $currentGroup = false;
-$groupID = $_GET['groupID'] ?? null;
-if ($groupID) {
+$page = $_GET['page'] ?? 0;
+if ($page) {
     foreach ($questionGroups as $group) {
-        if ($group->id == $groupID) {
+        if ($group->page == $page) {
             $currentGroup = $group;
             break;
         }
@@ -33,7 +33,7 @@ if ($groupID) {
 }
 
 if (!$currentGroup) {
-    $currentGroup = getNextUnansweredGroup($survey_id, $_SESSION['user_id']);
+    $currentGroup = getNextUnansweredGroup($survey_id, getUserFromJWT()->id);
     if (!$currentGroup && count($questionGroups) > 0) {
         $currentGroup = $questionGroups[0];
     }
@@ -63,4 +63,4 @@ $tabname = "Survey";
 $bgcolor = "bg-gray-100";
 $pos = "max-w-7xl";
 require "./views/surveys/surveyView.php";
-?>
+

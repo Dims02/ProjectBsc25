@@ -35,24 +35,26 @@ if ($action === 'next') {
     // Increment group index
     $next_group_index = (int)$group_index + 1;
     if ($next_group_index < count($questionGroups)) {
-        $next_group_id = $questionGroups[$next_group_index]->id;
-        header("Location: /survey?id=" . urlencode($survey_id) . "&groupID=" . urlencode($next_group_id));
+        // Get next group's page value
+        $next_page = $questionGroups[$next_group_index]->page;
+        header("Location: /survey?id=" . urlencode($survey_id) . "&page=" . urlencode($next_page));
         exit;
     } else {
         // No next group; redirect to thank-you page
         header("Location: /thankyou");
         exit;
     }
-} elseif ($action === 'previous') { 
+} elseif ($action === 'previous') {
     // Decrement group index
     $prev_group_index = (int)$group_index - 1;
     if ($prev_group_index >= 0) {
-        $prev_group_id = $questionGroups[$prev_group_index]->id;
-        header("Location: /survey?id=" . urlencode($survey_id) . "&groupID=" . urlencode($prev_group_id));
+        $prev_page = $questionGroups[$prev_group_index]->page;
+        header("Location: /survey?id=" . urlencode($survey_id) . "&page=" . urlencode($prev_page));
         exit;
     } else {
-        // No previous group; redirect to the current survey page
-        header("Location: /survey?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id));
+        // No previous group; redirect to the current survey page using the current group's page value
+        $current_page = $questionGroups[$group_index]->page;
+        header("Location: /survey?id=" . urlencode($survey_id) . "&page=" . urlencode($current_page));
         exit;
     }
 } elseif ($action === 'submit') {
@@ -60,8 +62,9 @@ if ($action === 'next') {
     header("Location: /thankyou");
     exit;
 } else {
-    // Fallback: redirect back to the current survey page
-    header("Location: /survey?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id));
+    // Fallback: redirect back to the current survey page using the current group's page value
+    $current_page = $questionGroups[$group_index]->page;
+    header("Location: /survey?id=" . urlencode($survey_id) . "&page=" . urlencode($current_page));
     exit;
 }
-?>
+

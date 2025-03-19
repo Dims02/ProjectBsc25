@@ -9,7 +9,6 @@ if(!isLoggedIn()) {
     exit;
 }
 
-
 if(!isAdminFromJWT()) {
     header("Location: /login");
     exit;
@@ -25,7 +24,6 @@ $questionsData      = $_POST['questions']          ?? []; // Existing questions:
 $newQuestionsData   = $_POST['newQuestions']       ?? []; // New questions: [index => questionText]
 $optionsData        = $_POST['options']            ?? []; // Existing options: options[question_id][option_id] = option_text
 $newOptionsData     = $_POST['newOptions']         ?? []; // New options: newOptions[question_id][] = option_text
-
 // NEW: Correct checkboxes for options.
 $correctOptions     = $_POST['correctOptions']     ?? []; // Existing: correctOptions[question_id][option_id] = "1" if checked
 $newCorrectOptions  = $_POST['newCorrectOptions']  ?? []; // New: newCorrectOptions[question_id][] = "1" if checked
@@ -43,11 +41,31 @@ if (!$survey_id || !$user_id) {
     header("Location: /surveys");
     exit;
 }
+
+// Handle moving groups first
+if ($action === 'moveUp') {
+    if (moveGroupUp($group_id, $survey_id)) {
+        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&success=Group+Moved+Up");
+    } else {
+        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&error=Cannot+Move+Group+Up");
+    }
+    exit;
+}
+
+if ($action === 'moveDown') {
+    if (moveGroupDown($group_id, $survey_id)) {
+        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&success=Group+Moved+Down");
+    } else {
+        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&error=Cannot+Move+Group+Down");
+    }
+    exit;
+}
+
 if ($action === 'addGroup') {
     $newGroupId = newQuestionGroup($survey_id, '', '');
     header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($newGroupId) . "&success=Group+Created");
+    exit;
 }
-
 
 // 1a. Delete removed options.
 if (is_array($removed_options) && !empty($removed_options)) {
@@ -86,7 +104,6 @@ if (is_array($newQuestionsData)) {
     foreach ($newQuestionsData as $newQuestionText) {
         if (trim($newQuestionText) !== '') {
             $newQuestionId = insertQuestion($group_id, trim($newQuestionText));
-            
         }
     }
 }
@@ -117,4 +134,4 @@ if (is_array($newOptionsData)) {
 // 7. Redirect back to the edit page with a success flag.
 header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id));
 exit;
-?>
+

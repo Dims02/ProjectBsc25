@@ -44,16 +44,22 @@
 
       
 
-      <!-- Question Group Navigation Card -->
-      <div class="mb-6 bg-white shadow rounded p-4 border">
+ <!-- Question Group Navigation Card -->
+ <div class="mb-6 bg-white shadow rounded p-4 border">
         <div class="flex items-center justify-between">
           <h3 class="text-2xl font-semibold text-black">Question Groups</h3>
           <div class="flex space-x-4">
-            <button type="submit" name="action" value="addGroup" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-600">
+              <button type="submit" name="action" value="moveDown" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+                <
+              </button>
+              <button type="submit" name="action" value="moveUp" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+                >
+              </button>
+            <button type="submit" name="action" value="addGroup" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
               Add Question Group
             </button>
             <?php if ($currentGroup): ?>
-              <button type="submit" id="remove-group" class="bg-red-500 text-white px-4 py-2 rounded">
+              <button type="submit" id="remove-group" name="action" value="removeGroup" class="bg-red-500 text-white px-4 py-2 rounded">
                 Remove Group
               </button>
             <?php endif; ?>
@@ -134,17 +140,17 @@
                         name="options[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
                         value="<?= htmlspecialchars($option->option_text, ENT_QUOTES, 'UTF-8') ?>" 
                         placeholder="Option text" 
-                        class="w-1/3 p-2 border border-gray-300 rounded mr-2 text-black"
+                        class="w-[85%] p-2 border border-gray-300 rounded mr-2 text-black mr-8"
                       >
-                      <label class="text-gray-600 mr-2">Correct?</label>
                       <input 
                         type="checkbox" 
                         name="correctOptions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
                         value="1" 
                         <?= $option->correct ? 'checked' : '' ?>
+                        style="transform: scale(1.5);"
                       >
                       <!-- Small cross icon for removal, pushed to the far right -->
-                      <button type="button" class="remove-option text-red-500 font-bold text-xl ml-auto">
+                      <button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">
                         &times;
                       </button>
                     </div>
