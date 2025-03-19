@@ -6,6 +6,7 @@
 <main class="flex-grow p-4 pb-20">
   <div class="max-w-5xl mx-auto">
     
+    <?     dd($currentGroup); ?>
     <!-- Optionally display the current question group title -->
     <?php if ($currentGroup && !empty($currentGroup->title)): ?>
       <h2 class="text-3xl font-bold mb-6"><?= htmlspecialchars($currentGroup->title, ENT_QUOTES, 'UTF-8') ?></h2>

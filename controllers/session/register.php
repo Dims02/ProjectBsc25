@@ -9,7 +9,7 @@ $honeypot = $_POST['website'] ?? '';
 
 if (!empty($email) && !empty($password)) {
     if (!empty(trim($honeypot))) {
-        echo "Spam detected. Please try again.";
+        echo "Spam detected.";
         exit;
     }
     
