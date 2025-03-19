@@ -85,7 +85,7 @@ CREATE TABLE `questions` (
   `text` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
-  CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `question_groups` (`id`)
+  CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `question_groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -199,4 +199,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-19 17:51:28
+-- Dump completed on 2025-03-19 17:54:42
