@@ -228,5 +228,16 @@ function moveGroupDown($group_id, $survey_id) {
         return false;
     }
 }
+
+function getQuestionGroupByPage($survey_id, $page) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM question_groups WHERE survey_id = :survey_id AND page = :page LIMIT 1");
+    $stmt->execute([
+        'survey_id' => $survey_id,
+        'page'      => $page
+    ]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
 ?>
 
