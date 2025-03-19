@@ -1,5 +1,4 @@
 <?php
-
 if(!isLoggedIn()) {
     header("Location: /login");
     exit;
@@ -27,19 +26,19 @@ if (!$survey) {
 }
 
 $currentGroup = null;
-$groupID = $_GET['groupID'] ?? null;
-if ($groupID) {
+$page = $_GET['page'] ?? null; // Changed from groupID to page
+if ($page !== null) {
     foreach ($questionGroups as $group) {
-        if ($group->id == $groupID) {
+        if ($group->page == $page) { // Compare page values instead of IDs
             $currentGroup = $group;
             break;
         }
     }
 }
 
-if (!isset($currentGroup)) {
+if (!$currentGroup) {
     if (!empty($questionGroups)) {
-        $currentGroup = getNextUnansweredGroup($survey_id, $userId );
+        $currentGroup = getNextUnansweredGroup($survey_id, $userId);
         if (!$currentGroup) {
             $currentGroup = $questionGroups[0];
         }
@@ -48,7 +47,6 @@ if (!isset($currentGroup)) {
         $currentGroup = null;
     }
 }
-
 
 if ($currentGroup) {
     $groupIds = array_map(function($grp) {
@@ -67,6 +65,7 @@ if ($currentGroup) {
     $currentIndex = null;
     $questions = [];
 }
+
 $heading = "Editing Survey: " . htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8');
 $tabname = "Edit Survey";
 $bgcolor = "bg-gray-100";

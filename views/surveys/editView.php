@@ -3,58 +3,54 @@
 
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20 max-w-7xl mx-auto">
-  
-  
-  <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow  bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
+  <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
     <!-- Survey Details Card -->
-  <div class="mb-6 bg-white shadow rounded p-4 border ">
-        <h2 class="text-2xl font-semibold text-black mb-4 ">
-          Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
-        </h2>
-        <div class="mb-4">
-          <label for="title" class="block text-black font-medium">Survey Title</label>
-          <input 
-            type="text" 
-            name="title" 
-            id="title" 
-            value="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
-            placeholder="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
-            class="w-full p-2 border border-gray-300 rounded"
-          >
-        </div>
-        <div class="mb-4">
-          <label for="description" class="block text-black font-medium">Description</label>
-          <textarea 
-            name="description" 
-            id="description" 
-            placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
-            class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
-          ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
-        </div>
+    <div class="mb-6 bg-white shadow rounded p-4 border ">
+      <h2 class="text-2xl font-semibold text-black mb-4 ">
+        Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
+      </h2>
+      <div class="mb-4">
+        <label for="title" class="block text-black font-medium">Survey Title</label>
+        <input 
+          type="text" 
+          name="title" 
+          id="title" 
+          value="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
+          placeholder="<?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>" 
+          class="w-full p-2 border border-gray-300 rounded"
+        >
       </div>
-  <div class="max-w-7xl mx-auto">
-    <!-- Combined Survey & Question Group Edit Form -->
-    
+      <div class="mb-4">
+        <label for="description" class="block text-black font-medium">Description</label>
+        <textarea 
+          name="description" 
+          id="description" 
+          placeholder="<?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>" 
+          class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
+        ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto">
+      <!-- Combined Survey & Question Group Edit Form -->
       
       <!-- Hidden fields -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
       <?php if ($currentGroup): ?>
-        <input type="hidden" name="group_id" value="<?= htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') ?>">
+        <!-- Instead of group_id, we pass the current page number -->
+        <input type="hidden" name="page" value="<?= htmlspecialchars($currentGroup->page, ENT_QUOTES, 'UTF-8') ?>">
       <?php endif; ?>
 
-      
-
- <!-- Question Group Navigation Card -->
- <div class="mb-6 bg-white shadow rounded p-4 border">
+      <!-- Question Group Navigation Card -->
+      <div class="mb-6 bg-white shadow rounded p-4 border">
         <div class="flex items-center justify-between">
           <h3 class="text-2xl font-semibold text-black">Question Groups</h3>
           <div class="flex space-x-4">
-              <button type="submit" name="action" value="moveDown" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
-                <
-              </button>
-              <button type="submit" name="action" value="moveUp" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
-                >
-              </button>
+            <button type="submit" name="action" value="moveDown" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+              &lt;
+            </button>
+            <button type="submit" name="action" value="moveUp" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+              &gt;
+            </button>
             <button type="submit" name="action" value="addGroup" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
               Add Question Group
             </button>
@@ -70,15 +66,15 @@
           <?php $numGroups = getNumberOfGroups($survey->id); ?>
           <?php for ($i = 1; $i <= $numGroups; $i++): ?>
             <?php $group = $questionGroups[$i - 1]; ?>
-            <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&groupID=<?= htmlspecialchars($group->id, ENT_QUOTES, 'UTF-8') ?>"
-              class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->id == $group->id) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
-              <?= $i ?>
+            <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&page=<?= htmlspecialchars($group->page, ENT_QUOTES, 'UTF-8') ?>"
+              class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->page == $group->page) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
+              <?= $group->page ?>
             </a>
           <?php endfor; ?>
         </div>
       </div>
 
-      <?php ?>
+
       <?php if ($currentGroup): ?>
       <!-- Group Details Card -->
       <div id="group-details-card" class="mb-6 bg-white shadow rounded p-4 border">
@@ -140,7 +136,7 @@
                         name="options[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
                         value="<?= htmlspecialchars($option->option_text, ENT_QUOTES, 'UTF-8') ?>" 
                         placeholder="Option text" 
-                        class="w-[85%] p-2 border border-gray-300 rounded mr-2 text-black mr-8"
+                        class="w-[85%] p-2 border border-gray-300 rounded mr-2 text-black"
                       >
                       <input 
                         type="checkbox" 
@@ -154,15 +150,13 @@
                         &times;
                       </button>
                     </div>
-
                   <?php $j++; endforeach; ?>
                 <?php endif; ?>
               </div>
               <!-- For existing questions, the Add Option button carries a data-question-id -->
-              <button type="button" class="add-option text-indigo-600  text-xl ml-2 border border-indigo-600 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+              <button type="button" class="add-option text-indigo-600 text-xl ml-2 border border-indigo-600 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 +
               </button>
-              
             </div>
           </div>
         <?php $i++; endforeach; ?>
@@ -185,12 +179,10 @@
             Update Survey
           </button>
         </div>
-        
       <?php endif; ?>
 
       <!-- Final Submit Button -->
-      <div class="flex justify-end">
-      </div>
+      <div class="flex justify-end"></div>
   </div>
   </form>
 </main>
@@ -217,7 +209,6 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var surveyForm = document.getElementById('survey-form');
-
     // Use delegation on surveyForm for "add-option" clicks.
     surveyForm.addEventListener('click', function(e) {
       if (e.target && e.target.classList.contains('add-option')) {
@@ -320,33 +311,29 @@
     // Select all textareas with the auto-resize class.
     var textareas = document.querySelectorAll('textarea.auto-resize');
     textareas.forEach(function(textarea) {
-        // Function to adjust the height of a textarea.
-        function autoExpand() {
-            textarea.style.height = 'auto'; // Reset height
-            textarea.style.height = textarea.scrollHeight + 'px'; // Set to scrollHeight
-        }
-        // Adjust height on page load.
-        autoExpand();
-        // Add event listener to adjust height on input.
-        textarea.addEventListener('input', autoExpand);
+      function autoExpand() {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+      autoExpand();
+      textarea.addEventListener('input', autoExpand);
     });
-});
+  });
 
-tinymce.init({
-      selector: 'textarea:not(.no-tiny)',  // Use the ID of your textarea or a selector that targets it
-      plugins: [
-        // Core editing features
-        'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize','autosave',
-        ],
-      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-      tinycomments_mode: 'embedded',
-      tinycomments_author: 'Author name',
-      autoresize_min_height: 50,
-              height: "300",
-      mergetags_list: [
-        { value: 'First.Name', title: 'First Name' },
-        { value: 'Email', title: 'Email' },
-      ],
-      ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-    });
+  tinymce.init({
+    selector: 'textarea:not(.no-tiny)',
+    plugins: [
+      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize','autosave',
+    ],
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    tinycomments_mode: 'embedded',
+    tinycomments_author: 'Author name',
+    autoresize_min_height: 50,
+    height: "300",
+    mergetags_list: [
+      { value: 'First.Name', title: 'First Name' },
+      { value: 'Email', title: 'Email' },
+    ],
+    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+  });
 </script>

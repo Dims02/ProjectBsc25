@@ -14,26 +14,28 @@ if(!isAdminFromJWT()) {
     exit;
 }
 
-$survey_id          = $_POST['survey_id']          ?? null;
-$group_id           = $_POST['group_id']           ?? null;
-$title              = $_POST['title']              ?? getSurvey($survey_id)->title;
-$questionGroupTitle = $_POST['group_title']        ?? getQuestionGroup($group_id)->title;
-$description        = $_POST['description']        ?? getSurvey($survey_id)->description;
-$recommendation     = $_POST['recommendation']     ?? '';
-$questionsData      = $_POST['questions']          ?? []; // Existing questions: [question_id => questionText]
-$newQuestionsData   = $_POST['newQuestions']       ?? []; // New questions: [index => questionText]
-$optionsData        = $_POST['options']            ?? []; // Existing options: options[question_id][option_id] = option_text
-$newOptionsData     = $_POST['newOptions']         ?? []; // New options: newOptions[question_id][] = option_text
-// NEW: Correct checkboxes for options.
-$correctOptions     = $_POST['correctOptions']     ?? []; // Existing: correctOptions[question_id][option_id] = "1" if checked
-$newCorrectOptions  = $_POST['newCorrectOptions']  ?? []; // New: newCorrectOptions[question_id][] = "1" if checked
+$survey_id = $_POST['survey_id'] ?? null;
+// Instead of group_id, we now read the page from the hidden field
+$page = $_POST['page'] ?? null;
+$currentGroup = $page ? getQuestionGroupByPage($survey_id, $page) : null;
+$group_id = $currentGroup ? $currentGroup->id : null;
 
-$user_id            = $_SESSION['user_id']         ?? null;
+$title = $_POST['title'] ?? getSurvey($survey_id)->title;
+$questionGroupTitle = $_POST['group_title'] ?? ($group_id ? getQuestionGroup($group_id)->title : '');
+$description = $_POST['description'] ?? getSurvey($survey_id)->description;
+$recommendation = $_POST['recommendation'] ?? '';
+$questionsData = $_POST['questions'] ?? [];
+$newQuestionsData = $_POST['newQuestions'] ?? [];
+$optionsData = $_POST['options'] ?? [];
+$newOptionsData = $_POST['newOptions'] ?? [];
+$correctOptions = $_POST['correctOptions'] ?? [];
+$newCorrectOptions = $_POST['newCorrectOptions'] ?? [];
+$user_id = $_SESSION['user_id'] ?? null;
 
 // Removed items.
-$removed_options    = $_POST['removed_options']    ?? [];
-$removed_questions  = $_POST['removed_questions']  ?? [];
-$removed_group      = $_POST['removed_group']      ?? '';
+$removed_options = $_POST['removed_options'] ?? [];
+$removed_questions = $_POST['removed_questions'] ?? [];
+$removed_group = $_POST['removed_group'] ?? '';
 
 $action = $_POST['action'] ?? '';
 
@@ -45,25 +47,31 @@ if (!$survey_id || !$user_id) {
 // Handle moving groups first
 if ($action === 'moveUp') {
     if (moveGroupUp($group_id, $survey_id)) {
-        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&success=Group+Moved+Up");
+        // After moving, re-fetch the current group's page number.
+        $currentGroup = getQuestionGroupByPage($survey_id, $page);
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page) . "&success=Group+Moved+Up");
     } else {
-        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&error=Cannot+Move+Group+Up");
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Up");
     }
     exit;
 }
 
 if ($action === 'moveDown') {
     if (moveGroupDown($group_id, $survey_id)) {
-        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&success=Group+Moved+Down");
+        $currentGroup = getQuestionGroupByPage($survey_id, $page);
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page) . "&success=Group+Moved+Down");
     } else {
-        header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id) . "&error=Cannot+Move+Group+Down");
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Down");
     }
     exit;
 }
 
 if ($action === 'addGroup') {
-    $newGroupId = newQuestionGroup($survey_id, '', '');
-    header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($newGroupId) . "&success=Group+Created");
+    // When adding, you might decide what page number to assign (e.g., next available page).
+    // For simplicity, here we assign page 0.
+    $newGroupId = newQuestionGroup($survey_id, '', '', 0);
+    $newGroup = getQuestionGroup($newGroupId);
+    header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($newGroup->page) . "&success=Group+Created");
     exit;
 }
 
@@ -84,7 +92,11 @@ if (is_array($removed_questions) && !empty($removed_questions)) {
 // 1c. If a group removal was requested, delete the group and redirect immediately.
 if (!empty($removed_group)) {
     deleteQuestionGroup($removed_group);
-    header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . getLastGroupId($survey_id));
+    // Re-fetch last group's page after deletion
+    $lastGroup = getLastGroupId($survey_id);
+    $lastGroupData = $lastGroup ? getQuestionGroup($lastGroup) : null;
+    $redirectPage = $lastGroupData ? $lastGroupData->page : 0;
+    header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($redirectPage));
     exit;
 }
 
@@ -112,7 +124,6 @@ if (is_array($newQuestionsData)) {
 if (is_array($optionsData)) {
     foreach ($optionsData as $question_id => $opts) {
         foreach ($opts as $option_id => $option_text) {
-            // Determine if this option is marked correct.
             $correct = isset($correctOptions[$question_id][$option_id]) ? 1 : 0;
             updateOption($option_id, trim($option_text), $correct);
         }
@@ -132,6 +143,6 @@ if (is_array($newOptionsData)) {
 }
 
 // 7. Redirect back to the edit page with a success flag.
-header("Location: /edit?id=" . urlencode($survey_id) . "&groupID=" . urlencode($group_id));
+header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page));
 exit;
-
+?>
