@@ -70,7 +70,7 @@ if ($type === 'pdf') {
     $pdfFile = str_replace('.tex', '.pdf', $texFile);
     file_put_contents($texFile, $latexCode);
 
-    $pdflatexPath = '"fpdf186/pdflatex.exe"';
+    $pdflatexPath = "/usr/bin/pdflatex";
     $command = $pdflatexPath . " -interaction=nonstopmode -output-directory=" . escapeshellarg($tempDir) . " " . escapeshellarg($texFile) . " 2>&1";
     $outputLatex = shell_exec($command);
     
