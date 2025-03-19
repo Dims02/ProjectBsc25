@@ -1,6 +1,4 @@
 <?php
-
-
 class User {
     public $id;
     public $email;
@@ -44,7 +42,8 @@ class QuestionGroup {
     public $questions = [];
     public $recommendation;
 
-    public function __construct($id, $survey_id) {
+    // Now, we also declare a default for recommendation.
+    public function __construct($id, $survey_id, $recommendation = '') {
         $this->id = $id;
         $this->survey_id = $survey_id;
         $this->recommendation = $recommendation;
@@ -55,11 +54,14 @@ class Question {
     public $id;
     public $group_id;
     public $text;
+    public $recommendation; // Added property to avoid dynamic creation
 
-    public function __construct($id, $group_id, $text) {
-		$this->id = $id;
+    // Updated constructor now accepts an optional recommendation parameter.
+    public function __construct($id, $group_id, $text, $recommendation = '') {
+        $this->id = $id;
         $this->group_id = $group_id;
         $this->text = $text;
+        $this->recommendation = $recommendation;
     }
 }
 
@@ -87,3 +89,4 @@ class Options {
         $this->text = $text;
     }
 }
+?>

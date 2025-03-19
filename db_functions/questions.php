@@ -23,14 +23,16 @@ function getQuestionsByGroupId($group_id) {
 
 function updateQuestion($question) {
     global $pdo;
-    $stmt = $pdo->prepare("UPDATE questions SET text = :text, group_id = :group_id WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE questions SET text = :text, group_id = :group_id, recommendation = :recommendation WHERE id = :id");
     $stmt->execute([
-        ':text'     => $question->text,
-        ':group_id' => $question->group_id,
-        ':id'       => $question->id
+        ':text'           => $question->text,
+        ':group_id'       => $question->group_id,
+        ':recommendation' => $question->recommendation,
+        ':id'             => $question->id
     ]);
     return $stmt->rowCount();
 }
+
 
 function deleteQuestion($questionId) {
     global $pdo;
@@ -47,12 +49,13 @@ function deleteQuestion($questionId) {
     $stmt->execute(['questionId' => $questionId]);
 }
 
-function insertQuestion($group_id, $text) {
+function insertQuestion($group_id, $text, $recommendation = '') {
     global $pdo;
-    $stmt = $pdo->prepare("INSERT INTO questions (group_id, text) VALUES (:group_id, :text)");
+    $stmt = $pdo->prepare("INSERT INTO questions (group_id, text, recommendation) VALUES (:group_id, :text, :recommendation)");
     $stmt->execute([
-        'group_id' => $group_id,
-        'text'     => $text
+        'group_id'      => $group_id,
+        'text'          => $text,
+        'recommendation'=> $recommendation
     ]);
     return $pdo->lastInsertId();
 }

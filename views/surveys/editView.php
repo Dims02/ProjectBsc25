@@ -5,8 +5,8 @@
 <main class="flex-grow p-4 pb-20 max-w-7xl mx-auto">
   <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
     <!-- Survey Details Card -->
-    <div class="mb-6 bg-white shadow rounded p-4 border ">
-      <h2 class="text-2xl font-semibold text-black mb-4 ">
+    <div class="mb-6 bg-white shadow rounded p-4 border">
+      <h2 class="text-2xl font-semibold text-black mb-4">
         Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
       </h2>
       <div class="mb-4">
@@ -30,13 +30,14 @@
         ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
       </div>
     </div>
+    
     <div class="max-w-7xl mx-auto">
       <!-- Combined Survey & Question Group Edit Form -->
       
       <!-- Hidden fields -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
       <?php if ($currentGroup): ?>
-        <!-- Instead of group_id, we pass the current page number -->
+        <!-- Instead of group_id, we now pass the current page number -->
         <input type="hidden" name="page" value="<?= htmlspecialchars($currentGroup->page, ENT_QUOTES, 'UTF-8') ?>">
       <?php endif; ?>
 
@@ -67,13 +68,12 @@
           <?php for ($i = 1; $i <= $numGroups; $i++): ?>
             <?php $group = $questionGroups[$i - 1]; ?>
             <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&page=<?= htmlspecialchars($group->page, ENT_QUOTES, 'UTF-8') ?>"
-              class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->page == $group->page) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
+               class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->page == $group->page) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
               <?= $group->page ?>
             </a>
           <?php endfor; ?>
         </div>
       </div>
-
 
       <?php if ($currentGroup): ?>
       <!-- Group Details Card -->
@@ -90,7 +90,7 @@
           >
         </div>
         <div class="mb-4">
-          <label for="recommendation" class="block text-black font-medium">Recommendation</label>
+          <label for="recommendation" class="block text-black font-medium">Group Recommendation</label>
           <textarea 
             id="recommendation" 
             name="recommendation" 
@@ -108,7 +108,6 @@
               <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="text-black font-medium text-lg">
                 Question <?= $i ?>
               </label>
-              <!-- Small cross icon for removal -->
               <button type="button" class="remove-question text-red-500 font-bold text-xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 &times;
               </button>
@@ -117,7 +116,7 @@
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
               placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
-              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize "
+              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize"
             ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textarea>
 
             <!-- Options Container -->
@@ -145,7 +144,6 @@
                         <?= $option->correct ? 'checked' : '' ?>
                         style="transform: scale(1.5);"
                       >
-                      <!-- Small cross icon for removal, pushed to the far right -->
                       <button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">
                         &times;
                       </button>
@@ -153,11 +151,20 @@
                   <?php $j++; endforeach; ?>
                 <?php endif; ?>
               </div>
-              <!-- For existing questions, the Add Option button carries a data-question-id -->
-              <button type="button" class="add-option text-indigo-600 text-xl ml-2 border border-indigo-600 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+              <button type="button" class="mb-5 add-option text-indigo-600 text-xl ml-2 border border-indigo-600 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 +
               </button>
             </div>
+            <!-- Recommendation Text Box for Question -->
+            <label for="question-recommendation" class="block text-black font-medium">Question Recommendation</label>
+            <textarea 
+              id="question-recommendation-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
+              placeholder="Enter recommendation for this question" 
+              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
+            ><?= htmlspecialchars($question->recommendation ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+
+
           </div>
         <?php $i++; endforeach; ?>
         <!-- Add Question Button Wrapper -->
@@ -181,9 +188,9 @@
         </div>
       <?php endif; ?>
 
-      <!-- Final Submit Button -->
+      <!-- Final Submit Button (if needed) -->
       <div class="flex justify-end"></div>
-  </div>
+    </div>
   </form>
 </main>
 
@@ -197,7 +204,6 @@
     <!-- Multiple Choice Options Container -->
     <div class="mb-2 ml-4 new-mc-options">
       <div class="option-container"></div>
-      <!-- For new questions, no data-question-id. The event delegation will locate the container via the closest .new-mc-options -->
       <button type="button" class="add-option hidden bg-indigo-600 text-white px-3 py-1 rounded mt-2">
         + Add Option
       </button>
@@ -209,17 +215,15 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var surveyForm = document.getElementById('survey-form');
-    // Use delegation on surveyForm for "add-option" clicks.
+    // Delegate add-option clicks
     surveyForm.addEventListener('click', function(e) {
       if (e.target && e.target.classList.contains('add-option')) {
         var button = e.target;
         var questionId = button.getAttribute('data-question-id');
         var container;
         if (questionId) {
-          // Existing question: find the container via its id.
           container = document.querySelector('#mc-options-' + questionId + ' .option-container');
         } else {
-          // New question: find the container in the closest .new-mc-options block.
           container = button.closest('.new-mc-options').querySelector('.option-container');
         }
         if (!container) {
@@ -245,7 +249,7 @@
       }
     });
 
-    // Delegate "remove-option" clicks.
+    // Delegate remove-option clicks
     surveyForm.addEventListener('click', function(e) {
       if (e.target && e.target.classList.contains('remove-option')) {
         var row = e.target.closest('.option-row');
@@ -263,17 +267,16 @@
       }
     });
 
-    // Handle "Add Question" button.
+    // Handle Add Question button
     var addQuestionBtn = document.getElementById('add-question');
     addQuestionBtn.addEventListener('click', function() {
       var template = document.getElementById('new-question-template');
       var clone = template.content.cloneNode(true);
-      // Insert the new question card before the add-question wrapper.
       var addQuestionWrapper = document.getElementById('add-question-wrapper');
       addQuestionWrapper.parentNode.insertBefore(clone, addQuestionWrapper);
     });
 
-    // Delegate "remove-question" clicks.
+    // Delegate remove-question clicks
     surveyForm.addEventListener('click', function(e) {
       if (e.target && e.target.classList.contains('remove-question')) {
         var questionBlock = e.target.closest('.question-card');
@@ -291,7 +294,7 @@
       }
     });
 
-    // Handle "Remove Group" button click.
+    // Handle Remove Group button
     var removeGroupBtn = document.getElementById('remove-group');
     if (removeGroupBtn) {
       removeGroupBtn.addEventListener('click', function() {
@@ -308,7 +311,6 @@
   });
 
   document.addEventListener('DOMContentLoaded', function() {
-    // Select all textareas with the auto-resize class.
     var textareas = document.querySelectorAll('textarea.auto-resize');
     textareas.forEach(function(textarea) {
       function autoExpand() {

@@ -4,38 +4,45 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if(!isLoggedIn()) {
+if (!isLoggedIn()) {
     header("Location: /login");
     exit;
 }
 
-if(!isAdminFromJWT()) {
+if (!isAdminFromJWT()) {
     header("Location: /login");
     exit;
 }
 
 $survey_id = $_POST['survey_id'] ?? null;
-// Instead of group_id, we now read the page from the hidden field
+// Instead of reading group_id, we now read the page number
 $page = $_POST['page'] ?? null;
-$currentGroup = $page ? getQuestionGroupByPage($survey_id, $page) : null;
+$currentGroup = ($page !== null) ? getQuestionGroupByPage($survey_id, $page) : null;
+
 $group_id = $currentGroup ? $currentGroup->id : null;
 
-$title = $_POST['title'] ?? getSurvey($survey_id)->title;
-$questionGroupTitle = $_POST['group_title'] ?? ($group_id ? getQuestionGroup($group_id)->title : '');
-$description = $_POST['description'] ?? getSurvey($survey_id)->description;
-$recommendation = $_POST['recommendation'] ?? '';
-$questionsData = $_POST['questions'] ?? [];
-$newQuestionsData = $_POST['newQuestions'] ?? [];
-$optionsData = $_POST['options'] ?? [];
-$newOptionsData = $_POST['newOptions'] ?? [];
-$correctOptions = $_POST['correctOptions'] ?? [];
-$newCorrectOptions = $_POST['newCorrectOptions'] ?? [];
-$user_id = $_SESSION['user_id'] ?? null;
+$title              = $_POST['title']              ?? getSurvey($survey_id)->title;
+$questionGroupTitle = $_POST['group_title']        ?? ($group_id ? getQuestionGroup($group_id)->title : '');
+$description        = $_POST['description']        ?? getSurvey($survey_id)->description;
+$recommendation     = $_POST['recommendation']     ?? '';
+$questionsData      = $_POST['questions']          ?? []; // Existing questions: [question_id => questionText]
+$newQuestionsData   = $_POST['newQuestions']       ?? []; // New questions: [index => questionText]
+$optionsData        = $_POST['options']            ?? []; // Existing options: options[question_id][option_id] = option_text
+$newOptionsData     = $_POST['newOptions']         ?? []; // New options: newOptions[question_id][] = option_text
+
+// NEW: Correct checkboxes for options.
+$correctOptions     = $_POST['correctOptions']     ?? []; // Existing: correctOptions[question_id][option_id] = "1" if checked
+$newCorrectOptions  = $_POST['newCorrectOptions']  ?? []; // New: newCorrectOptions[question_id][] = "1" if checked
+
+// NEW: Question recommendations (for the new recommendation field in questions)
+$questionRecommendations = $_POST['question_recommendations'] ?? [];
+
+$user_id            = $_SESSION['user_id']         ?? null;
 
 // Removed items.
-$removed_options = $_POST['removed_options'] ?? [];
-$removed_questions = $_POST['removed_questions'] ?? [];
-$removed_group = $_POST['removed_group'] ?? '';
+$removed_options    = $_POST['removed_options']    ?? [];
+$removed_questions  = $_POST['removed_questions']  ?? [];
+$removed_group      = $_POST['removed_group']      ?? '';
 
 $action = $_POST['action'] ?? '';
 
@@ -47,7 +54,7 @@ if (!$survey_id || !$user_id) {
 // Handle moving groups first
 if ($action === 'moveUp') {
     if (moveGroupUp($group_id, $survey_id)) {
-        // After moving, re-fetch the current group's page number.
+        // After moving, re-fetch the current group's page
         $currentGroup = getQuestionGroupByPage($survey_id, $page);
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page) . "&success=Group+Moved+Up");
     } else {
@@ -67,8 +74,8 @@ if ($action === 'moveDown') {
 }
 
 if ($action === 'addGroup') {
-    // When adding, you might decide what page number to assign (e.g., next available page).
-    // For simplicity, here we assign page 0.
+    // Decide what page number to assign for the new group.
+    // Here, for simplicity, we assign page 0.
     $newGroupId = newQuestionGroup($survey_id, '', '', 0);
     $newGroup = getQuestionGroup($newGroupId);
     header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($newGroup->page) . "&success=Group+Created");
@@ -92,9 +99,8 @@ if (is_array($removed_questions) && !empty($removed_questions)) {
 // 1c. If a group removal was requested, delete the group and redirect immediately.
 if (!empty($removed_group)) {
     deleteQuestionGroup($removed_group);
-    // Re-fetch last group's page after deletion
-    $lastGroup = getLastGroupId($survey_id);
-    $lastGroupData = $lastGroup ? getQuestionGroup($lastGroup) : null;
+    $lastGroupId = getLastGroupId($survey_id);
+    $lastGroupData = $lastGroupId ? getQuestionGroup($lastGroupId) : null;
     $redirectPage = $lastGroupData ? $lastGroupData->page : 0;
     header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($redirectPage));
     exit;
@@ -102,19 +108,33 @@ if (!empty($removed_group)) {
 
 // 2. Update Survey Details.
 updateSurvey($survey_id, $title, $description);
+
 // 3. Update the current Question Group.
 if ($group_id) {
     updateQuestionGroup($group_id, $questionGroupTitle, $recommendation);
 }
+
 // 4. Update each existing question.
+// Now, include the recommendation for each question.
+$questionsData = $_POST['questions'] ?? []; 
+$questionRecommendations = $_POST['question_recommendations'] ?? [];
+
 foreach ($questionsData as $question_id => $questionText) {
-    $question = new Question($question_id, $group_id, trim($questionText));
+    // Get the corresponding recommendation text; default to empty string if not set.
+    $recommendationText = isset($questionRecommendations[$question_id]) ? trim($questionRecommendations[$question_id]) : '';
+    
+    // Create the Question object with the recommendation included.
+    $question = new Question($question_id, $group_id, trim($questionText), $recommendationText);
+    
     updateQuestion($question);
 }
+
 // 4.5. Insert new questions.
+// For new questions, you may not have recommendations yet; they default to empty.
 if (is_array($newQuestionsData)) {
     foreach ($newQuestionsData as $newQuestionText) {
         if (trim($newQuestionText) !== '') {
+            // Here you can optionally add a recommendation parameter if provided
             $newQuestionId = insertQuestion($group_id, trim($newQuestionText));
         }
     }
@@ -124,6 +144,7 @@ if (is_array($newQuestionsData)) {
 if (is_array($optionsData)) {
     foreach ($optionsData as $question_id => $opts) {
         foreach ($opts as $option_id => $option_text) {
+            // Determine if this option is marked correct.
             $correct = isset($correctOptions[$question_id][$option_id]) ? 1 : 0;
             updateOption($option_id, trim($option_text), $correct);
         }
