@@ -48,31 +48,32 @@ if ($type === 'pdf') {
         $groupedResults[$groupId]['questions'][] = $row;
     }
     
-    // Build the recommendations LaTeX string.
-    if (empty($groupedResults)) {
-        $recs = "The entity is fully compliant with the directive.";
-    } else {
-        $recs = "";
-        foreach ($groupedResults as $group) {
-            $groupTitle = addslashes($group['group_title']);
-            $groupRec   = addslashes($group['group_recommendation']);
-            $recs .= "\\section*{$groupTitle}\n";
-            $recs .= "$groupRec \\\\[1em]\n";
-            foreach ($group['questions'] as $item) {
-                $questionText  = addslashes($item['question']);
-                $yourAnswer    = addslashes($item['your_answer']);
-                $correctAnswer = addslashes($item['correct_answer']);
-                $questionRec   = addslashes($item['recommendation']);
-                // Add a horizontal space indent for every question
-                $recs .= "\\hspace*{2em}\\textbf{Question:} $questionText \\\\[0.5em]\n";
-                $recs .= "\\hspace*{2em}\\textbf{Your Answer:} $yourAnswer \\\\[0.5em]\n";
-                $recs .= "\\hspace*{2em}\\textbf{Correct Answer:} $correctAnswer \\\\[0.5em]\n";
-                $recs .= "\\hspace*{2em}\\textbf{Recommendation:} $questionRec \\\\[1em]\n";
-                $recs .= "\\hrule\\vspace{1em}\n";
+        // Build the recommendations LaTeX string.
+        if (empty($groupedResults)) {
+            $recs = "The entity is fully compliant with the directive.";
+        } else {
+            $recs = "";
+            foreach ($groupedResults as $group) {
+                $groupTitle = addslashes($group['group_title']);
+                $groupRec   = addslashes($group['group_recommendation']);
+                $recs .= "\\section*{Group: $groupTitle}\n";
+                $recs .= "$groupRec \\\\[1em]\n";
+                foreach ($group['questions'] as $item) {
+                    $questionText  = addslashes($item['question']);
+                    $yourAnswer    = addslashes($item['your_answer']);
+                    $correctAnswer = addslashes($item['correct_answer']);
+                    $questionRec   = addslashes($item['recommendation']);
+                    // Add a horizontal space indent for every question
+                    $recs .= "\\hspace*{2em}\\textbf{Question:} $questionText \\\\[0.5em]\n";
+                    $recs .= "\\hspace*{2em}\\textbf{Your Answer:} $yourAnswer \\\\[0.5em]\n";
+                    $recs .= "\\hspace*{2em}\\textbf{Correct Answer:} $correctAnswer \\\\[0.5em]\n";
+                    $recs .= "\\hspace*{2em}\\textbf{Recommendation:} $questionRec \\\\[1em]\n";
+                    $recs .= "\\hrule\\vspace{1em}\n";
+                }
+                $recs .= "\\newpage\n";
             }
-            $recs .= "\\newpage\n";
         }
-    }
+
 
     
     // Load LaTeX template.
