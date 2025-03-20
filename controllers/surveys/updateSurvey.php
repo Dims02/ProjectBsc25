@@ -55,7 +55,7 @@ if ($action === 'moveUp') {
     if (moveGroupUp($group_id, $survey_id)) {
         // After moving, re-fetch the current group's page
         $currentGroup = getQuestionGroupByPage($survey_id, $page);
-        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page) . "&success=Group+Moved+Up");
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page + 1) . "&success=Group+Moved+Up");
     } else {
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Up");
     }
@@ -65,7 +65,7 @@ if ($action === 'moveUp') {
 if ($action === 'moveDown') {
     if (moveGroupDown($group_id, $survey_id)) {
         $currentGroup = getQuestionGroupByPage($survey_id, $page);
-        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page) . "&success=Group+Moved+Down");
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page - 1) . "&success=Group+Moved+Down");
     } else {
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Down");
     }
