@@ -51,6 +51,7 @@
             </div>
           <?php endforeach; ?>
         </div>
+        <?php endif; ?>
 
         <!-- Navigation Buttons with Navigator in Between -->
         <div class="flex items-center justify-between">
@@ -95,7 +96,7 @@
             <?php endif; ?>
           </div>
         </div>
-      <?php endif; ?>
+
     </form>
   </div>
 </main>
