@@ -67,7 +67,7 @@ if ($type === 'pdf') {
                     $recs .= "\\hspace*{2em}\\textbf{Question:} $questionText \\\\[0.5em]\n";
                     $recs .= "\\hspace*{2em}\\textbf{Your Answer:} $yourAnswer \\\\[0.5em]\n";
                     $recs .= "\\hspace*{2em}\\textbf{Correct Answer:} $correctAnswer \\\\[0.5em]\n";
-                    $recs .= "\\hspace*{2em}\\textbf{Recommendation:} $questionRec \\\\[1em]\n";
+                    $recs .= "\\hspace*{2em}\\textbf{Recommendation:} $questionRec \\\\[0.5em]\n";
                     $recs .= "\\hrule\\vspace{1em}\n";
                 }
                 $recs .= "\\newpage\n";
