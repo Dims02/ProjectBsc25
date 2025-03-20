@@ -75,11 +75,10 @@ if ($type === 'pdf') {
     
     // Load LaTeX template.
     $latexTemplate = include 'latex_template.php';
-    
     // Define placeholders.
     $placeholders = [
         '%SURVEY_TITLE%'    => addslashes($survey->title),
-        '%DOCUMENT_AUTHOR%' => addslashes($user->name . (!empty($user->entity) ? " ({$user->entity})" : 'Unknown')),
+        '%DOCUMENT_AUTHOR%' => addslashes($user->name . " " . $user->surname . (!empty($user->entity) ? " ({$user->entity})" : 'Unknown')),
         '%DOCUMENT_DATE%'   => date('d F Y'),
         '%RECOMMENDATIONS%' => $recs,
         '%LOGO_PATH%'       => 'media/ubiOriginal.jpg', // adjust path if necessary
