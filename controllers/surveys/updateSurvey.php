@@ -15,7 +15,6 @@ if (!isAdminFromJWT()) {
 }
 
 $survey_id = $_POST['survey_id'] ?? null;
-// Instead of reading group_id, we now read the page number
 $page = $_POST['page'] ?? null;
 $currentGroup = ($page !== null) ? getQuestionGroupByPage($survey_id, $page) : null;
 
@@ -74,13 +73,18 @@ if ($action === 'moveDown') {
 }
 
 if ($action === 'addGroup') {
-    // Decide what page number to assign for the new group.
-    // Here, for simplicity, we assign page 0.
-    $newGroupId = newQuestionGroup($survey_id, '', '', 0);
+    $groups = getQuestionGroupsBySurveyId($survey_id);
+    foreach ($groups as $group) {
+        if ($group->page > $page) {
+            updateQuestionGroupPage($group->id, $group->page + 1);
+        }
+    }
+    $newGroupId = newQuestionGroup($survey_id, '', '', $page + 1);
     $newGroup = getQuestionGroup($newGroupId);
     header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($newGroup->page) . "&success=Group+Created");
     exit;
 }
+
 
 // 1a. Delete removed options.
 if (is_array($removed_options) && !empty($removed_options)) {
@@ -98,13 +102,30 @@ if (is_array($removed_questions) && !empty($removed_questions)) {
 
 // 1c. If a group removal was requested, delete the group and redirect immediately.
 if (!empty($removed_group)) {
+    // Get the removed group's page before deletion.
+    $removedGroup = getQuestionGroup($removed_group);
+    $removedPage = $removedGroup ? $removedGroup->page : 0;
+    
+    // Delete the group.
     deleteQuestionGroup($removed_group);
+    
+    // Decrement page numbers for groups with page > removedPage.
+    $groups = getQuestionGroupsBySurveyId($survey_id);
+    foreach ($groups as $group) {
+        if ($group->page > $removedPage) {
+            updateQuestionGroupPage($group->id, $group->page - 1);
+        }
+    }
+    
+    // Determine the page to redirect to.
     $lastGroupId = getLastGroupId($survey_id);
     $lastGroupData = $lastGroupId ? getQuestionGroup($lastGroupId) : null;
     $redirectPage = $lastGroupData ? $lastGroupData->page : 0;
+    
     header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($redirectPage));
     exit;
 }
+
 
 // 2. Update Survey Details.
 updateSurvey($survey_id, $title, $description);

@@ -239,5 +239,14 @@ function getQuestionGroupByPage($survey_id, $page) {
     return $stmt->fetch(PDO::FETCH_OBJ);
 }
 
+function updateQuestionGroupPage($group_id, $newPage) {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE question_groups SET page = :newPage WHERE id = :id");
+    $stmt->execute([
+        'newPage' => $newPage,
+        'id'      => $group_id
+    ]);
+    return $stmt->rowCount();
+}
 ?>
 

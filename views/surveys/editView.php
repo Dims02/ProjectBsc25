@@ -172,7 +172,7 @@
           <button type="button" id="add-question" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-600">
             + Add Question
           </button>
-          <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
+          <button type="submit" id="update-survey-btn" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500">
             Update Survey
           </button>
         </div>
@@ -322,6 +322,15 @@
     });
   });
 
+  document.getElementById('survey-form').addEventListener('keydown', function(e) {
+  // For any element, check if Ctrl+Enter is pressed.
+  if (e.key === 'Enter' && e.ctrlKey) {
+    e.preventDefault();
+    document.getElementById('update-survey-btn').click();
+  }
+});
+
+
   tinymce.init({
     selector: 'textarea:not(.no-tiny)',
     plugins: [
@@ -338,4 +347,6 @@
     ],
     ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
   });
+
+
 </script>
