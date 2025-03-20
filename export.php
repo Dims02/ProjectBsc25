@@ -61,13 +61,13 @@ if ($type === 'pdf') {
                 foreach ($group['questions'] as $item) {
                     $questionText  = addslashes($item['question']);
                     $yourAnswer    = addslashes($item['your_answer']);
-                    $correctAnswer = addslashes($item['correct_answer']);
+                    //$correctAnswer = addslashes($item['correct_answer']);
                     $questionRec   = addslashes($item['recommendation']);
                 
                     $recs .= "\\begin{itemize}\n";
                     $recs .= "\\item \\textbf{Question:} $questionText\n";
                     $recs .= "\\item \\textbf{Your Answer:} $yourAnswer\n";
-                    $recs .= "\\item \\textbf{Correct Answer:} $correctAnswer\n";
+                    //$recs .= "\\item \\textbf{Correct Answer:} $correctAnswer\n";
                     $recs .= "\\item \\textbf{Recommendation:} $questionRec\n";
                     $recs .= "\\end{itemize}\n";
                     $recs .= "\\hrule\\vspace{1em}\n";
