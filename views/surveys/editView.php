@@ -10,7 +10,7 @@
         Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
       </h2>
       <div class="mb-4">
-        <label for="title" class="block text-black font-medium">Survey Title</label>
+        <label for="title" class="block text-black text-xl font-semibold">Survey Title</label>
         <input 
           type="text" 
           name="title" 
@@ -21,7 +21,7 @@
         >
       </div>
       <div class="mb-4">
-        <label for="description" class="block text-black font-medium">Description</label>
+        <label for="description" class="block text-black text-xl font-semibold">Description</label>
         <textarea 
           name="description" 
           id="description" 
@@ -79,7 +79,7 @@
       <!-- Group Details Card -->
       <div id="group-details-card" class="mb-6 bg-white shadow rounded p-4 border">
         <div class="mb-4">
-          <label for="group_title" class="block text-black font-medium">Question Group Title</label>
+          <label for="group_title" class="block text-black text-xl font-semibold">Question Group Title</label>
           <input 
             type="text" 
             name="group_title" 
@@ -90,7 +90,7 @@
           >
         </div>
         <div class="mb-4">
-          <label for="recommendation" class="block text-black font-medium">Group Recommendation</label>
+          <label for="recommendation" class="block text-black text-xl font-semibold">Group Recommendation</label>
           <textarea 
             id="recommendation" 
             name="recommendation" 
@@ -104,14 +104,15 @@
       <div id="questions-container" class="mb-6">
         <?php $i = 1; foreach ($questions as $question): ?>
           <div class="question-card mb-4 bg-white shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
-            <div class="flex items-center justify-between">
-              <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="text-black font-medium text-lg">
-                Question <?= $i ?>
-              </label>
-              <button type="button" class="remove-question text-red-500 font-bold text-xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
-                &times;
-              </button>
-            </div>
+          <div class="flex items-center justify-between">
+            <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-800">
+              Question <?= $i ?>
+            </label>
+            <button type="button" class="remove-question text-red-500 font-bold text-3xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+              &times;
+            </button>
+          </div>
+
             <textarea 
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
@@ -135,7 +136,7 @@
                         name="options[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
                         value="<?= htmlspecialchars($option->option_text, ENT_QUOTES, 'UTF-8') ?>" 
                         placeholder="Option text" 
-                        class="w-[85%] p-2 border border-gray-300 rounded mr-2 text-black"
+                        class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black"
                       >
                       <input 
                         type="checkbox" 
@@ -236,8 +237,8 @@
         newRow.innerHTML = 
           '<label class="block text-gray-600 font-medium mr-2">Option ' + newIndex + '</label>' +
           (questionId 
-            ? '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-1/3 p-2 border border-gray-300 rounded mr-2">' 
-            : '<input type="text" name="newOptions[]" placeholder="Option text" class="w-1/3 p-2 border border-gray-300 rounded mr-2">'
+            ? '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">' 
+            : '<input type="text" name="newOptions[]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">'
           ) +
           '<label class="text-gray-600 mr-2">Correct?</label>' +
           (questionId 
