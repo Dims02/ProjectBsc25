@@ -56,22 +56,24 @@ if ($type === 'pdf') {
         foreach ($groupedResults as $group) {
             $groupTitle = addslashes($group['group_title']);
             $groupRec   = addslashes($group['group_recommendation']);
-            $recs .= "\\section*{Group: $groupTitle}\n";
+            $recs .= "\\section*{$groupTitle}\n";
             $recs .= "$groupRec \\\\[1em]\n";
             foreach ($group['questions'] as $item) {
                 $questionText  = addslashes($item['question']);
                 $yourAnswer    = addslashes($item['your_answer']);
                 $correctAnswer = addslashes($item['correct_answer']);
                 $questionRec   = addslashes($item['recommendation']);
-                $recs .= "\\textbf{Question:} $questionText \\\\[0.5em]\n";
-                $recs .= "\\textbf{Your Answer:} $yourAnswer \\\\[0.5em]\n";
-                $recs .= "\\textbf{Correct Answer:} $correctAnswer \\\\[0.5em]\n";
-                $recs .= "\\textbf{Recommendation:} $questionRec \\\\[1em]\n";
+                // Add a horizontal space indent for every question
+                $recs .= "\\hspace*{2em}\\textbf{Question:} $questionText \\\\[0.5em]\n";
+                $recs .= "\\hspace*{2em}\\textbf{Your Answer:} $yourAnswer \\\\[0.5em]\n";
+                $recs .= "\\hspace*{2em}\\textbf{Correct Answer:} $correctAnswer \\\\[0.5em]\n";
+                $recs .= "\\hspace*{2em}\\textbf{Recommendation:} $questionRec \\\\[1em]\n";
                 $recs .= "\\hrule\\vspace{1em}\n";
             }
             $recs .= "\\newpage\n";
         }
     }
+
     
     // Load LaTeX template.
     $latexTemplate = include 'latex_template.php';
