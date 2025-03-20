@@ -63,13 +63,16 @@ if ($type === 'pdf') {
                     $yourAnswer    = addslashes($item['your_answer']);
                     $correctAnswer = addslashes($item['correct_answer']);
                     $questionRec   = addslashes($item['recommendation']);
-                    // Add a horizontal space indent for every question
-                    $recs .= "\\hspace*{2em}\\textbf{Question:} $questionText \\\\[0.5em]\n";
-                    $recs .= "\\hspace*{2em}\\textbf{Your Answer:} $yourAnswer \\\\[0.5em]\n";
-                    $recs .= "\\hspace*{2em}\\textbf{Correct Answer:} $correctAnswer \\\\[0.5em]\n";
-                    $recs .= "\\hspace*{2em}\\textbf{Recommendation:} $questionRec \\\\[0.5em]\n";
+                
+                    $recs .= "\\begin{itemize}\n";
+                    $recs .= "\\item \\textbf{Question:} $questionText\n";
+                    $recs .= "\\item \\textbf{Your Answer:} $yourAnswer\n";
+                    $recs .= "\\item \\textbf{Correct Answer:} $correctAnswer\n";
+                    $recs .= "\\item \\textbf{Recommendation:} $questionRec\n";
+                    $recs .= "\\end{itemize}\n";
                     $recs .= "\\hrule\\vspace{1em}\n";
                 }
+                
                 $recs .= "\\newpage\n";
             }
         }
