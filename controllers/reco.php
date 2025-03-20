@@ -4,7 +4,7 @@ $heading = "Report";
 $tabname = "Report";
 $pos = "max-w-4xl";
 
-if(!isLoggedIn()) {
+if (!isLoggedIn()) {
     header("Location: /login");
     exit;
 }
@@ -15,16 +15,32 @@ if (!$user) {
     exit;
 }
 
-// Get the survey id. You may pass it via GET, e.g., /reco?survey_id=123
 $survey_id = $_GET['survey_id'] ?? null;
 if (!$survey_id) {
     header("Location: /surveys");
     exit;
 }
 
-$incorrectResponses = getIncorrectResponses(getUserFromJWT()->id, $survey_id);
-
+// Get all incorrect responses for this user and survey.
+// Ensure your getIncorrectResponses() function returns, for each wrong question, at least these keys:
+// 'question', 'your_answer', 'correct_answer', 'recommendation' (question-specific recommendation),
+// 'group_id', 'group_title', 'group_recommendation'
+$incorrectResponses = getIncorrectResponses($user->id, $survey_id);
+// Group incorrect responses by question group (page).
+$groupedIncorrect = [];
+foreach ($incorrectResponses as $item) {
+    // Use the group_id as the key. (Assumes each question belongs to a group.)
+    $groupId = $item['group_id'];
+    if (!isset($groupedIncorrect[$groupId])) {
+        $groupedIncorrect[$groupId] = [
+            'group_title' => $item['group_title'] ?? 'Unnamed Group',
+            'group_recommendation' => $item['group_recommendation'] ?? '',
+            'questions' => []
+        ];
+    }
+    $groupedIncorrect[$groupId]['questions'][] = $item;
+}
 
 // Pass data to the view.
-require_once  'views/recoView.php';
+require_once 'views/recoView.php';
 ?>

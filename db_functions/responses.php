@@ -70,16 +70,15 @@ function getIncorrectResponses($userId, $survey_id) {
     global $pdo;
     $incorrectResponses = [];
 
-    // Retrieve all question groups.
-    // (You may want to filter these by a survey or some other parameter.)
+    // Retrieve all question groups for the survey.
     $questionGroups = getQuestionGroupsBySurveyId($survey_id);
 
     foreach ($questionGroups as $group) {
-        // Get all questions for the group.
+        // Get all questions for the current group.
         $questions = getQuestionsByGroupId($group->id);
 
         foreach ($questions as $question) {
-            // Retrieve the user's answer.
+            // Retrieve the user's answer for this question.
             $stmt = $pdo->prepare("SELECT answer FROM responses WHERE question_id = :question_id AND user_id = :user_id");
             $stmt->execute(['question_id' => $question->id, 'user_id' => $userId]);
             $response = $stmt->fetch(PDO::FETCH_OBJ);
@@ -97,12 +96,19 @@ function getIncorrectResponses($userId, $survey_id) {
 
                 // Compare user's answer with the correct answer.
                 if ($correctAnswer !== null && trim($response->answer) !== trim($correctAnswer)) {
+                    // Use the question recommendation if set; otherwise, fallback to the group's recommendation or a default message.
+                    $questionRecommendation = isset($question->recommendation) && !empty($question->recommendation)
+                        ? $question->recommendation
+                        : ($group->recommendation ?? "Review this topic for more details.");
+
                     $incorrectResponses[] = [
-                        'question'       => $question->text,
-                        'your_answer'    => $response->answer,
-                        'correct_answer' => $correctAnswer,
-                        // For recommendations, use the group's recommendation or a default message.
-                        'recommendation' => $group->recommendation ?? "Review this topic for more details."
+                        'group_id'            => $group->id,
+                        'group_title'         => $group->title,
+                        'group_recommendation'=> $group->recommendation ?? "Review this topic for more details.",
+                        'question'            => $question->text,
+                        'your_answer'         => $response->answer,
+                        'correct_answer'      => $correctAnswer,
+                        'recommendation'      => $questionRecommendation
                     ];
                 }
             }
@@ -111,5 +117,6 @@ function getIncorrectResponses($userId, $survey_id) {
     
     return $incorrectResponses;
 }
+
 
 ?>
