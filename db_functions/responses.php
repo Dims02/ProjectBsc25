@@ -101,9 +101,8 @@ function getIncorrectResponses($userId, $survey_id, $desiredComplianceLevel) {
                 if ($userOptionLevel === null || $userOptionLevel < $desiredComplianceLevel) {
                     // Choose a recommendation: use the question recommendation if set,
                     // otherwise, fallback to the group's recommendation or a default message.
-                    $questionRecommendation = !empty($question->recommendation)
-                        ? $question->recommendation
-                        : ($group->recommendation ?? "Review this topic for more details.");
+                    $questionRecommendation = getReco($question->id, $desiredComplianceLevel);
+
 
                     $incorrectResponses[] = [
                         'group_id'             => $group->id,

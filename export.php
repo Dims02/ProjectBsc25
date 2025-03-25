@@ -1,47 +1,54 @@
 <?php
+require_once "config.php";
+// Check if the user is logged in.
 if (!isLoggedIn()) {
     header("Location: /login");
     exit;
 }
 
-require_once "config.php";
-
+// Get survey id and export type.
 $surveyId = isset($_GET['survey_id']) ? (int)$_GET['survey_id'] : null;
-$type     = isset($_GET['type']) ? $_GET['type'] : 'json';
-
-$user     = getUserFromJWT();
-$survey   = getSurvey($surveyId);
-$survey->title ??= "Survey";
-
-$surveyNewTitle = str_replace(' ', '_', $survey->title);
-
-$filename = $surveyNewTitle . "_" . ($user->entity ?? "") . "_Report." . ($type === 'pdf' ? "pdf" : "json");
-
 if (!$surveyId) {
     header("Location: /surveys");
     exit;
 }
+$type = isset($_GET['type']) ? $_GET['type'] : 'json';
+
+$user   = getUserFromJWT();
+$survey = getSurvey($surveyId);
+$survey->title = $survey->title ?? "Survey";
+
+// Remove spaces from the survey title.
+$surveyNewTitle = str_replace(' ', '_', $survey->title);
+
+// Build filename.
+if ($type === 'pdf') {
+    $filename = $surveyNewTitle . "_" . ($user->entity ?? "") . "_Report.pdf";
+} else {
+    $filename = $surveyNewTitle . "_" . ($user->entity ?? "") . "_Report.json";
+}
 
 $desiredLevel = getUserDesiredComplianceLevel($user->id, $surveyId);
+
 $results = getIncorrectResponses($user->id, $surveyId, $desiredLevel);
 
-// Group the results
+// Group the results by question group.
 $groupedResults = [];
 foreach ($results as $row) {
     $groupId = $row['group_id'];
     if (!isset($groupedResults[$groupId])) {
         $groupedResults[$groupId] = [
-            'group_title'          => $row['group_title'] ?? 'Unnamed Group',
-            'group_recommendation' => $row['group_recommendation'] ?? "Review this topic for more details.",
+            'group_title'          => isset($row['group_title']) ? strip_tags($row['group_title']) : 'Unnamed Group',
+            'group_recommendation' => isset($row['group_recommendation']) ? strip_tags($row['group_recommendation']) : "Review this topic for more details.",
             'questions'            => []
         ];
     }
-
-    // Strip HTML tags
-    $row['question']       = strip_tags($row['question']);
-    $row['your_answer']    = strip_tags($row['your_answer']);
-    $row['recommendation'] = strip_tags($row['recommendation']);
-
+    
+    
+    // Strip HTML tags from question and user's answer.
+    $row['question']    = strip_tags($row['question']);
+    $row['your_answer'] = strip_tags($row['your_answer']);
+    
     $groupedResults[$groupId]['questions'][] = $row;
 }
 
@@ -77,7 +84,8 @@ if ($type === 'pdf') {
             $recs .= "\\newpage\n";
         }
     }
-
+    
+    // Get the LaTeX template content. Ensure that 'latex_template.php' returns a string.
     $latexTemplate = include 'latex_template.php';
     $placeholders = [
         '%SURVEY_TITLE%'    => addslashes($survey->title),
@@ -86,17 +94,17 @@ if ($type === 'pdf') {
         '%RECOMMENDATIONS%' => $recs,
         '%LOGO_PATH%'       => 'media/ubiOriginal.jpg'
     ];
-
+    
     $latexCode = strtr($latexTemplate, $placeholders);
     $tempDir   = sys_get_temp_dir();
     $texFile   = $tempDir . DIRECTORY_SEPARATOR . 'export_' . time() . '.tex';
     $pdfFile   = str_replace('.tex', '.pdf', $texFile);
     file_put_contents($texFile, $latexCode);
-
+    
     $pdflatexPath = "/usr/bin/pdflatex";
-    $command = "$pdflatexPath -interaction=nonstopmode -output-directory=" . escapeshellarg($tempDir) . " " . escapeshellarg($texFile) . " 2>&1";
+    $command = $pdflatexPath . " -interaction=nonstopmode -output-directory=" . escapeshellarg($tempDir) . " " . escapeshellarg($texFile) . " 2>&1";
     $output = shell_exec($command);
-
+    
     if (file_exists($pdfFile)) {
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
