@@ -43,7 +43,6 @@ foreach ($results as $row) {
     $row['recommendation'] = strip_tags($row['recommendation']);
 
     $groupedResults[$groupId]['questions'][] = $row;
-    dd($groupedResults);
 }
 
 if ($type === 'json') {
