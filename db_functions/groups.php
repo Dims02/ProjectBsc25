@@ -82,10 +82,6 @@ function getQuestionGroup($group_id) {
     return $stmt->fetch(PDO::FETCH_OBJ);
 }
 
-function getQuestionGroupTitle($group_id) {
-    $group = getQuestionGroup($group_id);
-    return $group ? $group->title : null;
-}
 
 function deleteQuestionGroup($group_id) {
     global $pdo;
@@ -120,13 +116,6 @@ function getLastGroupId($survey_id) {
     return $result ? $result->id : null;
 }
 
-function getGroupRecommendation($group_id) {
-    global $pdo;
-    $stmt = $pdo->prepare("SELECT recommendation FROM question_groups WHERE id = :group_id");
-    $stmt->execute(['group_id' => $group_id]);
-    $result = $stmt->fetch(PDO::FETCH_OBJ);
-    return $result ? $result->recommendation : null;
-}
 
 function moveGroupUp($group_id, $survey_id) {
     global $pdo;

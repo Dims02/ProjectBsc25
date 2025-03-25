@@ -9,7 +9,7 @@ if (!isLoggedIn()) {
     exit;
 }
 
-$user = getUserFromJWT($pdo);
+$user = getUserFromJWT();
 if (!$user) {
     header("Location: /login");
     exit;

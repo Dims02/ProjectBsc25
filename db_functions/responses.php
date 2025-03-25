@@ -27,37 +27,6 @@ function saveAnswer($question_id, $user_id, $answer) {
     }
 }
 
-function surveyAnswered($survey_id, $user_id) {
-    global $pdo;
-    $stmt = $pdo->prepare(
-        "SELECT COUNT(*) AS total 
-         FROM questions q 
-         JOIN responses r ON q.id = r.question_id 
-         WHERE q.survey_id = :survey_id AND r.user_id = :user_id"
-    );
-    $stmt->execute([
-        'survey_id' => $survey_id,
-        'user_id'   => $user_id
-    ]); 
-    $result = $stmt->fetch(PDO::FETCH_OBJ);
-    return $result->total > 0;
-}
-
-function surveyCountAnswers($survey_id, $user_id) {
-    global $pdo;
-    $stmt = $pdo->prepare(
-        "SELECT COUNT(*) AS total 
-         FROM questions q 
-         JOIN responses r ON q.id = r.question_id 
-         WHERE q.survey_id = :survey_id AND r.user_id = :user_id"
-    );
-    $stmt->execute([
-        'survey_id' => $survey_id,
-        'user_id'   => $user_id
-    ]);
-    $result = $stmt->fetch(PDO::FETCH_OBJ);
-    return $result->total;
-}
 
 function getOptionsByQuestionId($question_id) {
     global $pdo;

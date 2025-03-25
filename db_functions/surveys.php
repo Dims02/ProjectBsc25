@@ -176,6 +176,7 @@ function getUnfinishedSurveysCount($user_id) {
                 WHERE g.survey_id = s.id AND r.user_id = :user_id
             ) AS answeredQuestions
         FROM surveys s
+        WHERE s.state = 1
     ");
     
     $stmt->execute(['user_id' => $user_id]);
@@ -183,7 +184,6 @@ function getUnfinishedSurveysCount($user_id) {
     
     $unfinishedCount = 0;
     foreach ($surveys as $survey) {
-        // If the user answered fewer questions than available, the survey is unfinished.
         if ($survey->answeredQuestions < $survey->totalQuestions) {
             $unfinishedCount++;
         }
@@ -192,53 +192,30 @@ function getUnfinishedSurveysCount($user_id) {
     return $unfinishedCount;
 }
 
-function getAllSurveysCompletionPercentages($user_id) {
-    global $pdo;
 
-    $stmt = $pdo->prepare("
-        SELECT 
-            s.id AS survey_id,
-            s.title AS survey_title,
-            (
-                SELECT COUNT(*) 
-                FROM questions q
-                JOIN question_groups g ON q.group_id = g.id
-                WHERE g.survey_id = s.id
-            ) AS totalQuestions,
-            (
-                SELECT COUNT(*) 
-                FROM responses r
-                JOIN questions q ON r.question_id = q.id
-                JOIN question_groups g ON q.group_id = g.id
-                WHERE g.survey_id = s.id AND r.user_id = :user_id
-            ) AS answeredQuestions
-        FROM surveys s
-    ");
-    
-    $stmt->execute(['user_id' => $user_id]);
-    $surveys = $stmt->fetchAll(PDO::FETCH_OBJ);
-    
-    $completionPercentages = [];
-    foreach ($surveys as $survey) {
-        if ($survey->totalQuestions > 0) {
-            $completionPercentages[$survey->survey_title] = round(($survey->answeredQuestions / $survey->totalQuestions) * 100, 2);
-        } else {
-            $completionPercentages[$survey->survey_title] = 100;
-        }
-    }
-
-    return $completionPercentages;
-}
 
 
 function getSurveysCompletionRatio($user_id) {
     // Get the completed surveys for the user.
     $fullyAnsweredIds = getFullyAnsweredSurveyIds($user_id);
-    $completedCount = count($fullyAnsweredIds);
     
     // Get all surveys.
     $allSurveys = getAllSurveys();
-    $totalCount = count($allSurveys);
+    
+    // Filter only enabled surveys.
+    $enabledSurveys = array_filter($allSurveys, function($survey) {
+        return $survey->state == 1;
+    });
+    
+    $totalCount = count($enabledSurveys);
+    
+    // Count how many enabled surveys are completed.
+    $completedCount = 0;
+    foreach ($enabledSurveys as $survey) {
+        if (in_array($survey->id, $fullyAnsweredIds)) {
+            $completedCount++;
+        }
+    }
     
     // Calculate not completed count.
     $notCompletedCount = $totalCount - $completedCount;
@@ -255,8 +232,14 @@ function getSurveysCompletionRatio($user_id) {
 }
 
 
+
 function getUserDesiredComplianceLevel($user_id, $survey_id) {
     global $pdo;
+
+    // If the survey is not leveled, return 1 immediately.
+    if (!isLeveled($survey_id)) {
+        return 1;
+    }
     
     // Retrieve the first question for the given survey.
     $stmt = $pdo->prepare("
@@ -272,7 +255,7 @@ function getUserDesiredComplianceLevel($user_id, $survey_id) {
     
     if (!$firstQuestion) {
         // If no questions found, return 0 or handle accordingly.
-        return 0;
+        return 1;
     }
     
     $desiredQuestionId = $firstQuestion->question_id;
@@ -294,7 +277,6 @@ function getUserDesiredComplianceLevel($user_id, $survey_id) {
     if ($result) {
         $answer = trim($result->answer);
         // Map the answer text to a numeric compliance level.
-        // Adjust these values as needed.
         $mapping = [
             'Basic'        => 1,
             'Intermediate' => 2,
@@ -303,9 +285,9 @@ function getUserDesiredComplianceLevel($user_id, $survey_id) {
         return $mapping[$answer] ?? 0;
     }
     
-    // If no answer is found, return 0 (or adjust as needed)
-    return 0;
+    return 1;
 }
+
 
 function getAllSurveysComplianceLevels($user_id) {
     // Retrieve all surveys (you can filter this list as needed)
@@ -328,6 +310,17 @@ function updateSurveyState($survey_id, $newState) {
     ]);
 }
 
+function isLeveled($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT leveled FROM surveys WHERE id = :id");
+    $stmt->execute(['id' => $survey_id]);
+    return (bool)$stmt->fetchColumn();
+}
 
+function toggleLeveling($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE surveys SET leveled = NOT leveled WHERE id = :id");
+    return $stmt->execute(['id' => $survey_id]);
+}
 
 ?>

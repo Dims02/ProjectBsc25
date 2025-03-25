@@ -89,7 +89,8 @@ $highlightColor = "bg-indigo-600 text-white";
 <main style="
   background-image: url('media/bg5.jpg');
   min-height: 100vh;
-  background-size: cover;
+  background-size: auto;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
 ">
+

@@ -3,12 +3,13 @@
 
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20 max-w-7xl mx-auto">
-  <form action="/updateSurvey" method="POST" class="mb-8 p-4 bg-white rounded shadow bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
+  <form action="/updateSurvey" method="POST" data-leveled="<?= isLeveled($survey->id) ? '1' : '0' ?>" class="mb-8 p-4 bg-white rounded shadow bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
     <!-- Survey Details Card -->
     <div class="mb-6 bg-white shadow rounded p-4 border">
       <h2 class="text-2xl font-semibold text-black mb-4">
         Survey Details: <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
       </h2>
+      
       <div class="mb-4">
         <label for="title" class="block text-black text-xl font-semibold">Survey Title</label>
         <input 
@@ -29,6 +30,9 @@
           class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
         ><?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?></textarea>
       </div>
+      <button type="submit" name="action" value="toggleLeveled" id="toggle-leveled" class="px-3 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-500">
+        <?= isLeveled($survey->id) ? 'Switch to Non-Leveled' : 'Switch to Leveled' ?>
+      </button>
     </div>
     
     <div class="max-w-7xl mx-auto">
@@ -139,12 +143,19 @@
                         placeholder="Option text" 
                         class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black"
                       >
+                      <?php if (isLeveled($survey->id)) : ?>
                       <select class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="options_level[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]">
                         <option value="0" <?= ($option->level == 0 ? 'selected' : '') ?>>No</option>
                         <option value="1" <?= ($option->level == 1 ? 'selected' : '') ?>>Basic</option>
                         <option value="2" <?= ($option->level == 2 ? 'selected' : '') ?>>Intermediate</option>
                         <option value="3" <?= ($option->level == 3 ? 'selected' : '') ?>>Advanced</option>
                       </select>
+                    <?php else: ?>
+                      <label class="inline-flex items-center ml-auto">
+                        <input type="checkbox" name="options_correct[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" value="1" <?= ($option->level == 1 ? 'checked' : '') ?> class="form-checkbox h-6 w-6 rounded border-2">
+                      </label>
+                    <?php endif; ?>
+
                       <button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">
                         &times;
                       </button>
@@ -155,27 +166,27 @@
               <button type="button" class="mb-5 add-option text-indigo-600 text-xl ml-2 border border-indigo-600 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 +
               </button>
-            </div>
+            </div> 
 
             <!-- Recommendation Text Boxes for Question -->
             <?php 
               // For each question, load the recommendations from the new table
               $recommendations = getRecommendationByQuestionId($question->id); // Returns an associative array with keys: basic, intermediate, advanced
             ?>
-            <label for="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Advanced</label>
+            <label for="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= isLeveled($survey->id) ? '' : 'hidden' ?> block text-black font-medium">Question Recommendation - Advanced</label>
             <textarea 
               id="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][advanced]" 
               placeholder="Enter recommendation for Advanced level" 
-              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
+              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny <?= isLeveled($survey->id) ? '' : 'hidden' ?>"
             ><?= htmlspecialchars($recommendations['advanced'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
-            <label for="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Intermediate</label>
+            <label for="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= isLeveled($survey->id) ? '' : 'hidden' ?> block text-black font-medium">Question Recommendation - Intermediate</label>
             <textarea 
               id="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][intermediate]" 
               placeholder="Enter recommendation for Intermediate level" 
-              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
+              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny <?= isLeveled($survey->id) ? '' : 'hidden' ?>"
             ><?= htmlspecialchars($recommendations['intermediate'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
             <label for="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Basic</label>
@@ -235,57 +246,70 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   var surveyForm = document.getElementById('survey-form');
+  var isLeveledSurvey = surveyForm.getAttribute('data-leveled') === '1';
+
   
     // Delegate add-option clicks (inside your existing DOMContentLoaded event)
     surveyForm.addEventListener('click', function(e) {
-      if (e.target && e.target.classList.contains('add-option')) {
-        var button = e.target;
-        var questionId = button.getAttribute('data-question-id');
-        var container;
-        if (questionId) {
-          container = document.querySelector('#mc-options-' + questionId + ' .option-container');
-        } else {
-          container = button.closest('.new-mc-options').querySelector('.option-container');
-        }
-        if (!container) {
-          console.error('Option container not found.');
-          return;
-        }
-        // Determine the new option's index (based on existing option rows)
-        var newIndex = container.querySelectorAll('.option-row').length + 1;
-        
-        // Set default level based on newIndex:
-        // Option 1 -> Advanced (3)
-        // Option 2 -> Intermediate (2)
-        // Option 3 -> Basic (1)
-        // Option 4+ -> No (0)
-        var defaultLevel = 0;
-        if (newIndex === 1) {
-          defaultLevel = 3;
-        } else if (newIndex === 2) {
-          defaultLevel = 2;
-        } else if (newIndex === 3) {
-          defaultLevel = 1;
-        } else {
-          defaultLevel = 0;
-        }
-        
-        var newRow = document.createElement('div');
-        newRow.className = 'option-row mb-2 flex items-center';
-        newRow.innerHTML = 
-          '<label class="block text-gray-600 font-medium mr-2">Option ' + newIndex + '</label>' +
-          '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">' +
-          '<select class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="newOptionsLevel[' + questionId + '][]">' +
-            '<option value="0" ' + (defaultLevel === 0 ? 'selected' : '') + '>No</option>' +
-            '<option value="1" ' + (defaultLevel === 1 ? 'selected' : '') + '>Basic</option>' +
-            '<option value="2" ' + (defaultLevel === 2 ? 'selected' : '') + '>Intermediate</option>' +
-            '<option value="3" ' + (defaultLevel === 3 ? 'selected' : '') + '>Advanced</option>' +
-          '</select>' +
-          '<button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">&times;</button>';
-        
-        container.appendChild(newRow);
+    if (e.target && e.target.classList.contains('add-option')) {
+      var button = e.target;
+      var questionId = button.getAttribute('data-question-id');
+      var container;
+      if (questionId) {
+        container = document.querySelector('#mc-options-' + questionId + ' .option-container');
+      } else {
+        container = button.closest('.new-mc-options').querySelector('.option-container');
       }
-    });
+      if (!container) {
+        console.error('Option container not found.');
+        return;
+      }
+      // Determine the new option's index (based on existing option rows)
+      var newIndex = container.querySelectorAll('.option-row').length + 1;
+      
+      var defaultLevel = 0;
+      if (newIndex === 1) {
+        defaultLevel = 3;
+      } else if (newIndex === 2) {
+        defaultLevel = 2;
+      } else if (newIndex === 3) {
+        defaultLevel = 1;
+      } else {
+        defaultLevel = 0;
+      }
+      
+      // Read the survey's leveled state from the form's data attribute.
+      // Ensure that your form element has: data-leveled="<?= isLeveled($survey->id) ? '1' : '0' ?>"
+      var isLeveledSurvey = surveyForm.getAttribute('data-leveled') === '1';
+      
+      // Build the control based on the survey type.
+      var newOptionControl = '';
+      if (isLeveledSurvey) {
+        newOptionControl = '<select class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="newOptionsLevel[' + questionId + '][]">' +
+                              '<option value="0" ' + (defaultLevel === 0 ? 'selected' : '') + '>No</option>' +
+                              '<option value="1" ' + (defaultLevel === 1 ? 'selected' : '') + '>Basic</option>' +
+                              '<option value="2" ' + (defaultLevel === 2 ? 'selected' : '') + '>Intermediate</option>' +
+                              '<option value="3" ' + (defaultLevel === 3 ? 'selected' : '') + '>Advanced</option>' +
+                            '</select>';
+      } else {
+        newOptionControl = '<label class="inline-flex items-center ml-auto">' +
+                            '<input type="checkbox" name="newOptionsCorrect[' + questionId + '][]" value="1" class="form-checkbox h-6 w-6 rounded border-2">' +
+                            '</label>';
+
+      }
+      
+      var newRow = document.createElement('div');
+      newRow.className = 'option-row mb-2 flex items-center';
+      newRow.innerHTML = 
+        '<label class="block text-gray-600 font-medium mr-2">Option ' + newIndex + '</label>' +
+        '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">' +
+        newOptionControl +
+        '<button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">&times;</button>';
+      
+      container.appendChild(newRow);
+    }
+  });
+
 
 
   // Delegate remove-option clicks
@@ -369,28 +393,59 @@ document.getElementById('survey-form').addEventListener('keydown', function(e) {
   }
 });
 
-tinymce.init({
-  selector: 'textarea:not(.no-tiny)',
-  setup: function(editor) {
-    editor.on('keydown', function(e) {
-      if (e.ctrlKey && e.keyCode === 13) {
-        e.preventDefault();
-        document.getElementById('update-survey-btn').click();
-      }
-    });
-  },
-  plugins: [
-    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize','autosave'
-  ],
-  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-  tinycomments_mode: 'embedded',
-  tinycomments_author: 'Author name',
-  autoresize_min_height: 50,
-  height: "300",
-  mergetags_list: [
-    { value: 'First.Name', title: 'First Name' },
-    { value: 'Email', title: 'Email' }
-  ],
-  ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant'))
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Function to dynamically load the TinyMCE script
+  function loadTinyMCEScript(callback) {
+    if (typeof tinymce !== 'undefined') {
+      callback();
+      return;
+    }
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js';
+    script.async = true;
+    script.onload = callback;
+    document.head.appendChild(script);
+  }
+
+  // Select all textareas that should be converted to TinyMCE editors,
+  // excluding those with the class "no-tiny"
+  var lazyTextareas = document.querySelectorAll('textarea:not(.no-tiny)');
+  lazyTextareas.forEach(function(textarea) {
+    // Ensure each textarea has a unique id for TinyMCE's selector.
+    if (!textarea.id) {
+      textarea.id = 'lazy-editor-' + Math.floor(Math.random() * 1000000);
+    }
+    
+    // Attach focus event listener to load TinyMCE only on first focus.
+    textarea.addEventListener('focus', function initTiny() {
+      textarea.removeEventListener('focus', initTiny);
+      loadTinyMCEScript(function() {
+        tinymce.init({
+          selector: '#' + textarea.id,
+          plugins: [
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 
+            'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'autoreresize', 'autosave'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          setup: function(editor) {
+            editor.on('keydown', function(e) {
+              if (e.ctrlKey && e.keyCode === 13) {
+                e.preventDefault();
+                // Submit form if needed
+                document.getElementById('update-survey-btn').click();
+              }
+            });
+          },
+          autoresize_min_height: 50,
+          height: "300",
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' }
+          ]
+        });
+      });
+    }, { once: true });
+  });
 });
 </script>

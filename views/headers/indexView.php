@@ -31,7 +31,7 @@
 
         <!-- Survey Compliance Level Chart -->
         <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Survey Compliance Levels</h2>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Graded Surveys Compliance Levels</h2>
             <div class="h-64">
                 <canvas id="progressChart"></canvas>
             </div>
@@ -44,20 +44,23 @@
         <ul class="mt-4 space-y-3">
             <?php if (!empty($recentSurveys)): ?>
                 <?php foreach ($recentSurveys as $survey): ?>
-                    <li class="flex items-center justify-between bg-gray-200 p-4 rounded-md">
-                        <div>
-                            <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
-                        </div>
-                        <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
-                            View Results
-                        </a>
-                    </li>
+                    <?php if ($survey->state == 1): // Only show enabled surveys ?>
+                        <li class="flex items-center justify-between bg-gray-200 p-4 rounded-md">
+                            <div>
+                                <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
+                            </div>
+                            <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
+                                View Results
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             <?php else: ?>
                 <li class="text-gray-600">No completed surveys found.</li>
             <?php endif; ?>
         </ul>
     </div>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -89,7 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Bar Chart: Survey Compliance Levels for all surveys ---
-    const surveyComplianceData = <?php echo json_encode($allSurveyComplianceLevels); ?>;
+    const surveyComplianceData = <?php echo json_encode($leveledSurveyComplianceLevels); ?>;
+
     const surveyLabels = Object.keys(surveyComplianceData);
     const surveyLevels = Object.values(surveyComplianceData);
 

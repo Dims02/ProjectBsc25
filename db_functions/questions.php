@@ -1,11 +1,4 @@
 <?php
-function countTotalQuestions($survey_id) {
-    global $pdo;
-    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM questions WHERE survey_id = :survey_id");
-    $stmt->execute(['survey_id' => $survey_id]);
-    $result = $stmt->fetch(PDO::FETCH_OBJ);
-    return $result->total;
-}
 
 function getPossibleResponsesByQuestionId($question_id) {
     global $pdo;
@@ -23,16 +16,15 @@ function getQuestionsByGroupId($group_id) {
 
 function updateQuestion($question) {
     global $pdo;
-    $stmt = $pdo->prepare("UPDATE questions SET text = :text, group_id = :group_id, recommendation = :recommendation WHERE id = :id");
+    // Removed the recommendation column from the update
+    $stmt = $pdo->prepare("UPDATE questions SET text = :text, group_id = :group_id WHERE id = :id");
     $stmt->execute([
-        ':text'           => $question->text,
-        ':group_id'       => $question->group_id,
-        ':recommendation' => $question->recommendation,
-        ':id'             => $question->id
+        ':text'     => $question->text,
+        ':group_id' => $question->group_id,
+        ':id'       => $question->id
     ]);
     return $stmt->rowCount();
 }
-
 
 function deleteQuestion($questionId) {
     global $pdo;
@@ -49,13 +41,13 @@ function deleteQuestion($questionId) {
     $stmt->execute(['questionId' => $questionId]);
 }
 
-function insertQuestion($group_id, $text, $recommendation = '') {
+function insertQuestion($group_id, $text) {
     global $pdo;
-    $stmt = $pdo->prepare("INSERT INTO questions (group_id, text, recommendation) VALUES (:group_id, :text, :recommendation)");
+    // Removed the recommendation column from the insert
+    $stmt = $pdo->prepare("INSERT INTO questions (group_id, text) VALUES (:group_id, :text)");
     $stmt->execute([
-        'group_id'      => $group_id,
-        'text'          => $text,
-        'recommendation'=> $recommendation
+        'group_id' => $group_id,
+        'text'     => $text
     ]);
     return $pdo->lastInsertId();
 }

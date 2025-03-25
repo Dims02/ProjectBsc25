@@ -3,7 +3,7 @@ global $pdo;
 
 if (!isset($_COOKIE['jwt'])) {
     header("Location: /login");
-    die();
+    exit;
 }
 
 // Get the user ID from the JWT.
@@ -29,11 +29,20 @@ $NumSurveyTaken = count($fullyAnsweredIds);
 $NumSurveyNotCompleted = getUnfinishedSurveysCount($user_id);
 $PercentCorrect = getOverallBasicCompliancePercentage($user_id) . "%";
 
+// Get all surveys' compliance levels.
+$allSurveyComplianceLevels = getAllSurveysComplianceLevels($user_id);
+
+// Filter out only the surveys that are leveled.
+$allSurveys = getAllSurveys();
+$leveledSurveyComplianceLevels = [];
+foreach ($allSurveys as $survey) {
+    if (isLeveled($survey->id)) {
+        // Use survey title as key; if not set, default to 0.
+        $leveledSurveyComplianceLevels[$survey->title] = $allSurveyComplianceLevels[$survey->title] ?? 0;
+    }
+}
 
 $surveysRatio = getSurveysCompletionRatio($user_id);
-
-
-$allSurveyComplianceLevels = getAllSurveysComplianceLevels($user_id);
 
 // Load the dashboard view.
 require "views/headers/indexView.php";

@@ -17,6 +17,9 @@ if (!isAdminFromJWT()) {
 $survey_id = $_POST['survey_id'] ?? null;
 $page = $_POST['page'] ?? null;
 $currentGroup = ($page !== null) ? getQuestionGroupByPage($survey_id, $page) : null;
+$surveyObj = getSurvey($survey_id);
+$isLeveled = isLeveled($survey_id); // or use $surveyObj->leveled if that column exists
+
 
 $group_id = $currentGroup ? $currentGroup->id : null;
 
@@ -70,6 +73,17 @@ if ($action === 'moveDown') {
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Down");
     }
     exit;
+}
+
+if ($action === 'toggleLeveled') {
+    // Get current survey object
+    $survey = getSurvey($survey_id);
+    if ($survey) {
+        toggleLeveling($survey_id);
+        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&success=Leveling+Toggled");
+    // Redirect back to the edit page
+    exit;
+    }
 }
 
 if ($action === 'addGroup') {
@@ -170,12 +184,16 @@ if (is_array($newQuestionsData)) {
 if (is_array($optionsData)) {
     foreach ($optionsData as $question_id => $opts) {
         foreach ($opts as $option_id => $option_text) {
-            // Retrieve the level from the options_level array. If not set, default to 0.
-            $level = isset($_POST['options_level'][$question_id][$option_id]) ? (int) $_POST['options_level'][$question_id][$option_id] : 0;
+            if ($isLeveled) {
+                $level = isset($_POST['options_level'][$question_id][$option_id]) ? (int) $_POST['options_level'][$question_id][$option_id] : 0;
+            } else {
+                $level = (isset($_POST['options_correct'][$question_id][$option_id]) && $_POST['options_correct'][$question_id][$option_id] == '1') ? 1 : 0;
+            }
             updateOption($option_id, trim($option_text), $level);
         }
     }
 }
+
 
 
 // 6. Insert new options for questions.
@@ -183,13 +201,18 @@ if (is_array($newOptionsData)) {
     foreach ($newOptionsData as $question_id => $opts) {
         foreach ($opts as $index => $option_text) {
             if (trim($option_text) !== '') {
-                // Retrieve the level from the newOptionsLevel array. If not set, default to 0.
-                $level = isset($_POST['newOptionsLevel'][$question_id][$index]) ? (int) $_POST['newOptionsLevel'][$question_id][$index] : 0;
+                if ($isLeveled) {
+                    $level = isset($_POST['newOptionsLevel'][$question_id][$index]) ? (int) $_POST['newOptionsLevel'][$question_id][$index] : 0;
+                } else {
+                    $level = (isset($_POST['newOptionsCorrect'][$question_id][$index]) && $_POST['newOptionsCorrect'][$question_id][$index] == '1') ? 1 : 0;
+                }
                 insertOption($question_id, trim($option_text), $level);
             }
         }
     }
 }
+
+
 
 
 // 7. Redirect back to the edit page with a success flag.
