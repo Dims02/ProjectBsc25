@@ -44,7 +44,7 @@
                  class="border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-600 hover:text-white">
                 View
               </a>
-              <a href="edit?id=<?= $survey->id; ?>" 
+              <a href="edit?id=<?= $survey->id; ?>&page=<?=getFirstPage($survey->id);?>" 
                  class="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-600 hover:text-white ml-2">
                 Edit
               </a>

@@ -210,6 +210,14 @@ function moveGroupDown($group_id, $survey_id) {
     }
 }
 
+function getFirstPage($survey_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT page FROM question_groups WHERE survey_id = :survey_id ORDER BY page ASC LIMIT 1");
+    $stmt->execute(['survey_id' => $survey_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    return $result ? $result->page : null;
+}
+
 function getQuestionGroupByPage($survey_id, $page) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM question_groups WHERE survey_id = :survey_id AND page = :page LIMIT 1");
@@ -229,5 +237,6 @@ function updateQuestionGroupPage($group_id, $newPage) {
     ]);
     return $stmt->rowCount();
 }
+
 ?>
 
