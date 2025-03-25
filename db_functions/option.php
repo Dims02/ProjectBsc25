@@ -1,29 +1,29 @@
 <?php
-function updateOption($option_id, $option_text, $correct) {
+function updateOption($option_id, $option_text, $level) {
     global $pdo;
     $stmt = $pdo->prepare("
         UPDATE options
-        SET option_text = :option_text, correct = :correct
+        SET option_text = :option_text, level = :level
         WHERE id = :id
     ");
     $stmt->execute([
         'option_text' => $option_text,
-        'correct'     => $correct,
+        'level'       => $level,
         'id'          => $option_id
     ]);
     return $stmt->rowCount();
 }
 
-function insertOption($question_id, $option_text, $correct) {
+function insertOption($question_id, $option_text, $level) {
     global $pdo;
     $stmt = $pdo->prepare("
-        INSERT INTO options (question_id, option_text, correct)
-        VALUES (:question_id, :option_text, :correct)
+        INSERT INTO options (question_id, option_text, level)
+        VALUES (:question_id, :option_text, :level)
     ");
     $stmt->execute([
         'question_id' => $question_id,
         'option_text' => $option_text,
-        'correct'     => $correct
+        'level'       => $level
     ]);
     return $pdo->lastInsertId();
 }
@@ -34,4 +34,5 @@ function deleteOption($option_id) {
     $stmt->execute(['id' => $option_id]);
     return $stmt->rowCount();
 }
+
 ?>

@@ -6,12 +6,7 @@
   <title>Document</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen overflow-hidden bg-gray-200 flex flex-col hidden">
-  
-  <!-- Optional Preloader -->
-  <div id="preloader" class="fixed inset-0 flex items-center justify-center bg-gray-900 text-white z-50">
-    <p class="text-xl">Loading...</p>
-  </div>
+<body class="min-h-screen overflow-hidden bg-gray-200 flex flex-col" >
   
   <!-- Background Video -->
   <video autoplay muted loop playsinline poster="media/bgf.jpg" class="fixed inset-0 w-full h-full object-cover pointer-events-none">
@@ -44,11 +39,11 @@
           <a href="/contacts" class="text-xl font-semibold text-white">Contact Us</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-          <?php if (!isLoggedIn()): ?>
-            <a href="/login" class="text-xl font-semibold text-white">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
-          <?php endif; ?>
+        <?php if (!isLoggedIn()): ?>
+          <a href="/login" class="text-xl font-semibold text-white">
+            Log in <span aria-hidden="true">&rarr;</span>
+          </a>
+        <?php endif; ?>
         </div>
       </nav>
     </header>
@@ -74,59 +69,52 @@
       </div>
     </div>
   </div>
-
-  <!-- Cookie Consent Modal -->
-  <div id="cookieConsent" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-500">
-    <div class="bg-gray-900 text-white p-8 rounded shadow-lg max-w-md mx-auto">
-      <p class="mb-4 text-center">
-        We use cookies to ensure you get the best experience on our website.
-      </p>
-      <div class="flex justify-center">
-        <button id="cookieConsentBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold py-2 px-4 rounded">
-          Accept
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script>
-    // Wait until everything is loaded (including videos) to remove hidden class
-    window.onload = function() {
-      // Hide preloader if it exists
-      const preloader = document.getElementById("preloader");
-      if (preloader) preloader.style.display = "none";
-      
-      // Show the main content
-      document.body.classList.remove("hidden");
-    };
-
-    // Cookie consent modal functionality
-    document.addEventListener("DOMContentLoaded", function() {
-      const consentModal = document.getElementById("cookieConsent");
-      
-      // Delay showing the modal by 1 second (1000ms)
-      setTimeout(() => {
-        if (!localStorage.getItem("cookiesAccepted")) {
-          // Enable interaction and fade in by removing "opacity-0" and pointer-events disabling class
-          consentModal.classList.remove("opacity-0", "pointer-events-none");
-          consentModal.classList.add("opacity-100");
-        }
-      }, 1000);
-      
-      document.getElementById("cookieConsentBtn").addEventListener("click", function() {
-        localStorage.setItem("cookiesAccepted", "true");
-        // Fade out the modal by switching opacity classes
-        consentModal.classList.remove("opacity-100");
-        consentModal.classList.add("opacity-0");
-        // Optionally, disable pointer events after the transition completes (500ms)
-        setTimeout(() => {
-          consentModal.classList.add("pointer-events-none");
-        }, 500);
-      });
-    });
-  </script>
-
-  <?php require_once __DIR__ . '/../partials/footer.php'; ?>
 </body>
 </html>
+
+
+<!-- Cookie Consent Modal -->
+<div id="cookieConsent" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-500">
+  <div class="bg-gray-900 text-white p-8 rounded shadow-lg max-w-md mx-auto">
+    <p class="mb-4 text-center">
+      We use cookies to ensure you get the best experience on our website.
+    </p>
+    <div class="flex justify-center">
+      <button id="cookieConsentBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold py-2 px-4 rounded">
+        Accept
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const consentModal = document.getElementById("cookieConsent");
+  
+  // Delay showing the modal by 1 second (1000ms)
+  setTimeout(() => {
+    if (!localStorage.getItem("cookiesAccepted")) {
+      // Enable interaction and fade in by removing "opacity-0" and pointer-events disabling class
+      consentModal.classList.remove("opacity-0", "pointer-events-none");
+      consentModal.classList.add("opacity-100");
+    }
+  }, 1000);
+  
+  document.getElementById("cookieConsentBtn").addEventListener("click", function() {
+    localStorage.setItem("cookiesAccepted", "true");
+    // Fade out the modal by switching opacity classes
+    consentModal.classList.remove("opacity-100");
+    consentModal.classList.add("opacity-0");
+    // Optionally, disable pointer events after the transition completes (500ms)
+    setTimeout(() => {
+      consentModal.classList.add("pointer-events-none");
+    }, 500);
+  });
+});
+</script>
+
+
+
+
+
+<?php require_once __DIR__ . '/../partials/footer.php'; ?>

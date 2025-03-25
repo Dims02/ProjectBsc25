@@ -21,11 +21,10 @@ if (!$survey_id) {
     exit;
 }
 
-// Get all incorrect responses for this user and survey.
-// Ensure your getIncorrectResponses() function returns, for each wrong question, at least these keys:
-// 'question', 'your_answer', 'correct_answer', 'recommendation' (question-specific recommendation),
-// 'group_id', 'group_title', 'group_recommendation'
-$incorrectResponses = getIncorrectResponses($user->id, $survey_id);
+
+$desiredComplianceLevel = getUserDesiredComplianceLevel($user->id, $survey_id);
+$incorrectResponses = getIncorrectResponses($user->id, $survey_id,$desiredComplianceLevel);
+
 // Group incorrect responses by question group (page).
 $groupedIncorrect = [];
 foreach ($incorrectResponses as $item) {

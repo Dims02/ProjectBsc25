@@ -66,7 +66,7 @@ function getOptionsByQuestionId($question_id) {
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 
-function getIncorrectResponses($userId, $survey_id) {
+function getIncorrectResponses($userId, $survey_id, $desiredComplianceLevel) {
     global $pdo;
     $incorrectResponses = [];
 
@@ -84,31 +84,36 @@ function getIncorrectResponses($userId, $survey_id) {
             $response = $stmt->fetch(PDO::FETCH_OBJ);
 
             if ($response) {
-                // Get the correct option for this question.
+                // Get all options for this question.
                 $options = getOptionsByQuestionId($question->id);
-                $correctAnswer = null;
+                $userOptionLevel = null;
+                $userAnswerText = trim($response->answer);
+
+                // Loop through options to find the one matching the user's answer.
                 foreach ($options as $option) {
-                    if ($option->correct) {
-                        $correctAnswer = $option->option_text;
+                    if (trim($option->option_text) === $userAnswerText) {
+                        $userOptionLevel = (int)$option->level;
                         break;
                     }
                 }
 
-                // Compare user's answer with the correct answer.
-                if ($correctAnswer !== null && trim($response->answer) !== trim($correctAnswer)) {
-                    // Use the question recommendation if set; otherwise, fallback to the group's recommendation or a default message.
-                    $questionRecommendation = isset($question->recommendation) && !empty($question->recommendation)
+                // If no matching option found or the answer level is below the desired threshold, mark as incorrect.
+                if ($userOptionLevel === null || $userOptionLevel < $desiredComplianceLevel) {
+                    // Choose a recommendation: use the question recommendation if set,
+                    // otherwise, fallback to the group's recommendation or a default message.
+                    $questionRecommendation = !empty($question->recommendation)
                         ? $question->recommendation
                         : ($group->recommendation ?? "Review this topic for more details.");
 
                     $incorrectResponses[] = [
-                        'group_id'            => $group->id,
-                        'group_title'         => $group->title,
-                        'group_recommendation'=> $group->recommendation ?? "Review this topic for more details.",
-                        'question'            => $question->text,
-                        'your_answer'         => $response->answer,
-                        'correct_answer'      => $correctAnswer,
-                        'recommendation'      => $questionRecommendation
+                        'group_id'             => $group->id,
+                        'group_title'          => $group->title,
+                        'group_recommendation' => $group->recommendation ?? "Review this topic for more details.",
+                        'question'             => $question->text,
+                        'your_answer'          => $response->answer,
+                        'your_answer_level'    => $userOptionLevel,
+                        'desired_level'        => $desiredComplianceLevel,
+                        'recommendation'       => $questionRecommendation
                     ];
                 }
             }
@@ -117,6 +122,7 @@ function getIncorrectResponses($userId, $survey_id) {
     
     return $incorrectResponses;
 }
+
 
 
 ?>

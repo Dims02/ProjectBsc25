@@ -69,24 +69,30 @@ class Answer {
     public $id;
     public $question_id;
     public $user_id;
-    public $answer;
 
-    public function __construct($id, $question_id, $user_id, $answer) {
+    public function __construct($id, $question_id, $user_id, $optionId) {
         $this->id = $id;
         $this->question_id = $question_id;
         $this->user_id = $user_id;
-        $this->answer = $answer;
+        $this->optionId = $optionId;
     }
 }
 
-class Options {
+
+class Option {
     public $id;
     public $question_id;
     public $text;
+    // Level: 0 = no, 1 = basic, 2 = intermediate, 3 = advanced
+    public $level;
 
-    public function __construct($question_id, $text) {
+    public function __construct($id, $question_id, $text, $level) {
+        $this->id = $id;
         $this->question_id = $question_id;
         $this->text = $text;
+        $this->level = (int) $level;
     }
 }
+
+
 ?>

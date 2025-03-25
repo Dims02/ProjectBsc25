@@ -20,16 +20,19 @@
         <div class="bg-white shadow rounded p-6 mb-4">
           <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($group['group_title'], ENT_QUOTES, 'UTF-8') ?></h2>
           <?php if (!empty($group['group_recommendation'])): ?>
-            <p class="mb-4 text-indigo-600"><strong>Group Recommendation:</strong> <?= htmlspecialchars($group['group_recommendation'], ENT_QUOTES, 'UTF-8') ?></p>
+            <p class="mb-4 text-indigo-600">
+              <strong>Group Recommendation:</strong> <?= htmlspecialchars(strip_tags($group['group_recommendation']), ENT_QUOTES, 'UTF-8') ?>
+            </p>
           <?php endif; ?>
           <?php foreach ($group['questions'] as $item): ?>
             <div class="mb-4 border-t pt-4">
-              <h3 class="text-lg font-semibold mb-1">Question: <?= htmlspecialchars($item['question'], ENT_QUOTES, 'UTF-8') ?></h3>
-              <p class="mb-1"><strong>Your Answer:</strong> <?= htmlspecialchars($item['your_answer'], ENT_QUOTES, 'UTF-8') ?></p>
-              <p class="mb-1"><strong>Correct Answer:</strong> <?= htmlspecialchars($item['correct_answer'], ENT_QUOTES, 'UTF-8') ?></p>
-              <?php if (!empty($item['recommendation'])): ?>
-                <p class="mb-1 text-indigo-600"><strong>Recommendation:</strong> <?= htmlspecialchars($item['recommendation'], ENT_QUOTES, 'UTF-8') ?></p>
-              <?php endif; ?>
+              <h3 class="text-lg font-semibold mb-1">Question: <?= htmlspecialchars(strip_tags($item['question']), ENT_QUOTES, 'UTF-8') ?></h3>
+              <p class="mb-1">
+                <strong>Your Answer:</strong> <?= htmlspecialchars(strip_tags($item['your_answer']), ENT_QUOTES, 'UTF-8') ?>
+              </p>
+              <p class="mb-1 text-indigo-600">
+                <strong>Recommendation:</strong> <?= htmlspecialchars(strip_tags($item['recommendation']), ENT_QUOTES, 'UTF-8') ?>
+              </p>
             </div>
           <?php endforeach; ?>
         </div>

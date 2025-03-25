@@ -102,16 +102,16 @@
 
       <!-- Questions Container -->
       <div id="questions-container" class="mb-6">
-        <?php $i = 1; foreach ($questions as $question): ?>
+        <?php foreach ($questions as $question): ?>
           <div class="question-card mb-4 bg-white shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
-          <div class="flex items-center justify-between">
-            <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-800">
-              Question <?= $i ?>
-            </label>
-            <button type="button" class="remove-question text-red-500 font-bold text-3xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
-              &times;
-            </button>
-          </div>
+            <div class="flex items-center justify-between">
+              <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-800">
+                Question <?= $i ?>
+              </label>
+              <button type="button" class="remove-question text-red-500 font-bold text-3xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+                &times;
+              </button>
+            </div>
 
             <textarea 
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
@@ -125,6 +125,7 @@
               <div class="option-container">
                 <?php $options = getOptionsByQuestionId($question->id); ?>
                 <?php if ($options && count($options) > 0): ?>
+                  
                   <?php $j = 1; foreach ($options as $option): ?>
                     <div class="option-row mb-2 flex items-center" data-option-id="<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>">
                       <label for="option-<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium mr-2">
@@ -138,13 +139,12 @@
                         placeholder="Option text" 
                         class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black"
                       >
-                      <input 
-                        type="checkbox" 
-                        name="correctOptions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
-                        value="1" 
-                        <?= $option->correct ? 'checked' : '' ?>
-                        style="transform: scale(1.5);"
-                      >
+                      <select class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="options_level[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]">
+                        <option value="0" <?= ($option->level == 0 ? 'selected' : '') ?>>No</option>
+                        <option value="1" <?= ($option->level == 1 ? 'selected' : '') ?>>Basic</option>
+                        <option value="2" <?= ($option->level == 2 ? 'selected' : '') ?>>Intermediate</option>
+                        <option value="3" <?= ($option->level == 3 ? 'selected' : '') ?>>Advanced</option>
+                      </select>
                       <button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">
                         &times;
                       </button>
@@ -156,18 +156,37 @@
                 +
               </button>
             </div>
-            <!-- Recommendation Text Box for Question -->
-            <label for="question-recommendation" class="block text-black font-medium">Question Recommendation</label>
+
+            <!-- Recommendation Text Boxes for Question -->
+            <?php 
+              // For each question, load the recommendations from the new table
+              $recommendations = getRecommendationByQuestionId($question->id); // Returns an associative array with keys: basic, intermediate, advanced
+            ?>
+            <label for="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Advanced</label>
             <textarea 
-              id="question-recommendation-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
-              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
-              placeholder="Enter recommendation for this question" 
+              id="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][advanced]" 
+              placeholder="Enter recommendation for Advanced level" 
               class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
-            ><?= htmlspecialchars($question->recommendation ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+            ><?= htmlspecialchars($recommendations['advanced'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
+            <label for="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Intermediate</label>
+            <textarea 
+              id="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][intermediate]" 
+              placeholder="Enter recommendation for Intermediate level" 
+              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
+            ><?= htmlspecialchars($recommendations['intermediate'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
+            <label for="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Basic</label>
+            <textarea 
+              id="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][basic]" 
+              placeholder="Enter recommendation for Basic level" 
+              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
+            ><?= htmlspecialchars($recommendations['basic'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
           </div>
-        <?php $i++; endforeach; ?>
+          <?php $i++; endforeach; ?>
         <!-- Add Question Button Wrapper -->
         <div id="add-question-wrapper" class="flex items-center justify-between pt-3">
           <button type="button" id="add-question" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -214,9 +233,10 @@
 
 <!-- JavaScript to Handle Add/Remove for Options, Questions, and Group -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var surveyForm = document.getElementById('survey-form');
-    // Delegate add-option clicks
+document.addEventListener('DOMContentLoaded', function() {
+  var surveyForm = document.getElementById('survey-form');
+  
+    // Delegate add-option clicks (inside your existing DOMContentLoaded event)
     surveyForm.addEventListener('click', function(e) {
       if (e.target && e.target.classList.contains('add-option')) {
         var button = e.target;
@@ -231,99 +251,117 @@
           console.error('Option container not found.');
           return;
         }
+        // Determine the new option's index (based on existing option rows)
         var newIndex = container.querySelectorAll('.option-row').length + 1;
+        
+        // Set default level based on newIndex:
+        // Option 1 -> Advanced (3)
+        // Option 2 -> Intermediate (2)
+        // Option 3 -> Basic (1)
+        // Option 4+ -> No (0)
+        var defaultLevel = 0;
+        if (newIndex === 1) {
+          defaultLevel = 3;
+        } else if (newIndex === 2) {
+          defaultLevel = 2;
+        } else if (newIndex === 3) {
+          defaultLevel = 1;
+        } else {
+          defaultLevel = 0;
+        }
+        
         var newRow = document.createElement('div');
         newRow.className = 'option-row mb-2 flex items-center';
         newRow.innerHTML = 
           '<label class="block text-gray-600 font-medium mr-2">Option ' + newIndex + '</label>' +
-          (questionId 
-            ? '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">' 
-            : '<input type="text" name="newOptions[]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">'
-          ) +
-          '<label class="text-gray-600 mr-2">Correct?</label>' +
-          (questionId 
-            ? '<input type="checkbox" name="newCorrectOptions[' + questionId + '][]" value="1">' 
-            : '<input type="checkbox" name="newCorrectOptions[]" value="1">'
-          ) +
-          '<button type="button" class="remove-option text-red-500 font-bold text-xl ml-2">&times;</button>';
+          '<input type="text" name="newOptions[' + questionId + '][]" placeholder="Option text" class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black">' +
+          '<select class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="newOptionsLevel[' + questionId + '][]">' +
+            '<option value="0" ' + (defaultLevel === 0 ? 'selected' : '') + '>No</option>' +
+            '<option value="1" ' + (defaultLevel === 1 ? 'selected' : '') + '>Basic</option>' +
+            '<option value="2" ' + (defaultLevel === 2 ? 'selected' : '') + '>Intermediate</option>' +
+            '<option value="3" ' + (defaultLevel === 3 ? 'selected' : '') + '>Advanced</option>' +
+          '</select>' +
+          '<button type="button" class="remove-option text-red-500 font-bold text-3xl ml-auto">&times;</button>';
+        
         container.appendChild(newRow);
       }
     });
 
-    // Delegate remove-option clicks
-    surveyForm.addEventListener('click', function(e) {
-      if (e.target && e.target.classList.contains('remove-option')) {
-        var row = e.target.closest('.option-row');
-        if (row) {
-          var optionId = row.getAttribute('data-option-id');
-          if (optionId) {
-            var hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = 'removed_options[]';
-            hiddenInput.value = optionId;
-            surveyForm.appendChild(hiddenInput);
-          }
-          row.parentNode.removeChild(row);
-        }
-      }
-    });
 
-    // Handle Add Question button
-    var addQuestionBtn = document.getElementById('add-question');
-    addQuestionBtn.addEventListener('click', function() {
-      var template = document.getElementById('new-question-template');
-      var clone = template.content.cloneNode(true);
-      var addQuestionWrapper = document.getElementById('add-question-wrapper');
-      addQuestionWrapper.parentNode.insertBefore(clone, addQuestionWrapper);
-    });
-
-    // Delegate remove-question clicks
-    surveyForm.addEventListener('click', function(e) {
-      if (e.target && e.target.classList.contains('remove-question')) {
-        var questionBlock = e.target.closest('.question-card');
-        if (questionBlock) {
-          var questionId = questionBlock.getAttribute('data-question-id');
-          if (questionId && !questionId.startsWith('new_')) {
-            var hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = 'removed_questions[]';
-            hiddenInput.value = questionId;
-            surveyForm.appendChild(hiddenInput);
-          }
-          questionBlock.parentNode.removeChild(questionBlock);
-        }
-      }
-    });
-
-    // Handle Remove Group button
-    var removeGroupBtn = document.getElementById('remove-group');
-    if (removeGroupBtn) {
-      removeGroupBtn.addEventListener('click', function() {
-        var groupId = "<?= htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') ?>";
-        if (groupId) {
+  // Delegate remove-option clicks
+  surveyForm.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-option')) {
+      var row = e.target.closest('.option-row');
+      if (row) {
+        var optionId = row.getAttribute('data-option-id');
+        if (optionId) {
           var hiddenInput = document.createElement('input');
           hiddenInput.type = 'hidden';
-          hiddenInput.name = 'removed_group';
-          hiddenInput.value = groupId;
+          hiddenInput.name = 'removed_options[]';
+          hiddenInput.value = optionId;
           surveyForm.appendChild(hiddenInput);
         }
-      });
+        row.parentNode.removeChild(row);
+      }
     }
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var textareas = document.querySelectorAll('textarea.auto-resize');
-    textareas.forEach(function(textarea) {
-      function autoExpand() {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-      }
-      autoExpand();
-      textarea.addEventListener('input', autoExpand);
-    });
+  // Handle Add Question button
+  var addQuestionBtn = document.getElementById('add-question');
+  addQuestionBtn.addEventListener('click', function() {
+    var template = document.getElementById('new-question-template');
+    var clone = template.content.cloneNode(true);
+    var addQuestionWrapper = document.getElementById('add-question-wrapper');
+    addQuestionWrapper.parentNode.insertBefore(clone, addQuestionWrapper);
   });
 
-  document.getElementById('survey-form').addEventListener('keydown', function(e) {
+  // Delegate remove-question clicks
+  surveyForm.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-question')) {
+      var questionBlock = e.target.closest('.question-card');
+      if (questionBlock) {
+        var questionId = questionBlock.getAttribute('data-question-id');
+        if (questionId && !questionId.startsWith('new_')) {
+          var hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = 'removed_questions[]';
+          hiddenInput.value = questionId;
+          surveyForm.appendChild(hiddenInput);
+        }
+        questionBlock.parentNode.removeChild(questionBlock);
+      }
+    }
+  });
+
+  // Handle Remove Group button
+  var removeGroupBtn = document.getElementById('remove-group');
+  if (removeGroupBtn) {
+    removeGroupBtn.addEventListener('click', function() {
+      var groupId = "<?= htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') ?>";
+      if (groupId) {
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'removed_group';
+        hiddenInput.value = groupId;
+        surveyForm.appendChild(hiddenInput);
+      }
+    });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var textareas = document.querySelectorAll('textarea.auto-resize');
+  textareas.forEach(function(textarea) {
+    function autoExpand() {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+    autoExpand();
+    textarea.addEventListener('input', autoExpand);
+  });
+});
+
+document.getElementById('survey-form').addEventListener('keydown', function(e) {
   // For any element, check if Ctrl+Enter is pressed.
   if (e.key === 'Enter' && e.ctrlKey) {
     e.preventDefault();
@@ -331,12 +369,10 @@
   }
 });
 
-
 tinymce.init({
   selector: 'textarea:not(.no-tiny)',
   setup: function(editor) {
     editor.on('keydown', function(e) {
-      // 13 is Enter
       if (e.ctrlKey && e.keyCode === 13) {
         e.preventDefault();
         document.getElementById('update-survey-btn').click();
@@ -357,7 +393,4 @@ tinymce.init({
   ],
   ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant'))
 });
-
-
-
 </script>

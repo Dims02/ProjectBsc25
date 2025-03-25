@@ -24,7 +24,7 @@ $tabname = "Dashboard";
 $pos = "max-w-7xl";
 $NumSurveyTaken = count($fullyAnsweredIds);
 $NumSurveyTaking = getUnfinishedSurveysCount($user_id);
-$PercentCorrect = getOverallCorrectnessPercentage($user_id) . "%";
+$PercentCorrect = getOverallBasicCompliancePercentage($user_id) . "%";
 
 // For charts:
 // For the doughnut chart, we need the completeness of a specific survey.

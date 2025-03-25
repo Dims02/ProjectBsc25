@@ -136,26 +136,31 @@ if ($group_id) {
 }
 
 // 4. Update each existing question.
-// Now, include the recommendation for each question.
 $questionsData = $_POST['questions'] ?? []; 
 $questionRecommendations = $_POST['question_recommendations'] ?? [];
 
 foreach ($questionsData as $question_id => $questionText) {
-    // Get the corresponding recommendation text; default to empty string if not set.
-    $recommendationText = isset($questionRecommendations[$question_id]) ? trim($questionRecommendations[$question_id]) : '';
-    
-    // Create the Question object with the recommendation included.
-    $question = new Question($question_id, $group_id, trim($questionText), $recommendationText);
-    
+    // Update the question text by creating a new Question object
+    // (Assuming updateQuestion($question) updates the question text in your database.)
+    $question = new Question($question_id, $group_id, trim($questionText));
     updateQuestion($question);
+    
+    // Then update the recommendations for this question
+    $recBasic = isset($questionRecommendations[$question_id]['basic']) ? trim($questionRecommendations[$question_id]['basic']) : '';
+    $recIntermediate = isset($questionRecommendations[$question_id]['intermediate']) ? trim($questionRecommendations[$question_id]['intermediate']) : '';
+    $recAdvanced = isset($questionRecommendations[$question_id]['advanced']) ? trim($questionRecommendations[$question_id]['advanced']) : '';
+
+    updateRecommendation($question_id, $recBasic, $recIntermediate, $recAdvanced);
 }
+
+
 
 // 4.5. Insert new questions.
 // For new questions, you may not have recommendations yet; they default to empty.
 if (is_array($newQuestionsData)) {
     foreach ($newQuestionsData as $newQuestionText) {
         if (trim($newQuestionText) !== '') {
-            // Here you can optionally add a recommendation parameter if provided
+            // Here you can optionally add a recommendation parameter if provided.
             $newQuestionId = insertQuestion($group_id, trim($newQuestionText));
         }
     }
@@ -165,24 +170,27 @@ if (is_array($newQuestionsData)) {
 if (is_array($optionsData)) {
     foreach ($optionsData as $question_id => $opts) {
         foreach ($opts as $option_id => $option_text) {
-            // Determine if this option is marked correct.
-            $correct = isset($correctOptions[$question_id][$option_id]) ? 1 : 0;
-            updateOption($option_id, trim($option_text), $correct);
+            // Retrieve the level from the options_level array. If not set, default to 0.
+            $level = isset($_POST['options_level'][$question_id][$option_id]) ? (int) $_POST['options_level'][$question_id][$option_id] : 0;
+            updateOption($option_id, trim($option_text), $level);
         }
     }
 }
+
 
 // 6. Insert new options for questions.
 if (is_array($newOptionsData)) {
     foreach ($newOptionsData as $question_id => $opts) {
         foreach ($opts as $index => $option_text) {
             if (trim($option_text) !== '') {
-                $correct = isset($newCorrectOptions[$question_id][$index]) ? 1 : 0;
-                insertOption($question_id, trim($option_text), $correct);
+                // Retrieve the level from the newOptionsLevel array. If not set, default to 0.
+                $level = isset($_POST['newOptionsLevel'][$question_id][$index]) ? (int) $_POST['newOptionsLevel'][$question_id][$index] : 0;
+                insertOption($question_id, trim($option_text), $level);
             }
         }
     }
 }
+
 
 // 7. Redirect back to the edit page with a success flag.
 header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page));
