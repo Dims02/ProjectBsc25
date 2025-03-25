@@ -21,7 +21,6 @@ if (!$survey_id) {
     exit;
 }
 
-
 $desiredComplianceLevel = getUserDesiredComplianceLevel($user->id, $survey_id);
 $incorrectResponses = getIncorrectResponses($user->id, $survey_id,$desiredComplianceLevel);
 

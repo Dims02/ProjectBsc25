@@ -195,6 +195,7 @@ function getUnfinishedSurveysCount($user_id) {
 
 
 
+
 function getSurveysCompletionRatio($user_id) {
     // Get the completed surveys for the user.
     $fullyAnsweredIds = getFullyAnsweredSurveyIds($user_id);
