@@ -1,4 +1,4 @@
-<header class="relative h-20 bg-cover bg-center" style="background-image: url('/media/banner.jpg');">
+<header class="relative h-20 bg-cover bg-center">
   <!-- Overlay -->
   <div class="absolute inset-0 bg-black opacity-20"></div>
   <!-- Content container above the overlay -->

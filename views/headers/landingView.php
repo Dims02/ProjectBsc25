@@ -51,12 +51,15 @@
     <div class="relative isolate flex items-center justify-center h-screen px-6 pt-14 lg:px-8">
       <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56 text-center">
         <div class="text-center">
-          <h1 class="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl" style="text-shadow: 2px 2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff, -2px -2px 0 #fff;">
+        <h1 class="text-5xl font-semibold tracking-tight text-white sm:text-7xl" 
+            style="text-shadow: 2px 2px 3px rgba(0,0,0,1);">
             Ensuring Compliance
-          </h1>
-          <p class="mt-8 text-lg font-medium text-gray-900 sm:text-2xl" style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
-            Secure & Resilient Digital Infrastructure
-          </p>
+        </h1>
+        <p class="mt-8 text-lg font-medium text-white sm:text-2xl" 
+          style="text-shadow: 2px 2px 3px rgba(0,0,0,1);">
+          Secure & Resilient Digital Infrastructure
+        </p>
+
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <a href="/dashboard" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500">
               Get started

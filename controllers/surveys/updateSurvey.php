@@ -62,7 +62,6 @@ if ($action === 'moveUp') {
     } else {
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Up");
     }
-    exit;
 }
 
 if ($action === 'moveDown') {
@@ -72,7 +71,6 @@ if ($action === 'moveDown') {
     } else {
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Down");
     }
-    exit;
 }
 
 if ($action === 'toggleLeveled') {
@@ -82,7 +80,6 @@ if ($action === 'toggleLeveled') {
         toggleLeveling($survey_id);
         header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&success=Leveling+Toggled");
     // Redirect back to the edit page
-    exit;
     }
 }
 
@@ -96,7 +93,6 @@ if ($action === 'addGroup') {
     $newGroupId = newQuestionGroup($survey_id, '', '', $page + 1);
     $newGroup = getQuestionGroup($newGroupId);
     header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($newGroup->page) . "&success=Group+Created");
-    exit;
 }
 
 
