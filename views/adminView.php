@@ -4,69 +4,85 @@
 
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
   <!-- Survey List -->
-  <div class="bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">All Surveys</h2>
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-6">All Surveys</h2>
 
-    <table class="w-full border-collapse border border-gray-300">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="border border-gray-300 px-4 py-2">Title</th>
-          <th class="border border-gray-300 px-4 py-2">Created By</th>
-          <th class="border border-gray-300 px-4 py-2">Created At</th>
-          <th class="border border-gray-300 px-4 py-2">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($surveys as $survey): ?>
-          <tr class="border border-gray-300">
-            <td class="border border-gray-300 px-4 py-2 text-center">
-              <?= htmlspecialchars($survey->title); ?>
-            </td>
-            <td class="border border-gray-300 px-4 py-2 text-center">
-              <?php 
-                $user = getUserFromId($survey->user_id);
-                if ($user && isset($user->name) && isset($user->surname)) {
-                  echo htmlspecialchars(
-                    !empty($user->entity)
-                      ? $user->entity . ' - ' . ($user->name . ' ' . $user->surname)
-                      : ($user->name . ' ' . $user->surname)
-                  );
-                } else {
-                  echo "Deleted User";
-                }
-              ?>
-            </td>
-            <td class="border border-gray-300 px-4 py-2 text-center">
-              <?= htmlspecialchars($survey->created_at); ?>
-            </td>
-            <td class="border border-gray-300 px-4 py-2 text-center">
-              <a href="survey?id=<?= $survey->id; ?>" 
-                 class="border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-600 hover:text-white">
-                View
-              </a>
-              <a href="edit?id=<?= $survey->id; ?>&page=<?=getFirstPage($survey->id);?>" 
-                 class="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-600 hover:text-white ml-2">
-                Edit
-              </a>
-              <form action="delete" method="POST" class="inline-block" 
-                    onsubmit="return confirm('Are you sure you want to delete this survey?');">
-                <input type="hidden" name="survey_id" value="<?= $survey->id; ?>">
-                <button type="submit" 
-                        class="border border-red-600 text-red-600 px-2 py-1 rounded hover:bg-red-600 hover:text-white ml-2">
-                  Delete
-                </button>
-              </form>
-            </td>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Title</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Created By</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Created At</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">State</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Actions</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-    
-    <form action="create" method="POST" class="mb-4 mt-4">
-      <button type="submit" class="<?= $highlightColor; ?> px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80">
-        + Create New Survey
-      </button>
-    </form>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <?php foreach ($surveys as $survey): ?>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <?= htmlspecialchars($survey->title); ?>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <?php 
+                  $user = getUserFromId($survey->user_id);
+                  if ($user && isset($user->name) && isset($user->surname)) {
+                    echo htmlspecialchars(
+                      !empty($user->entity)
+                        ? $user->entity . ' - ' . ($user->name . ' ' . $user->surname)
+                        : ($user->name . ' ' . $user->surname)
+                    );
+                  } else {
+                    echo "Deleted User";
+                  }
+                ?>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <?= htmlspecialchars($survey->created_at); ?>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                <?php 
+                  // Assuming state 1 = Enabled, 0 = Disabled.
+                  if ($survey->state == 1) {
+                    echo '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Enabled</span>';
+                  } else {
+                    echo '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Disabled</span>';
+                  }
+                ?>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                <div class="flex justify-center items-center space-x-2">
+                  <a href="survey?id=<?= $survey->id; ?>" class="px-3 py-1 rounded bg-green-50 text-green-600 hover:bg-green-100">
+                    View
+                  </a>
+                  <a href="edit?id=<?= $survey->id; ?>&page=<?= getFirstPage($survey->id); ?>" class="px-3 py-1 rounded bg-blue-50 text-blue-600 hover:bg-blue-100">
+                    Edit
+                  </a>
+                  <a href="toggle?id=<?= $survey->id; ?>" class="px-3 py-1 rounded bg-purple-50 text-purple-600 hover:bg-purple-100">
+                    <?= ($survey->state == 1) ? 'Disable' : 'Enable'; ?>
+                  </a>
+                  <form action="delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this survey?');" class="inline-block">
+                    <input type="hidden" name="survey_id" value="<?= $survey->id; ?>">
+                    <button type="submit" class="px-3 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-6">
+      <form action="create" method="POST">
+        <button type="submit" class="<?= $highlightColor; ?> px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80">
+          + Create New Survey
+        </button>
+      </form>
+    </div>
   </div>
 </main>
 

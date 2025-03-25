@@ -1,0 +1,16 @@
+{
+	"folder-color.pathColors": [
+		{
+			"folderPath": "htdocs\\controllers\\",
+			"color": "foldercolorizer.color_cc0000"
+		},
+		{
+			"folderPath": "htdocs\\db_functions\\",
+			"color": "foldercolorizer.color_00aa00"
+		},
+		{
+			"folderPath": "htdocs\\views\\",
+			"color": "foldercolorizer.color_0066ff"
+		}
+	]
+}

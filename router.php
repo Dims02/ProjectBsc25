@@ -25,6 +25,7 @@ $routes = [
     "/submit"       => "controllers/surveys/submit.php",
     "/delete"       => "controllers/surveys/delete.php",
     "/create"       => "controllers/surveys/create.php",
+    "/toggle"       => "controllers/surveys/toggle.php",
     "/edit"         => "controllers/surveys/edit.php",
     "/thankyou"     => "views/surveys/thankyou.php",
     "/submitChanges"=> "controllers/surveys/submitChanges.php",
@@ -32,6 +33,7 @@ $routes = [
     "/reco"         => "controllers/reco.php",
     "/export"       => "export.php",
     "/test"         => "testlatex.php",
+
 
 ];
 

@@ -43,7 +43,7 @@
       <p class="mt-2 text-gray-600">
         This project is supervised by <strong>Professor Pedro Inácio</strong> 
         (<a href="mailto:inacio@di.ubi.pt" class="text-indigo-600 hover:underline">inacio@di.ubi.pt</a>) 
-        and developed at <strong>Universidade da Beira Interior (UBI)</strong> by <strong> Diogo Silva </strong>(<a href="mailto:matos.silva@di.ubi.pt" class="text-indigo-600 hover:underline">matos.silva@di.ubi.pt</a>).
+        and developed at <strong>Universidade da Beira Interior (UBI)</strong> by <strong> Diogo Silva </strong>(<a href="mailto:matos.silva@ubi.pt" class="text-indigo-600 hover:underline">matos.silva@ubi.pt</a>).
       </p>
     </div>
 

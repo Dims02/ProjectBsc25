@@ -231,37 +231,29 @@ function getAllSurveysCompletionPercentages($user_id) {
 }
 
 
-function getSurveyCompletenessPercentage($survey_id, $user_id) {
-    global $pdo;
+function getSurveysCompletionRatio($user_id) {
+    // Get the completed surveys for the user.
+    $fullyAnsweredIds = getFullyAnsweredSurveyIds($user_id);
+    $completedCount = count($fullyAnsweredIds);
     
-    // Get total questions in the survey
-    $stmt = $pdo->prepare("
-        SELECT 
-            (SELECT COUNT(*) 
-             FROM questions q
-             JOIN question_groups g ON q.group_id = g.id
-             WHERE g.survey_id = :survey_id
-            ) AS totalQuestions,
-            (SELECT COUNT(*) 
-             FROM responses r
-             JOIN questions q ON r.question_id = q.id
-             JOIN question_groups g ON q.group_id = g.id
-             WHERE g.survey_id = :survey_id AND r.user_id = :user_id
-            ) AS answeredQuestions
-    ");
+    // Get all surveys.
+    $allSurveys = getAllSurveys();
+    $totalCount = count($allSurveys);
     
-    $stmt->execute([
-        'survey_id' => $survey_id,
-        'user_id'   => $user_id
-    ]);
+    // Calculate not completed count.
+    $notCompletedCount = $totalCount - $completedCount;
     
-    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    // Optionally, calculate a ratio string (e.g., "3:2").
+    $ratio = $completedCount . ":" . $notCompletedCount;
     
-    if ($result && $result->totalQuestions > 0) {
-        return round(($result->answeredQuestions / $result->totalQuestions) * 100, 2);
-    }
-    return 0;
+    return [
+        'completed'     => $completedCount,
+        'not_completed' => $notCompletedCount,
+        'ratio'         => $ratio,
+        'total'         => $totalCount
+    ];
 }
+
 
 function getUserDesiredComplianceLevel($user_id, $survey_id) {
     global $pdo;
@@ -314,6 +306,28 @@ function getUserDesiredComplianceLevel($user_id, $survey_id) {
     // If no answer is found, return 0 (or adjust as needed)
     return 0;
 }
+
+function getAllSurveysComplianceLevels($user_id) {
+    // Retrieve all surveys (you can filter this list as needed)
+    $surveys = getAllSurveys();
+    $complianceLevels = [];
+    foreach ($surveys as $survey) {
+        // Use reachedLevel() to determine the compliance level for each survey.
+        // This returns 0 (No compliance), 1 (Basic), 2 (Intermediate), or 3 (Advanced)
+        $complianceLevels[$survey->title] = reachedLevel($survey->id, $user_id);
+    }
+    return $complianceLevels;
+}
+
+function updateSurveyState($survey_id, $newState) {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE surveys SET state = :state WHERE id = :id");
+    return $stmt->execute([
+        'state' => $newState,
+        'id'    => $survey_id
+    ]);
+}
+
 
 
 ?>
