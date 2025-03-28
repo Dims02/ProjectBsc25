@@ -1181,7 +1181,6 @@ INSERT INTO `recommendations` VALUES
 (245,770,'A entidade deve implementar um plano de comunicação e manter registos das comunicações efetuadas, mesmo que de forma pouco estruturada e dispersa, conforme as ocorrências.','A entidade deve manter um plano de comunicação com documentos de suporte associados, mantendo o registo de partes interessadas conforme o tema a comunicar.','A entidade deve manter um plano de comunicação e os registos das comunicações efetuadas, de forma proativa e através de ações de consciencialização, para as diversas audiências no âmbito.'),
 (246,771,'As atividades de recuperação da entidade devem ser comunicadas às partes interessadas, mantendo registos das comunicações efetuadas.','As atividades de recuperação da entidade devem ser comunicadas às partes interessadas, recorrendo a um plano de comunicação com o detalhe do objetivo a ser comunicado e a identificação da audiência.','As atividades de recuperação da entidade devem ser comunicadas às partes interessadas, incluindo as equipas executivas e de gestão. Os processos de aprovação das comunicações devem ser definidos, e as comunicações feitas para cada audiência devem ser avaliadas.'),
 
-/*!40000 ALTER TABLE `recommendations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
