@@ -1,4 +1,9 @@
-
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19  Distrib 10.11.10-MariaDB, for Linux (x86_64)
+--
+-- Host: localhost    Database: surveydb
+-- ------------------------------------------------------
+-- Server version	10.11.10-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
