@@ -109,7 +109,7 @@
         <?php foreach ($questions as $question): ?>
           <div class="question-card mb-4 bg-white shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
             <div class="flex items-center justify-between">
-              <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-800">
+              <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-600">
                 Question <?= $i ?>
               </label>
               <button type="button" class="remove-question text-red-500 font-bold text-3xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
