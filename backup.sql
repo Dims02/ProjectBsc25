@@ -1015,7 +1015,6 @@ CREATE TABLE `recommendations` (
 --
 
 LOCK TABLES `recommendations` WRITE;
-/*!40000 ALTER TABLE `recommendations` DISABLE KEYS */;
 INSERT INTO `recommendations` VALUES
 (26,366,'Basic Reco','Inter Reco','Advanced Reco'),
 (27,367,'Basic Reco','Inter Reco','Advanced Reco'),
