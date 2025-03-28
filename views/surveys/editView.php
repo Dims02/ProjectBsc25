@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . '/../partials/header.php'; ?>
 <?php require_once __DIR__ . '/../partials/nav.php'; ?>
-
+<?php $n = 1; ?>
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20 max-w-7xl mx-auto">
   <form action="/updateSurvey" method="POST" data-leveled="<?= isLeveled($survey->id) ? '1' : '0' ?>" class="mb-8 p-4 bg-white rounded shadow bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
@@ -110,7 +110,7 @@
           <div class="question-card mb-4 bg-white shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
             <div class="flex items-center justify-between">
               <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-600">
-                Question <?= $i ?>
+                Question <?= $n ?>
               </label>
               <button type="button" class="remove-question text-red-500 font-bold text-3xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 &times;
@@ -197,7 +197,7 @@
               class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
             ><?= htmlspecialchars($recommendations['basic'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
           </div>
-          <?php $i++; endforeach; ?>
+          <?php $i++; $n++; endforeach; ?>
         <!-- Add Question Button Wrapper -->
         <div id="add-question-wrapper" class="flex items-center justify-between pt-3">
           <button type="button" id="add-question" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-blue-600">
