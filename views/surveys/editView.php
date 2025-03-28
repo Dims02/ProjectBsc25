@@ -105,11 +105,11 @@
       </div>
 
       <!-- Questions Container -->
-      <div id="questions-container" class="mb-6">
+      <div id="questions-container" class="mb-6 ">
         <?php foreach ($questions as $question): ?>
-          <div class="question-card mb-4 bg-white shadow rounded p-4 border" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
-            <div class="flex items-center justify-between">
-              <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-500 rounded text-lg font-medium mb-2 p-2 text-indigo-600">
+          <div class="question-card mb-4 bg-white shadow rounded p-4 border " data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+            <div class="flex items-center justify-between ">
+              <label for="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block border border-indigo-100 rounded text-lg font-medium mb-2 p-2 text-indigo-600 bg-indigo-100">
                 Question <?= $n ?>
               </label>
               <button type="button" class="remove-question text-red-500 font-bold text-3xl" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
@@ -121,7 +121,7 @@
               id="question-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
               name="questions[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>]" 
               placeholder="<?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?>" 
-              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize"
+              class="w-full p-2 border border-gray-300 rounded mt-2 auto-resize border-indigo-300"
             ><?= htmlspecialchars($question->text, ENT_QUOTES, 'UTF-8') ?></textarea>
 
             <!-- Options Container -->
@@ -141,10 +141,10 @@
                         name="options[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]" 
                         value="<?= htmlspecialchars($option->option_text, ENT_QUOTES, 'UTF-8') ?>" 
                         placeholder="Option text" 
-                        class="w-[80%] p-2 border border-gray-300 rounded mr-2 text-black"
+                        class="w-[80%] p-2 border rounded border-indigo-300 rounded mr-2 text-black"
                       >
                       <?php if (isLeveled($survey->id)) : ?>
-                      <select class="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="options_level[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]">
+                      <select class="border rounded p-2 border-indigo-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-auto" name="options_level[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][<?= htmlspecialchars($option->id, ENT_QUOTES, 'UTF-8') ?>]">
                         <option value="0" <?= ($option->level == 0 ? 'selected' : '') ?>>No</option>
                         <option value="1" <?= ($option->level == 1 ? 'selected' : '') ?>>Basic</option>
                         <option value="2" <?= ($option->level == 2 ? 'selected' : '') ?>>Intermediate</option>
@@ -163,39 +163,46 @@
                   <?php $j++; endforeach; ?>
                 <?php endif; ?>
               </div>
-              <button type="button" class="mb-5 add-option text-indigo-600 text-xl ml-2 border border-indigo-600 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
+              <button type="button" class="mb-5 add-option text-white text-xl ml-2 border border-indigo-600 bg-indigo-500 rounded w-20 h-7 flex items-center justify-center" data-question-id="<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>">
                 +
               </button>
             </div> 
 
-            <!-- Recommendation Text Boxes for Question -->
-            <?php 
-              // For each question, load the recommendations from the new table
-              $recommendations = getRecommendationByQuestionId($question->id); // Returns an associative array with keys: basic, intermediate, advanced
-            ?>
-            <label for="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= isLeveled($survey->id) ? '' : 'hidden' ?> block text-black font-medium">Question Recommendation - Advanced</label>
-            <textarea 
-              id="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
-              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][advanced]" 
-              placeholder="Enter recommendation for Advanced level" 
-              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny <?= isLeveled($survey->id) ? '' : 'hidden' ?>"
-            ><?= htmlspecialchars($recommendations['advanced'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+          <!-- Recommendation Text Boxes for Question -->
+          <?php 
+            // For each question, load the recommendations from the new table
+            $recommendations = getRecommendationByQuestionId($question->id); // Returns an associative array with keys: basic, intermediate, advanced
+          ?>
+          <label for="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= isLeveled($survey->id) ? 'text-lg font-medium mb-4 p-2 text-indigo-500' : 'hidden' ?>">
+            Recommendation - Advanced
+          </label>
+          <textarea 
+            id="question-recommendation-advanced-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+            name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][advanced]" 
+            placeholder="Enter recommendation for Advanced level" 
+            class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny border-indigo-300 <?= isLeveled($survey->id) ? '' : 'hidden' ?>"
+          ><?= htmlspecialchars($recommendations['advanced'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
-            <label for="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= isLeveled($survey->id) ? '' : 'hidden' ?> block text-black font-medium">Question Recommendation - Intermediate</label>
-            <textarea 
-              id="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
-              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][intermediate]" 
-              placeholder="Enter recommendation for Intermediate level" 
-              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny <?= isLeveled($survey->id) ? '' : 'hidden' ?>"
-            ><?= htmlspecialchars($recommendations['intermediate'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+          <label for="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= isLeveled($survey->id) ? 'text-lg font-medium mb-4 p-2 text-indigo-500' : 'hidden' ?>">
+            Recommendation - Intermediate
+          </label>
+          <textarea 
+            id="question-recommendation-intermediate-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+            name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][intermediate]" 
+            placeholder="Enter recommendation for Intermediate level" 
+            class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny border-indigo-300 <?= isLeveled($survey->id) ? '' : 'hidden' ?>"
+          ><?= htmlspecialchars($recommendations['intermediate'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
-            <label for="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="block text-black font-medium">Question Recommendation - Basic</label>
-            <textarea 
-              id="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
-              name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][basic]" 
-              placeholder="Enter recommendation for Basic level" 
-              class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny"
-            ><?= htmlspecialchars($recommendations['basic'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+          <label for="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" class="text-lg font-medium mb-4 p-2 text-indigo-500">
+            Recommendation - Basic
+          </label>
+          <textarea 
+            id="question-recommendation-basic-<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>" 
+            name="question_recommendations[<?= htmlspecialchars($question->id, ENT_QUOTES, 'UTF-8') ?>][basic]" 
+            placeholder="Enter recommendation for Basic level" 
+            class="w-full p-2 border border-gray-300 rounded auto-resize no-tiny border-indigo-300"
+          ><?= htmlspecialchars($recommendations['basic'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+
           </div>
           <?php $i++; $n++; endforeach; ?>
         <!-- Add Question Button Wrapper -->
@@ -385,13 +392,15 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-document.getElementById('survey-form').addEventListener('keydown', function(e) {
-  // For any element, check if Ctrl+Enter is pressed.
-  if (e.key === 'Enter' && e.ctrlKey) {
+document.addEventListener('keydown', function(e) {
+  // Check if Ctrl+Enter or Ctrl+S (in lowercase) is pressed.
+  if ((e.key === 'Enter' && e.ctrlKey) || (e.key.toLowerCase() === 's' && e.ctrlKey)) {
     e.preventDefault();
     document.getElementById('update-survey-btn').click();
   }
 });
+
+
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -448,4 +457,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { once: true });
   });
 });
+
+// Save scroll position on scroll
+window.addEventListener('scroll', function() {
+  sessionStorage.setItem('scrollPosition', window.scrollY);
+});
+
+// Restore scroll position on page load
+window.addEventListener('load', function() {
+  var scrollPosition = sessionStorage.getItem('scrollPosition');
+  if (scrollPosition) {
+    window.scrollTo(0, parseInt(scrollPosition, 10));
+    sessionStorage.removeItem('scrollPosition'); // Clear after restoration
+  }
+});
+
+
 </script>

@@ -5,13 +5,31 @@
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20">
   <div class="max-w-5xl mx-auto">
-    <!-- Optionally display the current question group title -->
-    <?php if ($currentGroup && !empty($currentGroup->title)): ?>
-      <h2 class="text-3xl font-bold mb-6"><?= htmlspecialchars($currentGroup->title, ENT_QUOTES, 'UTF-8') ?></h2>
-    <?php endif; ?>
+    <!-- Top Header: Title on the left and Navigator on the right -->
+    <div class="flex items-center justify-between mb-6">
+      <?php if ($currentGroup && !empty($currentGroup->title)): ?>
+        <h2 class="text-3xl font-bold tracking-tight text-white relative z-10" style="text-shadow: 1px 1px 2px rgba(0,0,0,1);"><?= htmlspecialchars($currentGroup->title, ENT_QUOTES, 'UTF-8') ?></h2>
+      <?php endif; ?>
+      
+      <!-- Simplified Top Navigator with Previous and Next buttons -->
+      <div class="flex gap-4">
+        <?php if ($currentIndex !== false && $currentIndex > 0): ?>
+          <button type="submit" form="surveyForm" name="action" value="previous" 
+                  class="rounded-md bg-gray-600 px-4 py-2 text-white font-semibold hover:bg-gray-700">
+            Previous
+          </button>
+        <?php endif; ?>
+        <?php if ($currentIndex !== false && $currentIndex < count($questionGroups) - 1): ?>
+          <button type="submit" form="surveyForm" name="action" value="next" 
+                  class="rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500">
+            Next
+          </button>
+        <?php endif; ?>
+      </div>
+    </div>
     
     <!-- Survey Form -->
-    <form action="submit" method="POST" class="space-y-8">
+    <form id="surveyForm" action="submit" method="POST" class="space-y-8">
       <!-- Hidden inputs carrying necessary data -->
       <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
       <input type="hidden" name="group_id" value="<?= $currentGroup ? htmlspecialchars($currentGroup->id, ENT_QUOTES, 'UTF-8') : '' ?>">
@@ -33,7 +51,7 @@
                 if ($options):
                   foreach ($options as $option):
               ?>
-                <div class="flex items-center mb-2">
+                <div class="flex items-center mb-2 ml-5">
                   <input 
                     type="radio" 
                     name="answers[<?= $question->id ?>]" 
@@ -51,51 +69,51 @@
             </div>
           <?php endforeach; ?>
         </div>
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <!-- Navigation Buttons with Navigator in Between -->
-        <div class="flex items-center justify-between">
-          <!-- Previous Button -->
-          <div>
-            <?php if ($currentIndex !== false && $currentIndex > 0): ?>
-              <button type="submit" name="action" value="previous" 
-                      class="rounded-md bg-gray-600 px-4 py-2 text-white font-semibold hover:bg-gray-700">
-                Previous
-              </button>
-            <?php else: ?>
-              <span></span>
-            <?php endif; ?>
-          </div>
+      <!-- Bottom Navigator with Page Links and Next/Submit -->
+      <div class="flex items-center justify-between">
+        <!-- Previous Button -->
+        <div>
+          <?php if ($currentIndex !== false && $currentIndex > 0): ?>
+            <button type="submit" name="action" value="previous" 
+                    class="rounded-md bg-gray-600 px-4 py-2 text-white font-semibold hover:bg-gray-700">
+              Previous
+            </button>
+          <?php else: ?>
+            <span></span>
+          <?php endif; ?>
+        </div>
 
-          <!-- Navigator: Page Links -->
-          <div>
-            <div class="flex flex-wrap gap-2">
-              <?php $numGroups = getNumberOfGroups($survey->id); ?>
-              <?php for ($i = 1; $i <= $numGroups; $i++): ?>
-                <?php $group = $questionGroups[$i - 1]; ?>
-                <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&page=<?= htmlspecialchars($group->page, ENT_QUOTES, 'UTF-8') ?>"
-                   class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->page == $group->page) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
-                  <?= $group->page ?>
-                </a>
-              <?php endfor; ?>
-            </div>
-          </div>
-
-          <!-- Next / Submit Button -->
-          <div>
-            <?php if ($currentIndex !== false && $currentIndex < count($questionGroups) - 1): ?>
-              <button type="submit" name="action" value="next" 
-                      class="rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500">
-                Next
-              </button>
-            <?php else: ?>
-              <button type="submit" name="action" value="submit" 
-                      class="rounded-md bg-green-600 px-4 py-2 text-white font-semibold hover:bg-green-500">
-                Submit Survey
-              </button>
-            <?php endif; ?>
+        <!-- Navigator: Page Links -->
+        <div>
+          <div class="flex flex-wrap gap-2">
+            <?php $numGroups = getNumberOfGroups($survey->id); ?>
+            <?php for ($i = 1; $i <= $numGroups; $i++): ?>
+              <?php $group = $questionGroups[$i - 1]; ?>
+              <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&page=<?= htmlspecialchars($group->page, ENT_QUOTES, 'UTF-8') ?>"
+                 class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->page == $group->page) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
+                <?= $group->page ?>
+              </a>
+            <?php endfor; ?>
           </div>
         </div>
+
+        <!-- Next / Submit Button -->
+        <div>
+          <?php if ($currentIndex !== false && $currentIndex < count($questionGroups) - 1): ?>
+            <button type="submit" name="action" value="next" 
+                    class="rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500">
+              Next
+            </button>
+          <?php else: ?>
+            <button type="submit" name="action" value="submit" 
+                    class="rounded-md bg-green-600 px-4 py-2 text-white font-semibold hover:bg-green-500">
+              Submit Survey
+            </button>
+          <?php endif; ?>
+        </div>
+      </div>
 
     </form>
   </div>
