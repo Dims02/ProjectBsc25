@@ -84,7 +84,7 @@
 
   <!-- Users List Section (Displayed After Surveys) -->
   <div class="bg-white shadow-lg rounded-lg p-6">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Registered Users</h2>
+    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Users</h2>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
