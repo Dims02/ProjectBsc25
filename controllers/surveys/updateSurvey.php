@@ -132,7 +132,7 @@ if (!empty($removed_group)) {
     $lastGroupData = $lastGroupId ? getQuestionGroup($lastGroupId) : null;
     $redirectPage = $lastGroupData ? $lastGroupData->page : 0;
     
-    header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($redirectPage));
+    header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($redirectPage) . "&success=Data+Saved");
     exit;
 }
 
@@ -212,6 +212,6 @@ if (is_array($newOptionsData)) {
 
 
 // 7. Redirect back to the edit page with a success flag.
-header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page));
+header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&success=Data+Saved");
 exit;
 ?>

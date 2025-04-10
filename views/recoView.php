@@ -1,9 +1,9 @@
 <?php require "partials/header.php"; ?>
 <?php require "partials/nav.php"; ?>
+<?php require "partials/banner.php"; ?>
 
 <main class="flex-grow p-4">
   <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Your Recommendations</h1>
     
     <!-- Export Buttons -->
     <div class="mb-6">

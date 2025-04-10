@@ -155,8 +155,6 @@ function getOverallBasicCompliancePercentage($user_id) {
         : 0;
 }
 
-
-
 function getUnfinishedSurveysCount($user_id) {
     global $pdo;
     $stmt = $pdo->prepare("

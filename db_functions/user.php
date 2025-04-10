@@ -1,5 +1,4 @@
 <?php
-use Firebase\JWT\JWT;
 function getUserFromJWT() {
     global $pdo;
     if (!isset($_COOKIE['jwt'])) {
@@ -22,7 +21,9 @@ function getUserFromJWT() {
 
 function getUserFromId($id) {
     global $pdo;
+    // Define a query com um placeholder para o ID do utilizador
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    // Executa a query, passando o ID do utilizador como parâmetro
     $stmt->execute([$id]);
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -40,8 +41,7 @@ function getUserFromId($id) {
         $user->country = $userData['country'] ?? null;
         
         return $user;
-    }
-    
+    } 
     return null;
 }
 
@@ -303,5 +303,17 @@ function getFullyAnsweredSurveyIds($userId) {
 }
 
 
+function getAllUsers() {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM users");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
 
 
+function deleteUser($userId) {
+    global $pdo;
+    // Delete the user from the database
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
+    return $stmt->execute(['id' => $userId]);
+}

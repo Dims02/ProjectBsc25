@@ -1,7 +1,7 @@
 <?php
 global $pdo;
-$heading = "Report";
-$tabname = "Report";
+$heading = "Recommendations";
+$tabname = "Recommendations";
 $pos = "max-w-4xl";
 
 if (!isLoggedIn()) {

@@ -2,6 +2,9 @@
 <?php require_once __DIR__ . '/../partials/nav.php'; ?>
 <?php $n = 1; ?>
 <!-- Main Content -->
+<script>
+    console.log("Basic log: Script is running");
+  </script>
 <main class="flex-grow p-4 pb-20 max-w-7xl mx-auto">
   <form action="/updateSurvey" method="POST" data-leveled="<?= isLeveled($survey->id) ? '1' : '0' ?>" class="mb-8 p-4 bg-white rounded shadow bg-opacity-50" id="survey-form" onsubmit="console.log('Form submitted'); tinymce.triggerSave();">
     <!-- Survey Details Card -->
@@ -397,6 +400,39 @@ document.addEventListener('keydown', function(e) {
   if ((e.key === 'Enter' && e.ctrlKey) || (e.key.toLowerCase() === 's' && e.ctrlKey)) {
     e.preventDefault();
     document.getElementById('update-survey-btn').click();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Attach to window so it's globally available.
+  window.showToast = function(message) {
+    let toast = document.createElement('div');
+    // Use a non-conflicting class name instead of "hidden"
+    toast.className = 'toast toast-init';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // Force a reflow so the initial state is applied
+    void toast.offsetWidth;
+    
+    // Add the "show" class to animate the toast
+    toast.classList.add('show');
+    
+    // Remove after 2 seconds (2000ms) plus a fade-out period (500ms)
+    setTimeout(function() {
+      toast.classList.remove('show');
+      setTimeout(function() {
+        toast.remove();
+      }, 500);
+    }, 2000);
+  };
+
+  // Parse URL parameters and show toast if success parameter exists
+  const urlParams = new URLSearchParams(window.location.search);
+  const successMessage = urlParams.get('success');
+  if (successMessage) {
+    const message = decodeURIComponent(successMessage).replace(/\+/g, ' ');
+    window.showToast(message);
   }
 });
 
