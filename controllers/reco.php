@@ -15,7 +15,7 @@ if (!$user) {
     exit;
 }
 
-$survey_id = $_GET['survey_id'] ?? null;
+$survey_id = decodeSurveyCode($_GET['survey_id']) ?? null;
 if (!$survey_id) {
     header("Location: /surveys");
     exit;

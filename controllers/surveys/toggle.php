@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     if (!isAdminFromJWT()) {
         exit;
     }
-    $survey_id = intval($_GET['id']);
+    $survey_id = decodeSurveyCode($_GET['id']);
 
     // Retrieve the survey using the external function
     $survey = getSurvey($survey_id);

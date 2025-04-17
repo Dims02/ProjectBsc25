@@ -74,7 +74,7 @@
           <?php $numGroups = getNumberOfGroups($survey->id); ?>
           <?php for ($i = 1; $i <= $numGroups; $i++): ?>
             <?php $group = $questionGroups[$i - 1]; ?>
-            <a href="?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&page=<?= htmlspecialchars($group->page, ENT_QUOTES, 'UTF-8') ?>"
+            <a href="?id=<?= htmlspecialchars(encodeSurveyId($survey->id), ENT_QUOTES, 'UTF-8') ?>&page=<?= htmlspecialchars($group->page, ENT_QUOTES, 'UTF-8') ?>"
                class="px-4 py-2 rounded <?= (isset($currentGroup) && $currentGroup->page == $group->page) ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black' ?>">
               <?= $group->page ?>
             </a>

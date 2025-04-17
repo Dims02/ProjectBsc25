@@ -11,12 +11,12 @@ if(!isLoggedIn()) {
 }
 
 // Retrieve posted data
-$survey_id   = $_POST['survey_id']   ?? null;
+$survey_id   = decodeSurveyCode($_POST['survey_id'])   ?? null;
 $group_index = $_POST['group_index'] ?? null;
 $group_id    = $_POST['group_id']    ?? null;
 $action      = $_POST['action']      ?? '';
 $answers     = $_POST['answers']     ?? [];
-$user_id     = $_SESSION['user_id']  ?? null;
+$user_id     = getUserFromJWT()  ?? null;
 
 if (!$survey_id || !$user_id || !$group_id) {
     header("Location: /surveys");

@@ -41,3 +41,26 @@
   }
   </style>
 </head>
+
+<?php $error = $_SESSION['error_message'] ?? '';
+        unset($_SESSION['error_message']); ?>
+
+    <div id="toast" class="toast hidden"></div>
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Grab the PHP‑side $error into JS
+        const error = <?= json_encode($error ?? '') ?>;
+        if (error) {
+        const toast = document.getElementById('toast');
+        toast.textContent = error;
+        // show the toast
+        toast.classList.remove('hidden');
+        toast.classList.add('show');
+        // hide after 3s
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.classList.add('hidden');
+        }, 3000);
+        }
+    });
+    </script>

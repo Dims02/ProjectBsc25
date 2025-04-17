@@ -9,7 +9,7 @@ if(!isAdminFromJWT()) {
     exit;
 }
 
-$survey_id = $_GET['id'] ?? null;
+$survey_id = decodeSurveyCode($_GET['id']) ?? null;
 if (!$survey_id) {
     header("Location: /admin");
     exit;

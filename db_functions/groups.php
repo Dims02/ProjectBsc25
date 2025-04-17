@@ -227,5 +227,12 @@ function updateQuestionGroupPage($group_id, $newPage) {
     return $stmt->rowCount();
 }
 
+function getPageFromGroupId($group_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT page FROM question_groups WHERE id = :id");
+    $stmt->execute(['id' => $group_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    return $result ? $result->page : null;
+}
 ?>
 

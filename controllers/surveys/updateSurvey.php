@@ -1,21 +1,24 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['error_message'] = 'Invalid request method.';
     header("Location: /surveys");
     exit;
 }
 
 if (!isLoggedIn()) {
+    $_SESSION['error_message'] = 'You must be logged in to access that page.';
     header("Location: /login");
     exit;
 }
 
 if (!isAdminFromJWT()) {
+    $_SESSION['error_message'] = 'You must be logged in as an admin to access that page.';
     header("Location: /login");
     exit;
 }
 
-$survey_id = $_POST['survey_id'] ?? null;
-$page = $_POST['page'] ?? null;
+$survey_id = intval($_POST['survey_id']) ?? null;
+$page = isset($_POST['page']) ? (int) $_POST['page'] : null;
 $currentGroup = ($page !== null) ? getQuestionGroupByPage($survey_id, $page) : null;
 $surveyObj = getSurvey($survey_id);
 $isLeveled = isLeveled($survey_id); // or use $surveyObj->leveled if that column exists
@@ -39,7 +42,7 @@ $newCorrectOptions  = $_POST['newCorrectOptions']  ?? []; // New: newCorrectOpti
 // NEW: Question recommendations (for the new recommendation field in questions)
 $questionRecommendations = $_POST['question_recommendations'] ?? [];
 
-$user_id            = $_SESSION['user_id']         ?? null;
+$user_id            = getUserFromJWT()         ?? null;
 
 // Removed items.
 $removed_options    = $_POST['removed_options']    ?? [];
@@ -48,28 +51,36 @@ $removed_group      = $_POST['removed_group']      ?? '';
 
 $action = $_POST['action'] ?? '';
 
-if (!$survey_id || !$user_id) {
-    header("Location: /surveys");
+if (empty($survey_id)) {
+    $_SESSION['error_message'] = 'Invalid survey ID.';
+    header("Location: /dashboard");
     exit;
 }
 
+if (empty($user_id)) {
+    $_SESSION['error_message'] = 'Invalid user ID.';
+    header("Location: /dashboard");
+    exit;
+}
 // Handle moving groups first
 if ($action === 'moveUp') {
     if (moveGroupUp($group_id, $survey_id)) {
         // After moving, re-fetch the current group's page
         $currentGroup = getQuestionGroupByPage($survey_id, $page);
-        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page + 1) . "&success=Group+Moved+Up");
+        header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($currentGroup->page + 1 ) . "&success=Page+Moved+Up");
+        exit;
     } else {
-        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Up");
+        header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Up");
     }
 }
 
 if ($action === 'moveDown') {
     if (moveGroupDown($group_id, $survey_id)) {
         $currentGroup = getQuestionGroupByPage($survey_id, $page);
-        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($currentGroup->page - 1) . "&success=Group+Moved+Down");
+        header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($currentGroup->page - 1) . "&success=Page+Moved+Down");
+        exit;
     } else {
-        header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Down");
+        header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($page) . "&error=Cannot+Move+Group+Down");
     }
 }
 
@@ -90,9 +101,11 @@ if ($action === 'addGroup') {
             updateQuestionGroupPage($group->id, $group->page + 1);
         }
     }
+
     $newGroupId = newQuestionGroup($survey_id, '', '', $page + 1);
     $newGroup = getQuestionGroup($newGroupId);
-    header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($newGroup->page) . "&success=Group+Created");
+    header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($newGroup->page) . "&success=Page+Created");
+    exit;
 }
 
 
@@ -132,7 +145,7 @@ if (!empty($removed_group)) {
     $lastGroupData = $lastGroupId ? getQuestionGroup($lastGroupId) : null;
     $redirectPage = $lastGroupData ? $lastGroupData->page : 0;
     
-    header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($redirectPage) . "&success=Data+Saved");
+    header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($redirectPage) . "&success=Group+Removed");
     exit;
 }
 
@@ -209,9 +222,7 @@ if (is_array($newOptionsData)) {
 }
 
 
-
-
 // 7. Redirect back to the edit page with a success flag.
-header("Location: /edit?id=" . urlencode($survey_id) . "&page=" . urlencode($page) . "&success=Data+Saved");
+header("Location: /edit?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($page) . "&success=Data+Saved");
 exit;
 ?>

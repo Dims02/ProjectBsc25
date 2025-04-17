@@ -13,6 +13,7 @@ if (isLoggedIn()) {
     exit;
 }
 
+
 // Check if login was attempted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($email) && !empty($password)) {
     // Check honeypot; if it's filled, assume spam/bot and do not process login.

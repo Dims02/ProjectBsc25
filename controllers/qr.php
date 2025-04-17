@@ -13,14 +13,12 @@ if (!isAdminFromJWT() || !isLoggedIn()) {
     header('HTTP/1.1 403 Forbidden');
     exit('Access denied');
 }
-
 // --- Validate survey_id ---
-if (empty($_GET['survey_id']) || !ctype_digit($_GET['survey_id'])) {
+if (empty($_GET['survey_id'])) {
     http_response_code(400);
     exit('Missing or invalid survey_id');
 }
-$surveyId = (int) $_GET['survey_id'];
-
+$surveyId = decodeSurveyCode( $_GET['survey_id']);
 // --- Load survey ---
 $survey = getSurvey($surveyId);
 if (!$survey) {

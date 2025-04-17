@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		exit;
 	}
 
-    $user_id = $_SESSION['user_id'];
+    $user_id = getUserFromJWT();
     $timestamp = date('Y-m-d H:i:s');
 
     createSurvey($user_id, $timestamp);

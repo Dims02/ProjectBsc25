@@ -25,7 +25,7 @@
             <p class="text-gray-600 mt-2 flex-grow line-clamp-3">
               <?= htmlspecialchars($survey->description, ENT_QUOTES, 'UTF-8') ?>
             </p>
-            <a href="survey?id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>&page=1" 
+            <a href="survey?id=<?= htmlspecialchars(encodeSurveyId($survey->id), ENT_QUOTES, 'UTF-8') ?>&page=1" 
                class="mt-auto self-start inline-block bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-500">
               Take Survey
             </a>

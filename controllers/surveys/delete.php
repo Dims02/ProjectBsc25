@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['survey_id'])) {
 		exit;
 	}
 
-    $survey_id = intval($_POST['survey_id']);
+    $survey_id = decodeSurveyCode($_POST['survey_id']) ?? null;
     deleteSurvey($survey_id);
 
     // Redirect back to the surveys page after deletion

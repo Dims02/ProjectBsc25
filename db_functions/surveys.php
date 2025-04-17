@@ -318,6 +318,21 @@ function toggleLeveling($survey_id) {
     return $stmt->execute(['id' => $survey_id]);
 }
 
+use Hashids\Hashids;
+function encodeSurveyId(int $id): string
+{
+    $hashids = new Hashids('o_diogo_escreveu_isto!', 8);
+    return $hashids->encode($id);
+}
 
+function decodeSurveyCode(string $code): ?int
+{
+    $hashids = new Hashids('o_diogo_escreveu_isto!', 8);
+    $numbers = $hashids->decode($code);
+    if (count($numbers) === 1) {
+        return $numbers[0];
+    }
+    return null;
+}
 
 ?>

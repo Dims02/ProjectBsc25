@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['survey_id'])) {
         exit;
     }
     
-    $survey_id = intval($_GET['survey_id']);
+    $survey_id = decodeSurveyCode($_GET['survey_id']);
     $survey = getSurvey($survey_id);
     if (!$survey) {
         http_response_code(404);

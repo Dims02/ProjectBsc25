@@ -1,6 +1,5 @@
 <?php
 global $pdo;
-
 if (!isset($_COOKIE['jwt'])) {
     header("Location: /login");
     exit;

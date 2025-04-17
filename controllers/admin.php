@@ -10,7 +10,6 @@ if (!isAdminFromJWT() || !isLoggedIn()) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
     $userId = $_POST['user_id'];
-    // Call your user deletion function.
     if (deleteUser($userId)) {
         // Optional: Redirect with a success message.
         header("Location: /admin?msg=User+deleted");

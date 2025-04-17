@@ -3,6 +3,10 @@
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+
+
+
+
     <!-- Summary Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
@@ -49,7 +53,7 @@
                             <div>
                                 <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
                             </div>
-                            <a href="/reco?survey_id=<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
+                            <a href="/reco?survey_id=<?= htmlspecialchars(encodeSurveyId($survey->id), ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
                                 View Results
                             </a>
                         </li>

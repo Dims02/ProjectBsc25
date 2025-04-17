@@ -1,7 +1,8 @@
 <?php
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-
+// --- Load Composer autoloader ---
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'config.php';
 
 foreach (glob("db_functions/*.php") as $filename)

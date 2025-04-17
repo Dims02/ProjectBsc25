@@ -135,8 +135,6 @@ function registerUser($email, $password) {
     $userId = getUserIdByEmail($email);
     $user = getUserFromId($userId);
     
-    $_SESSION['user_id'] = $user->id;
-    
     // Prepare JWT payload.
     $issuedAt   = time();
     $expiration = $issuedAt + 3600; // Token valid for 1 hour
@@ -171,8 +169,6 @@ function loginUser($email, $password) {
     $userId = verifyUser($email, $password);
     
     if ($userId) {
-        $_SESSION['user_id'] = $userId;
-
         $user = getUserFromId($userId);
         
         // Prepare JWT payload.
