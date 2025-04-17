@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     updateUser($userData);
     
     // Refresh user data after the update.
-    $user = getUserFromJWT($pdo);
+    $user = getUserFromJWT();
 }
 
 // Set variables for the view.

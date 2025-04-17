@@ -18,7 +18,7 @@ function urlIs($value) {
 
 
 function generateJWT($payload) {
-    return \Firebase\JWT\JWT::encode($payload, JWT_SECRET_KEY, 'HS256');
+    return JWT::encode($payload, JWT_SECRET_KEY, 'HS256');
 }
 
 
