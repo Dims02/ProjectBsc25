@@ -190,10 +190,6 @@ function getUnfinishedSurveysCount($user_id) {
     return $unfinishedCount;
 }
 
-
-
-
-
 function getSurveysCompletionRatio($user_id) {
     // Get the completed surveys for the user.
     $fullyAnsweredIds = getFullyAnsweredSurveyIds($user_id);
@@ -321,5 +317,7 @@ function toggleLeveling($survey_id) {
     $stmt = $pdo->prepare("UPDATE surveys SET leveled = NOT leveled WHERE id = :id");
     return $stmt->execute(['id' => $survey_id]);
 }
+
+
 
 ?>

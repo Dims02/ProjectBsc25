@@ -60,6 +60,10 @@
                   <a href="toggle?id=<?= $survey->id; ?>" class="px-3 py-1 rounded bg-purple-50 text-purple-600 hover:bg-purple-100">
                     <?= ($survey->state == 1) ? 'Disable' : 'Enable'; ?>
                   </a>
+                  <!-- QR Code Button -->
+                  <a href="/qr?survey_id=<?= $survey->id; ?>" target="_blank" class="px-3 py-1 rounded bg-yellow-50 text-yellow-600 hover:bg-yellow-100">
+                    QR Code
+                  </a>
                   <form action="delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this survey?');" class="inline-block">
                     <input type="hidden" name="survey_id" value="<?= $survey->id; ?>">
                     <button type="submit" class="px-3 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100">

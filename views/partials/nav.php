@@ -19,7 +19,7 @@ $highlightColor = "bg-indigo-600 text-white";
       <div class="flex items-center">
         <div class="shrink-0">
           <a href="/">
-            <img class="size-14 rounded-full" src="media/ubi2.png" alt="User Profile">
+            <img class="size-12 rounded-full" src="media/ubi2.png" alt="User Profile">
           </a>
         </div>
         <div class="hidden md:block">

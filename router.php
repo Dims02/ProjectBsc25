@@ -33,6 +33,7 @@ $routes = [
     "/reco"         => "controllers/reco.php",
     "/export"       => "export.php",
     "/test"         => "testlatex.php",
+    "/qr"           => "controllers/qr.php",
 
 
 ];

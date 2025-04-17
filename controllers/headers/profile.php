@@ -9,7 +9,7 @@ if(!isLoggedIn()) {
 }
 
 // Retrieve the current user using the JWT.
-$user = getUserFromJWT($pdo);
+$user = getUserFromJWT();
 
 // If no user is found, redirect to login.
 if (!$user) {
