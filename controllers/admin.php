@@ -1,29 +1,28 @@
 <?php
-$heading = "Admin Dashboard - Manage Surveys";
-$tabname = "Admin Dashboard";
-$pos = "max-w-7xl";
+// controllers/admin.php
 
-if (!isAdminFromJWT() || !isLoggedIn()) {
-    header("Location: /dashboard");
+// 1. Page metadata
+$heading = 'Admin Dashboard – Manage Surveys';
+$tabname = 'Admin Dashboard';
+$pos     = 'max-w-7xl';
+
+// 2. Handle user deletions
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
+    $userId = (int) $_POST['user_id'];
+
+    if (deleteUser($userId)) {
+        $_SESSION['success_message'] = 'User deleted successfully.';
+    } else {
+        $_SESSION['error_message'] = 'Failed to delete user.';
+    }
+
+    header('Location: /admin');
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
-    $userId = $_POST['user_id'];
-    if (deleteUser($userId)) {
-        // Optional: Redirect with a success message.
-        header("Location: /admin?msg=User+deleted");
-        exit;
-    } else {
-        // Optional: Redirect with an error message.
-        header("Location: /admin?msg=Error+deleting+user");
-        exit;
-    }
-}
+// 3. Load data for the view
+$surveys = getAllSurveys(); // returns array of survey objects
+$users   = getAllUsers();   // returns array of user objects
 
-$surveys = getAllSurveys();
-
-$users = getAllUsers();
-
-require "views/adminView.php"; 
-?>
+// 4. Render the admin view
+require __DIR__ . '/../views/adminView.php';

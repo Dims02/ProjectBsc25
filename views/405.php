@@ -1,18 +1,14 @@
 <?php
-// views/404.php
-$tabname = "404";
+// views/405.php
+$tabname = "405";
 ?>
 <?php require('partials/header.php'); ?>
 <?php require('partials/nav.php'); ?>
 
 <div class="flex items-center justify-center min-h-screen px-6">
   <div class="text-center">
-    <h1 class="text-6xl font-extrabold text-gray-900">404</h1>
-    <h2 class="text-2xl font-semibold text-gray-700 mt-4">Oops! Page Not Found.</h2>
-    <p class="text-gray-600 mt-2">
-      The page you are looking for might have been removed, renamed, or is temporarily unavailable.
-    </p>
-    <p class="text-gray-600 mt-2">Here is a happy hedgehog instead :)</p>
+    <h1 class="text-6xl font-extrabold text-gray-900">405</h1>
+    <h2 class="text-2xl font-semibold text-gray-700 mt-4">Method Not Allowed!</h2>
 
     <div class="mt-6">
       <a
@@ -24,7 +20,7 @@ $tabname = "404";
     </div>
 
     <div class="mt-8">
-      <img src="/media/404.jpg" alt="Page not found" class="w-64 mx-auto" />
+      <img src="/media/no.gif" alt="Error animation" class="w-64 mx-auto" />
     </div>
   </div>
 </div>

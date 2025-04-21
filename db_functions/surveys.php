@@ -21,14 +21,14 @@ function getSurvey($id) {
     return $stmt->fetch(PDO::FETCH_OBJ);
 }
 
-function createSurvey($user_id, $timestamp, $title = "New Survey", $description = "This is a new survey, you should give me a description") {
+function createSurvey($user_id) {
     global $pdo;
     $stmt = $pdo->prepare("INSERT INTO surveys (title, description, user_id, created_at) VALUES (:title, :description, :user_id, :created_at)");
     $stmt->execute([
-        'title'       => $title,
-        'description' => $description,
+        'title'       => "Title",
+        'description' => "Description",
         'user_id'     => $user_id,
-        'created_at'  => $timestamp
+        'created_at'  => date('Y-m-d H:i:s')
     ]);
     return $pdo->lastInsertId();
 }
@@ -333,6 +333,13 @@ function decodeSurveyCode(string $code): ?int
         return $numbers[0];
     }
     return null;
+}
+function surveyExists(int $id): bool
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM surveys WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    return (bool)$stmt->fetchColumn();
 }
 
 ?>

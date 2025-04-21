@@ -61,17 +61,54 @@
           Secure & Resilient Digital Infrastructure
         </p>
 
-          <div class="mt-10 flex items-center justify-center gap-x-6">
-            <a href="/dashboard" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500">
-              Get started
-            </a>
-            <a href="/about" class="text-sm font-semibold text-gray-900">
-              Learn more <span aria-hidden="true">→</span>
-            </a>
+        <div class="mt-10 flex flex-col items-center space-y-4">
+            <!-- 1. Buttons row -->
+            <div class="flex items-center justify-center gap-x-6">
+              <a
+                href="/dashboard"
+                class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500"
+              >
+                Get started
+              </a>
+              <a href="/about" class="text-sm font-semibold text-gray-900">
+                Learn more <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <!-- 2. Info‑icon + tooltip, centered under buttons -->
+            <span class="relative inline-block group">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 
+                    3.582-8 8-8 8 3.582 8 8zm-9-3a1 1 
+                    0 112 0 1 1 0 01-2 0zm1 2a1 1 0 
+                    00-.993.883L9 10v4a1 1 0 
+                    001.993.117L11 14v-4a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <div
+              class="absolute top-full left-1/2 mt-2 w-56 transform -translate-x-1/2
+                      p-2 bg-gray-700 text-white text-xs rounded text-center
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                      z-50"
+              >
+                We treat your data in strict compliance with GDPR. We do not share your data with third parties.
+              </div>
+            </span>
           </div>
+
+
         </div>
       </div>
     </div>
+    
   </div>
 </body>
 </html>

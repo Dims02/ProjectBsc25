@@ -42,7 +42,7 @@
       <!-- Combined Survey & Question Group Edit Form -->
       
       <!-- Hidden fields -->
-      <input type="hidden" name="survey_id" value="<?= htmlspecialchars($survey->id, ENT_QUOTES, 'UTF-8') ?>">
+      <input type="hidden" name="survey_id" value="<?= htmlspecialchars(encodeSurveyId($survey->id), ENT_QUOTES, 'UTF-8') ?>">
       <?php if ($currentGroup): ?>
         <!-- Instead of group_id, we now pass the current page number -->
         <input type="hidden" name="page" value="<?= htmlspecialchars($currentGroup->page, ENT_QUOTES, 'UTF-8') ?>">
@@ -69,6 +69,7 @@
             <?php endif; ?>
           </div>
         </div>
+        
         <!-- Group links container, wrapping underneath -->
         <div class="flex flex-wrap gap-2 mt-4">
           <?php $numGroups = getNumberOfGroups($survey->id); ?>

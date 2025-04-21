@@ -1,59 +1,49 @@
 <?php
 
-$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-// --- Load Composer autoloader ---
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 
-foreach (glob("db_functions/*.php") as $filename)
-{
-    require_once($filename);
+foreach (glob(__DIR__ . "/db_functions/*.php") as $f) {
+    require_once $f;
 }
 
-$routes = [
-    "/"             => "controllers/headers/landing.php",
-    "/dashboard"    => "controllers/headers/index.php",
-    "/surveys"      => "controllers/headers/surveys.php",
-    "/contacts"     => "controllers/headers/contacts.php",
-    "/about"        => "controllers/headers/about.php",
-    "/404"          => "controllers/404.php",
-    "/profile"      => "controllers/headers/profile.php",
-    "/login"        => "controllers/session/login.php",
-    "/register"     => "controllers/session/register.php",
-    "/admin"        => "controllers/admin.php",
-    "/logout"       => "controllers/session/logout.php",
-    "/survey"       => "controllers/surveys/survey.php",
-    "/submit"       => "controllers/surveys/submit.php",
-    "/delete"       => "controllers/surveys/delete.php",
-    "/create"       => "controllers/surveys/create.php",
-    "/toggle"       => "controllers/surveys/toggle.php",
-    "/edit"         => "controllers/surveys/edit.php",
-    "/thankyou"     => "views/surveys/thankyou.php",
-    "/submitChanges"=> "controllers/surveys/submitChanges.php",
-    "/updateSurvey" => "controllers/surveys/updateSurvey.php",
-    "/reco"         => "controllers/reco.php",
-    "/export"       => "export.php",
-    "/test"         => "testlatex.php",
-    "/qr"           => "controllers/qr.php",
+$routes = require __DIR__ . '/routes.php';
 
+$uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+if ($uri === '') { $uri = '/'; }
 
-];
-
-function routeToController($uri, $routes) {
-    if (array_key_exists($uri, $routes)) {
-        require $routes[$uri];
-    } else {
-        abort();
-    }
+if (!isset($routes[$uri])) {
+    http_response_code(404);
+    require __DIR__ . "/views/404.php";
+    exit;
 }
 
-function abort($code = 404) {
-    http_response_code($code);
+$route = $routes[$uri];
 
-    require "views/{$code}.php";
-
-    die();
+// auth checks
+if (!empty($route['auth']) && !isLoggedIn()) {
+    $_SESSION['error_message'] = 'You need to authenticate first.';
+    header("Location: /login");
+    exit;
+}
+if (!empty($route['admin']) && !isAdminFromJWT()) {
+    http_response_code(403);
+    require __DIR__ . "/views/403.php";
+    exit;
 }
 
+// method check
+$methods = $route['methods'] ?? ['GET'];
+if (!in_array($_SERVER['REQUEST_METHOD'], $methods, true)) {
+    http_response_code(405);
+    header('Allow: ' . implode(', ', $methods));
+    require __DIR__ . "/views/405.php";
+    exit;
+}
 
-routeToController($uri, $routes);
+// survey‐ID check
+if (!empty($route['survey'])) {
+    requireValidSurvey();
+}
+
+require $route['controller'];

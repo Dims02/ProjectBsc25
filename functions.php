@@ -33,4 +33,36 @@ function verifyJWT($token) {
     }
 }
 
+function requireValidUser(): void
+{
+    $user = getUserFromJWT();
+    $userId = $user->id ?? null;
+    if (!$userId) {
+        http_response_code(401);
+        $_SESSION['error_message'] = 'Please log in to continue.';
+        header('Location: /login');
+        exit;
+    }
+}
+
+
+function requireValidSurvey(): void
+{
+    $raw = 
+        $_POST['survey_id'] ??
+        $_GET['survey_id']  ??
+        $_GET['id']         ??
+        '';
+
+    $surveyId = decodeSurveyCode($raw) ?: null;
+
+    if (!$surveyId || !getSurvey($surveyId)) {
+        http_response_code(400);
+        $received = htmlspecialchars($raw, ENT_QUOTES, 'UTF-8');
+        $_SESSION['error_message'] = 'Bad survey ID. ';
+        header('Location: /dashboard');
+        exit;
+    }
+}
+
 ?>

@@ -3,7 +3,7 @@
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <main>
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 pb-16">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <?php foreach ($surveys as $survey): ?>
         <?php if ($survey->state == 1): ?>

@@ -3,7 +3,7 @@
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <form method="POST" action="">
-  <div class="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8 pb-16">
     
     <!-- Form Card -->
     <div class="bg-white shadow-md rounded-lg p-6">

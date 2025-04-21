@@ -1,66 +1,50 @@
 <?php
+// controllers/surveys/survey.php
 
-if(!isLoggedIn()) {
-    header("Location: /login");
-    exit;
-}
+$surveyId       = decodeSurveyCode($_GET['id']);
+$survey         = getSurvey($surveyId);
+$questionGroups = getQuestionGroupsBySurveyId($surveyId);
 
-$survey_id = decodeSurveyCode($_GET['id']) ?? null;
-if (!$survey_id) {
-    header("Location: /surveys");
-    exit;
-}
+// 2) Determine the requested page (or null)
+$page = isset($_GET['page']) ? (int) $_GET['page'] : null;
 
-$survey = getSurvey($survey_id);
-$questionGroups = getQuestionGroupsBySurveyId($survey_id);
-
-if (!$survey) {
-    echo "No survey found with ID: " . htmlspecialchars($survey_id, ENT_QUOTES, 'UTF-8');
-    exit;
-}
-
-// Determine the current group by its page passed via GET parameter "page".
-// If none is provided, use getNextUnansweredGroup() or default to the first group.
-$currentGroup = false;
-$page = $_GET['page'] ?? 0;
-if ($page) {
-    foreach ($questionGroups as $group) {
-        if ($group->page == $page) {
-            $currentGroup = $group;
+// 3) Try to find the matching group by page
+$currentGroup = null;
+if ($page !== null) {
+    foreach ($questionGroups as $grp) {
+        if ((int)$grp->page === $page) {
+            $currentGroup = $grp;
             break;
         }
     }
 }
 
-if (!$currentGroup) {
-    $currentGroup = getNextUnansweredGroup($survey_id, getUserFromJWT()->id);
-    if (!$currentGroup && count($questionGroups) > 0) {
-        $currentGroup = $questionGroups[0];
-    }
+// 4) Fallback: next‑unanswered or first group
+$userId       = getUserFromJWT()->id;
+$currentGroup = $currentGroup
+    ?: getNextUnansweredGroup($surveyId, $userId)
+    ?: ($questionGroups[0] ?? null);
+
+// 5) Compute index & load questions
+$groupIds     = array_column($questionGroups, 'id');
+$currentIndex = $currentGroup
+    ? array_search($currentGroup->id, $groupIds, true)
+    : null;
+
+$questions = $currentGroup
+    ? getQuestionsByGroupIdAndSurveyId($currentGroup->id, $surveyId)
+    : [];
+
+// 6) Attach possible responses
+foreach ($questions as $q) {
+    $q->responses = getPossibleResponsesByQuestionId($q->id);
 }
 
-// Compute the index of the current group within the $questionGroups array.
-$groupIds = array_map(function($grp) {
-    return $grp->id;
-}, $questionGroups);
+// 7) Page metadata
+$heading = 'Survey: ' . htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8');
+$tabname = 'Survey';
+$bgcolor = 'bg-gray-100';
+$pos     = 'max-w-7xl';
 
-if ($currentGroup) {
-    $currentIndex = array_search($currentGroup->id, $groupIds);
-    $questions = getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id);
-} else {
-    // No valid current group exists
-    $currentIndex = false;
-    $questions = [];
-}
-
-// Ensure $questions is an array even if no questions are returned.
-if (!$questions) {
-    $questions = [];
-}
-
-$heading = "Survey: " . $survey->title;
-$tabname = "Survey";
-$bgcolor = "bg-gray-100";
-$pos = "max-w-7xl";
-require "./views/surveys/surveyView.php";
-
+// 8) Render
+require './views/surveys/surveyView.php';

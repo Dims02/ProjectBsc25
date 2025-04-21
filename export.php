@@ -7,15 +7,16 @@ if (!isLoggedIn()) {
 }
 
 // Get survey id and export type.
-$surveyId = isset($_GET['survey_id']) ? (int)$_GET['survey_id'] : null;
-if (!$surveyId) {
+$survey_id = decodeSurveyCode(code: $_GET['survey_id']) ?? null;
+if (!$survey_id) {
+    $_SESSION['error_message'] = 'Invalid Survey.';
     header("Location: /surveys");
     exit;
 }
 $type = isset($_GET['type']) ? $_GET['type'] : 'json';
 
 $user   = getUserFromJWT();
-$survey = getSurvey($surveyId);
+$survey = getSurvey($survey_id);
 $survey->title = $survey->title ?? "Survey";
 
 // Remove spaces from the survey title.
@@ -28,9 +29,9 @@ if ($type === 'pdf') {
     $filename = $surveyNewTitle . "_" . ($user->entity ?? "") . "_Report.json";
 }
 
-$desiredLevel = getUserDesiredComplianceLevel($user->id, $surveyId);
+$desiredLevel = getUserDesiredComplianceLevel($user->id, $survey_id);
 
-$results = getIncorrectResponses($user->id, $surveyId, $desiredLevel);
+$results = getIncorrectResponses($user->id, $survey_id, $desiredLevel);
 
 // Group the results by question group.
 $groupedResults = [];

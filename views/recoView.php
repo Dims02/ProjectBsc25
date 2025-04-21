@@ -2,7 +2,7 @@
 <?php require "partials/nav.php"; ?>
 <?php require "partials/banner.php"; ?>
 
-<main class="flex-grow p-4">
+<main class="flex-grow p-4 pb-16">
   <div class="max-w-4xl mx-auto">
     
     <!-- Export Buttons -->

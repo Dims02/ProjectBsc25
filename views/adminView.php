@@ -2,7 +2,7 @@
 <?php require "partials/nav.php"; ?>
 <?php require "partials/banner.php"; ?>
 
-<main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+<main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 pb-16">
   <!-- Surveys List Section (Displayed First) -->
   <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
     <h2 class="text-2xl font-semibold text-gray-900 mb-6">All Surveys</h2>
