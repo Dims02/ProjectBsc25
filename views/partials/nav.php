@@ -24,10 +24,10 @@ $highlightColor = "bg-indigo-600 text-white";
         </div>
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-4">
-            <a href="/dashboard" class="<?= urlIs('/dashboard') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-            <a href="/surveys" class="<?= urlIs('/surveys') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Surveys</a>
-            <a href="/about" class="<?= urlIs('/about') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-            <a href="/contacts" class="<?= urlIs('/contacts') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact us</a>
+            <a href="/dashboard" class="<?= urlIs('/dashboard') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+            <a href="/surveys" class="<?= urlIs('/surveys') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Surveys</a>
+            <a href="/about" class="<?= urlIs('/about') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">About</a>
+            <a href="/contacts" class="<?= urlIs('/contacts') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Contact us</a>
           </div>
         </div>
       </div>
@@ -86,11 +86,14 @@ $highlightColor = "bg-indigo-600 text-white";
 
 <!-- Add Alpine.js -->
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-<main style="
-  background-image: url('media/bg5.jpg');
-  min-height: 100vh;
-  background-size: auto;
-  background-position: center;
-  background-repeat: repeat;
-">
+
+<?php
+// Determine which style to use
+$mainStyle = isset($overrideStyle)
+    ? $overrideStyle
+    : "background-image: url('media/b1.jpg'); min-height: 100vh;background-size: auto; background-position: center; background-repeat: repeat;";
+?>
+<main style="<?= htmlspecialchars($mainStyle, ENT_QUOTES) ?>">
+
+
 

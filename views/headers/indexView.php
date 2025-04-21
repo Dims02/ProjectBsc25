@@ -4,9 +4,6 @@
 
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-
-
-
     <!-- Summary Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="bg-white shadow-md rounded-lg p-6 text-center">
@@ -49,7 +46,7 @@
             <?php if (!empty($recentSurveys)): ?>
                 <?php foreach ($recentSurveys as $survey): ?>
                     <?php if ($survey->state == 1): // Only show enabled surveys ?>
-                        <li class="flex items-center justify-between bg-gray-200 p-4 rounded-md">
+                        <li class="flex items-center justify-between bg-indigo-100 p-4 rounded-md">
                             <div>
                                 <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
                             </div>

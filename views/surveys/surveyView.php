@@ -15,7 +15,7 @@
       <div class="flex gap-4">
         <?php if ($currentIndex !== false && $currentIndex > 0): ?>
           <button type="submit" form="surveyForm" name="action" value="previous" 
-                  class="rounded-md bg-gray-600 px-4 py-2 text-white font-semibold hover:bg-gray-700">
+                  class="rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500">
             Previous
           </button>
         <?php endif; ?>
@@ -42,7 +42,7 @@
       <?php else: ?>
         <div class="mb-6">
           <?php foreach ($questions as $question): ?>
-            <div class="mb-4 bg-white shadow rounded-lg p-4">
+            <div class="mb-4 bg-indigo-50 shadow-2xl rounded-lg p-4">
               <label class="block text-lg font-medium text-gray-700 mb-2">
                 <?= $question->text ?>
               </label>
@@ -77,7 +77,7 @@
         <div>
           <?php if ($currentIndex !== false && $currentIndex > 0): ?>
             <button type="submit" name="action" value="previous" 
-                    class="rounded-md bg-gray-600 px-4 py-2 text-white font-semibold hover:bg-gray-700">
+                    class="rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500">
               Previous
             </button>
           <?php else: ?>

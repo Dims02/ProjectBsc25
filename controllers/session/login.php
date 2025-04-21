@@ -31,6 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($email) && !empty($password)
         }
     }
 }
-
+$overrideStyle = "
+        background-color: #0c2340;
+        background-image: url('media/watermark.png');
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        background-size: contain;
+        min-height: 100vh;
+    ";
 require "./views/session/loginView.php";
 ?>
