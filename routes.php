@@ -78,7 +78,7 @@ return [
         "controller" => "controllers/admin.php",
         "auth"       => true,
         "admin"      => true,
-        "methods"    => ["GET"],
+        "methods"    => ["GET","POST"],
     ],
 
     "/survey" => [

@@ -8,27 +8,11 @@ use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
-// --- Auth: only admins allowed ---
-if (!isAdminFromJWT() || !isLoggedIn()) {
-    header('HTTP/1.1 403 Forbidden');
-    exit('Access denied');
-}
-// --- Validate survey_id ---
-if (empty($_GET['survey_id'])) {
-    http_response_code(400);
-    exit('Missing or invalid survey_id');
-}
-$surveyId = decodeSurveyCode( $_GET['survey_id']);
-// --- Load survey ---
-$survey = getSurvey($surveyId);
-if (!$survey) {
-    http_response_code(404);
-    exit('Survey not found');
-}
+$encodedSurveyId = $_GET['survey_id'] ?? null;
+$survey = getSurvey(decodeSurveyCode( $encodedSurveyId));
 
-// --- Construct public URL ---
 $host      = $_SERVER['HTTP_HOST'];
-$surveyUrl = sprintf('https://%s/survey?id=%d', $host, $survey->id);
+$surveyUrl = sprintf('https://%s/survey?id=%s', $host, $encodedSurveyId);
 
 // --- Path to full logo ---
 $logoPath = __DIR__ . '/../media/ubi2.png';
@@ -73,21 +57,21 @@ $dataUri = $result->getDataUri();
     }
     .card {
       position: relative;
-      background:rgb(255, 255, 255);
+      background: white;
       padding: 2rem;
       border-radius: 2rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       text-align: center;
       max-width: 360px;
+      overflow: hidden;
     }
-    .card .card-icon { 
-      position: center;
-      top: 0rem;
-      left: 2rem;
-      width: 300px;
-      height: 100px;
+    .card .card-icon {
+      display: block;
+      margin: 0 auto 1rem;
+      max-width: 200px;
+      height: auto;
       object-fit: contain;
     }
+
     .card .qr {
       margin-bottom: 1rem;
 	  margin-top: 0rem;
@@ -145,7 +129,8 @@ $dataUri = $result->getDataUri();
       const card = document.getElementById('card');
       html2canvas(card, {
         useCORS: true,
-        backgroundColor: null  // preserve transparent corners from your border-radius
+        backgroundColor: null,
+        scale: window.devicePixelRatio || 1
       }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'QR_CODE.png';
