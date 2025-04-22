@@ -39,12 +39,13 @@ function getUserFromId($id) {
         $user->surname = $userData['surname'] ?? null;
         $user->entity  = $userData['entity']  ?? null;
         $user->country = $userData['country'] ?? null;
+        $user->phone   = $userData['phone']   ?? null;
+        $user->phone_code = $userData['phone_code'] ?? null;
         
         return $user;
     } 
     return null;
 }
-
 
 function verifyUser($email = null, $password = null) {
     global $pdo;
@@ -65,19 +66,6 @@ function checkUserExists($email) {
     return $user ? true : false;
 }
 
-function createUser(User $user) {
-    global $pdo;
-    $statement = $pdo->prepare("INSERT INTO users (name, email, password, country, role, created_at) VALUES (:name, :email, :password, :country, :role, :created_at)");
-    $statement->execute([
-        'name'       => $user->name,
-        'email'      => $user->email,
-        'password'   => $user->password,
-        'country'    => $user->country,
-        'role'       => $user->role,
-        'created_at' => $user->created_at
-    ]);
-}
-
 function createNewUser($email, $password) {
     global $pdo;
     $statement = $pdo->prepare("INSERT INTO users (email, password, role) VALUES (:email, :password, :role)");
@@ -90,13 +78,16 @@ function createNewUser($email, $password) {
 
 function updateUser($user) {
     global $pdo;
-    $statement = $pdo->prepare("UPDATE users SET name = :name, entity = :entity, surname = :surname, country = :country WHERE id = :id");
+    $statement = $pdo->prepare("UPDATE users SET name = :name, entity = :entity, surname = :surname, country = :country, temp = :temp, phone = :phone, phone_code = :phone_code  WHERE id = :id");
     $statement->execute([
         'id'      => $user->id,
         'entity'  => $user->entity,
         'name'    => $user->name,
         'surname' => $user->surname,
         'country' => $user->country,
+        'temp'    => $user->temp,
+        'phone'   => $user->phone,
+        'phone_code' => $user->phone_code
     ]);
 }
 
@@ -124,8 +115,8 @@ function registerUser($email, $password) {
     global $pdo;
     
     // Check if the email is already registered.
-    if (checkUserExists($email)) {
-        return "Email already exists";
+    if ($email !== 'user@temp.com' && checkUserExists($email)) {
+        return "Email already registered. Please use a different email.";
     }
     
     // Create the new user.
@@ -143,7 +134,8 @@ function registerUser($email, $password) {
         'exp'   => $expiration,
         'sub'   => $user->id,
         'email' => $user->email,
-        'role'  => $user->role
+        'role'  => $user->role,
+        'temp' => false
     ];
     
     // Generate the JWT token using the payload.
@@ -161,6 +153,44 @@ function registerUser($email, $password) {
     return true;
 }
 
+function registerTempUser() {
+    // Create a temporary user with a specific email.
+    $randomNumber = random_int(10000,90000);
+    $randomEmail = $randomNumber . '@temp.com';
+    createNewUser($randomEmail,"tempuser");
+    // Retrieve the new user's ID.
+    $userId = getUserIdByEmail($randomEmail);
+    $user = getUserFromId($userId);
+    $user->temp = true;
+    $user->name = $randomNumber;
+    updateUser($user);
+    // Update user contact Information.
+
+    // Prepare JWT payload.
+    $issuedAt   = time();
+    $expiration = 0; // Token valid indefinitely
+    $payload = [
+        'iat'   => $issuedAt,
+        'exp'   => $expiration,
+        'sub'   => $user->id, 
+        'email' => $user->email,
+        'role'  => $user->role,
+        'temp' => true
+    ];
+    // Generate the JWT token using the payload.
+    $jwt = generateJWT($payload);
+
+        // Store the JWT in an HTTP-only cookie.
+        setcookie('jwt', $jwt, [
+            'expires'  => $expiration,
+            'path'     => '/',
+            'secure'   => false, // Change to true if using HTTPS.
+            'httponly' => true,
+            'samesite' => 'Strict'
+        ]);
+        loginUser($user->email,"tempuser");
+        return true;
+}
 
 function loginUser($email, $password) {
     global $pdo;
@@ -198,31 +228,6 @@ function loginUser($email, $password) {
     } else {
         return "Invalid email or password";
     }
-}
-
-function logoutUser() {
-    // Clear all session variables
-    $_SESSION = [];
-    
-    // Destroy the session
-    session_destroy();
-    
-    // Remove the session cookie if it exists
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
-    }
-    
-    // Clear the JWT cookie (if used for authentication)
-    setcookie('jwt', '', time() - 3600, '/');
 }
 
 function isLoggedIn() {
@@ -282,7 +287,6 @@ function userAnsweredSurveyFully($userId, $surveyId) {
     // to every question that is answerable.
     return ($totalQuestions > 0 && $answered === $totalQuestions);
 }
-
 
 function getFullyAnsweredSurveyIds($userId) {
     // Assuming getAllSurveys() retrieves surveys with property 'id'

@@ -5,11 +5,15 @@ class User {
     public $password;
     public $role;
     public $created_at;
+
     // Optional properties
     public $name;
     public $surname;
     public $entity;
     public $country;
+    public $temp;
+    public $phone;
+    public $phone_code;
 
     // Constructor for mandatory fields
     public function __construct($id, $email, $password, $role, $created_at) {

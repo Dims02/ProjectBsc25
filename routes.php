@@ -27,7 +27,7 @@ return [
 
     "/surveys" => [
         "controller" => "controllers/headers/surveys.php",
-        "auth"       => true,
+        "auth"       => false,
         "admin"      => false,
         "methods"    => ["GET"],
     ],

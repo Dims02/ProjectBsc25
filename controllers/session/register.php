@@ -12,6 +12,10 @@ if (!empty($email) && !empty($password)) {
         echo "Spam detected.";
         exit;
     }
+    if ($email === 'user@temp.com') {
+        echo "Cannot register with this email address.";
+        exit;
+    }
     
     $result = registerUser($email, $password);
     if ($result === true) {

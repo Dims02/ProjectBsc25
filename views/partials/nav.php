@@ -2,12 +2,15 @@
 // Check if the user is logged in via JWT
 $decodedJWT = isset($_COOKIE['jwt']) ? verifyJWT($_COOKIE['jwt']) : false;
 if ($decodedJWT !== false) {
-    $isLoggedIn = true;
-    $role = $decodedJWT->role ?? '';
+  $isLoggedIn = !str_contains($decodedJWT->email, "temp"); // Temporary users are not logged in
+  $role = $decodedJWT->role ?? '';
 } else {
     $isLoggedIn = false;
     $role = '';
 }
+
+  $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+  $isSurveys   = $currentPath === '/surveys' || $currentPath === '/survey';
 
 
 $highlightColor = "bg-indigo-600 text-white";
@@ -25,7 +28,7 @@ $highlightColor = "bg-indigo-600 text-white";
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-4">
             <a href="/dashboard" class="<?= urlIs('/dashboard') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
-            <a href="/surveys" class="<?= urlIs('/surveys') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Surveys</a>
+            <a href="/surveys" class="<?= $isSurveys ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Surveys</a>
             <a href="/about" class="<?= urlIs('/about') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">About</a>
             <a href="/contacts" class="<?= urlIs('/contacts') ? $highlightColor : 'text-gray-300' ?> hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium">Contact us</a>
           </div>

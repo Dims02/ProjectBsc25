@@ -1,9 +1,9 @@
 <?php
 // controllers/surveys/survey.php
 
-$surveyId       = decodeSurveyCode($_GET['id']);
-$survey         = getSurvey($surveyId);
-$questionGroups = getQuestionGroupsBySurveyId($surveyId);
+$survey_id       = decodeSurveyCode($_GET['id']);
+$survey         = getSurvey($survey_id);
+$questionGroups = getQuestionGroupsBySurveyId($survey_id);
 
 // 2) Determine the requested page (or null)
 $page = isset($_GET['page']) ? (int) $_GET['page'] : null;
@@ -19,11 +19,21 @@ if ($page !== null) {
     }
 }
 
+$user_id= getUserFromJWT()->id ?? null;
+if(!$user_id) {
+    registerTempUser();
+    dd(getUserFromJWT());
+    loginUser(getUserFromJWT()->email,"tempuser");
+
+}
+$tempUser = isset(getUserFromJWT()->temp_user) ? getUserFromJWT()->temp_user : true;
+$user = getUserFromJWT();
 // 4) Fallback: next‑unanswered or first group
-$userId       = getUserFromJWT()->id;
-$currentGroup = $currentGroup
-    ?: getNextUnansweredGroup($surveyId, $userId)
+if($user_id) {
+    $currentGroup = $currentGroup
+    ?: getNextUnansweredGroup($survey_id, $user_id)
     ?: ($questionGroups[0] ?? null);
+}
 
 // 5) Compute index & load questions
 $groupIds     = array_column($questionGroups, 'id');
@@ -32,7 +42,7 @@ $currentIndex = $currentGroup
     : null;
 
 $questions = $currentGroup
-    ? getQuestionsByGroupIdAndSurveyId($currentGroup->id, $surveyId)
+    ? getQuestionsByGroupIdAndSurveyId($currentGroup->id, $survey_id)
     : [];
 
 // 6) Attach possible responses

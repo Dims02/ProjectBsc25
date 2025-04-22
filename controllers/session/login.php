@@ -20,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($email) && !empty($password)
     if (!empty(trim($honeypot))) {
         $error = "Spam detected. Please try again.";
     } else {
+        if ($email === 'user@temp.com') {
+            echo "Cannot login with this email address.";
+            exit;
+        }
         $result = loginUser($email, $password);
         if ($result === true) {
             // Successful login: redirect to dashboard
@@ -31,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($email) && !empty($password)
         }
     }
 }
+
 $overrideStyle = "
         background-color: #0c2340;
         background-image: url('media/watermark.png');

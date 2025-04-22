@@ -4,7 +4,22 @@
 
 <!-- Main Content -->
 <main class="flex-grow p-4 pb-20">
+
+
   <div class="max-w-5xl mx-auto">
+      <!-- Add a popup message with input in case $tempuser is true -->
+  <?php if ($tempUser): ?>
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+      <p class="font-bold">Temporary User</p>
+      <p>You are currently logged in as a temporary user #<?= $user->name?> .Please provide your contact information to continue.</p>
+      <form action="submit_temp_user" method="POST" class="mt-2">
+        <input type="phone" name="phone number" placeholder="961234567" required class="border rounded px-2 py-1">
+        <button type="submit" class="bg-blue-500 text-white rounded px-4 py-1 ml-2">Submit</button>
+      </form>
+    </div>
+  <?php endif; ?>
+
+
     <!-- Top Header: Title on the left and Navigator on the right -->
     <div class="flex items-center justify-between mb-6">
       <?php if ($currentGroup && !empty($currentGroup->title)): ?>
