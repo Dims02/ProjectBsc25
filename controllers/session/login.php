@@ -7,23 +7,20 @@ $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
 $honeypot = $_POST['website'] ?? '';  // Honeypot field
 
-// If user is already logged in, redirect to dashboard
-if (isLoggedIn()) {
-    header("Location: /dashboard");
-    exit;
-}
 
 
 // Check if login was attempted
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($email) && !empty($password)) {
-    // Check honeypot; if it's filled, assume spam/bot and do not process login.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($email) && !    empty($password)) {
+    
+    if (isLoggedIn()) {
+        $_SESSION['error_message'] = "You're already logged in.";
+        header("Location: /dashboard");
+        exit;
+    }
+    
     if (!empty(trim($honeypot))) {
         $error = "Spam detected. Please try again.";
     } else {
-        if ($email === 'user@temp.com') {
-            echo "Cannot login with this email address.";
-            exit;
-        }
         $result = loginUser($email, $password);
         if ($result === true) {
             // Successful login: redirect to dashboard

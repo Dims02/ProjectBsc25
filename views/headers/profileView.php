@@ -3,7 +3,7 @@
 <?php require_once __DIR__ . '/../partials/banner.php'; ?>
 
 <form method="POST" action="">
-  <div class="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8 pb-16">
+  <div class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 pb-16">
     
     <!-- Form Card -->
     <div class="bg-white shadow-md rounded-lg p-6">
@@ -32,6 +32,36 @@
         </div>
       </div>
 
+
+     <!-- Email Section -->
+    <div class="mb-6">
+      <label for="email" class="block text-sm font-medium text-gray-900">ID</label>
+      <div class="mt-2">
+        <input
+          type="email"
+          id="email"
+          value="<?= htmlspecialchars($user->id, ENT_QUOTES) ?>"
+          disabled
+          class="block w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-1.5 text-base text-gray-900 sm:text-sm cursor-not-allowed opacity-50"
+        >
+      </div>
+    </div>
+
+
+    <!-- Email Section -->
+    <div class="mb-6">
+      <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
+      <div class="mt-2">
+        <input
+          type="email"
+          id="email"
+          value="<?= htmlspecialchars($user->email, ENT_QUOTES) ?>"
+          disabled
+          class="block w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-1.5 text-base text-gray-900 sm:text-sm cursor-not-allowed opacity-50"
+        >
+      </div>
+    </div>
+
       <!-- Name Section -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
@@ -58,6 +88,53 @@
           </div>
         </div>
       </div>
+
+            <!-- Phone Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+        <div>
+          <label for="phone_code" class="block text-sm font-medium text-gray-900">Country Code</label>
+          <div class="mt-2">
+            <select id="phone_code" name="phone_code" 
+                    class="block w-full appearance-none rounded-md bg-white border border-gray-300 py-1.5 pr-8 pl-3 text-base text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+              <?php
+                $codes = [
+                  '+351' => 'Portugal (+351)',
+                  '+34'  => 'Spain (+34)',
+                  '+44'  => 'United Kingdom (+44)',
+                  '+33'  => 'France (+33)',
+                  '+49'  => 'Germany (+49)',
+                  '+39'  => 'Italy (+39)',
+                  '+31'  => 'Netherlands (+31)',
+                  '+32'  => 'Belgium (+32)',
+                  '+43'  => 'Austria (+43)',
+                  '+41'  => 'Switzerland (+41)',
+                  '+46'  => 'Sweden (+46)',
+                  '+45'  => 'Denmark (+45)',
+                  '+358' => 'Finland (+358)',
+                  '+47'  => 'Norway (+47)',
+                  '+353' => 'Ireland (+353)',
+              ];
+              
+                foreach ($codes as $code => $label) {
+                  $sel = ($phone_code === $code) ? 'selected' : '';
+                  echo "<option value=\"{$code}\" {$sel}>".htmlspecialchars($label)."</option>";
+                }
+              ?>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-900">Phone Number</label>
+          <div class="mt-2">
+            <input type="tel" name="phone" id="phone" 
+                   value="<?= htmlspecialchars($phone ?? '') ?>"
+                   placeholder="912345678"
+                   class="block w-full rounded-md bg-white border border-gray-300 px-3 py-1.5 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+          </div>
+        </div>
+      </div>
+
+      
 
       <!-- Country Selection -->
       <div class="mt-6">

@@ -37,16 +37,29 @@ $highlightColor = "bg-indigo-600 text-white";
 
       <!-- Right Section: Sign In & Profile Icon -->
       <div class="hidden md:flex items-center space-x-4">
+
+        <?php if (isset($decodedJWT->email)): 
+          $localPart = strstr($decodedJWT->email, '@', true) ?: $decodedJWT->email; ?>
+          <div class="flex items-center">
+            <span
+              class="inline-block bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"
+              title="Temporary user email"
+            >
+              <?= htmlspecialchars($localPart, ENT_QUOTES) ?>
+            </span>
+          </div>
+        <?php endif; ?>
+
         <?php if ($isLoggedIn) : ?>
             <?php if ($role === 'admin') : ?>
-                <a href="/admin" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-500 transition">
+                <a href="/admin" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-500 transition">
                   Admin
                 </a>
             <?php endif; ?>
-            <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition">Sign Out</a>
+            <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition">Sign Out</a>
         <?php else : ?>
-            <a href="/register" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-500 transition">Register</a>
-            <a href="/login" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-500 transition">Sign In</a>
+            <a href="/register" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-500 transition">Register</a>
+            <a href="/login" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-500 transition">Sign In</a>
         <?php endif; ?>
 
         <a href="/profile" class="inline-block">

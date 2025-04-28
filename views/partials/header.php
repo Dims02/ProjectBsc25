@@ -14,6 +14,7 @@
     html, body {
       overscroll-behavior: none;
       
+      
     }
 
     /* Include padding/border in element’s total width/height */
@@ -21,6 +22,7 @@
       box-sizing: border-box;
     }
 
+    
     .toast {
       position: fixed;
       top: 20px;

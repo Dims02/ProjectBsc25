@@ -1,18 +1,11 @@
 <?php
-require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../db_functions/user.php';
-global $pdo;
-
-if(!isLoggedIn()) {
-    header("Location: /login");
-    exit;
-}
 
 // Retrieve the current user using the JWT.
 $user = getUserFromJWT();
 
 // If no user is found, redirect to login.
-if (!$user) {
+if ($user ->role === 'temp') {
+    $_SESSION['error_message'] = 'You need to authenticate first.';
     header("Location: /login");
     exit;
 }
@@ -23,13 +16,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name    = $_POST['name']    ?? $user->name;
     $surname = $_POST['surname'] ?? $user->surname;
     $country = $_POST['country'] ?? $user->country;
+    $phone   = $_POST['phone']   ?? $user->phone;
+    $phone_code = $_POST['phone_code'] ?? $user->phone_code;
     
     $userData = (object)[
         'id'      => $user->id,
         'entity'  => $entity,
+        'role'   => $user->role,
         'name'    => $name,
         'surname' => $surname,
-        'country' => $country
+        'country' => $country,
+        'phone'  => $phone,
+        'phone_code' => $phone_code,
     ];
     
     updateUser($userData);
@@ -43,9 +41,12 @@ $entity  = $user->entity ?? '';
 $name    = $user->name ?? '';
 $surname = $user->surname ?? '';
 $country = $user->country ?? '';
+$phone   = $user->phone ?? '';
+$phone_code = $user->phone_code ?? '';
+
 $heading = "Profile";
 $tabname = "Profile";
-$pos = "max-w-7xl";
+$pos = "max-w-5xl";
 $highlightColor = $highlightColor ?? "bg-indigo-600 text-white";
 
 require_once __DIR__ . '/../../views/headers/profileView.php';

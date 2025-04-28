@@ -6,6 +6,7 @@ $heading = 'Admin Dashboard – Manage Surveys';
 $tabname = 'Admin Dashboard';
 $pos     = 'max-w-7xl';
 
+
 // 2. Handle user deletions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
     $userId = (int) $_POST['user_id'];

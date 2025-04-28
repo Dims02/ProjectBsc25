@@ -39,6 +39,7 @@ function getUserFromId($id) {
         $user->surname = $userData['surname'] ?? null;
         $user->entity  = $userData['entity']  ?? null;
         $user->country = $userData['country'] ?? null;
+        $user->temp    = $userData['temp']    ?? null;
         $user->phone   = $userData['phone']   ?? null;
         $user->phone_code = $userData['phone_code'] ?? null;
         
@@ -78,19 +79,51 @@ function createNewUser($email, $password) {
 
 function updateUser($user) {
     global $pdo;
-    $statement = $pdo->prepare("UPDATE users SET name = :name, entity = :entity, surname = :surname, country = :country, temp = :temp, phone = :phone, phone_code = :phone_code  WHERE id = :id");
+    $statement = $pdo->prepare("
+        UPDATE users 
+        SET 
+            name        = :name,
+            entity      = :entity,
+            role        = :role,
+            surname     = :surname,
+            country     = :country,
+            phone       = :phone,
+            phone_code  = :phone_code
+        WHERE id = :id
+    ");
     $statement->execute([
-        'id'      => $user->id,
-        'entity'  => $user->entity,
-        'name'    => $user->name,
-        'surname' => $user->surname,
-        'country' => $user->country,
-        'temp'    => $user->temp,
-        'phone'   => $user->phone,
-        'phone_code' => $user->phone_code
+        'id'         => $user->id,
+        'entity'     => $user->entity,
+        'name'       => $user->name,
+        'role'       => $user->role,
+        'surname'    => $user->surname,
+        'country'    => $user->country,
+        'phone'      => $user->phone,
+        'phone_code' => $user->phone_code,
     ]);
 }
 
+function finalizeTemp($user) {
+    if($user->role !== 'temp') {
+        return;
+    }
+    global $pdo;
+    $statement = $pdo->prepare("
+        UPDATE users 
+        SET 
+            email       = :email,
+            password    = :password,
+            role        = :role
+        WHERE id = :id
+    ");
+    $statement->execute([
+        'id'         => $user->id,
+        'email'      => $user->email,
+        'password'   => password_hash($user->password, PASSWORD_DEFAULT),
+        'role'       => 'user',
+    ]);
+
+}
 function getUserIdByEmail($email) {
     global $pdo;
     $statement = $pdo->prepare("SELECT id FROM users WHERE email = :email");
@@ -157,39 +190,39 @@ function registerTempUser() {
     // Create a temporary user with a specific email.
     $randomNumber = random_int(10000,90000);
     $randomEmail = $randomNumber . '@temp.com';
-    createNewUser($randomEmail,"tempuser");
+    createNewUser($randomEmail,$randomNumber . "tempuser");
+
     // Retrieve the new user's ID.
     $userId = getUserIdByEmail($randomEmail);
     $user = getUserFromId($userId);
     $user->temp = true;
     $user->name = $randomNumber;
+    $user->role = 'temp';
     updateUser($user);
-    // Update user contact Information.
 
     // Prepare JWT payload.
     $issuedAt   = time();
-    $expiration = 0; // Token valid indefinitely
+    $expiration = $issuedAt + 360000;
     $payload = [
         'iat'   => $issuedAt,
         'exp'   => $expiration,
         'sub'   => $user->id, 
         'email' => $user->email,
-        'role'  => $user->role,
+        'role'  => 'temp',
         'temp' => true
     ];
     // Generate the JWT token using the payload.
     $jwt = generateJWT($payload);
 
-        // Store the JWT in an HTTP-only cookie.
-        setcookie('jwt', $jwt, [
-            'expires'  => $expiration,
-            'path'     => '/',
-            'secure'   => false, // Change to true if using HTTPS.
-            'httponly' => true,
-            'samesite' => 'Strict'
-        ]);
-        loginUser($user->email,"tempuser");
-        return true;
+    // Store the JWT in an HTTP-only cookie.
+    setcookie('jwt', $jwt, [
+        'expires'  => $expiration,
+        'path'     => '/',
+        'secure'   => false, // Change to true if using HTTPS.
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+    return $user->id;
 }
 
 function loginUser($email, $password) {
@@ -230,14 +263,44 @@ function loginUser($email, $password) {
     }
 }
 
+function loginId($user_id){ //login user with id only. careful use
+    global $pdo;
+    $user = getUserFromId($user_id);
+    
+    // Prepare JWT payload.
+    $issuedAt   = time();
+    $expiration = $issuedAt + 3600; // Token valid for 1 hour
+    $payload = [
+        'iat'   => $issuedAt,
+        'exp'   => $expiration,
+        'sub'   => $user_id,
+        'email' => $user->email,
+        'role' =>  $user->role
+    ];
+    
+    // Generate the JWT token using your existing function.
+    $jwt = generateJWT($payload);
+    
+    // Store the JWT in an HTTP-only cookie.
+    setcookie('jwt', $jwt, [
+        'expires'  => $expiration,
+        'path'     => '/',
+        'secure'   => false, // Change to true if using HTTPS
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
+}
+
 function isLoggedIn() {
     if (!isset($_COOKIE['jwt'])) {
         return false;
     }
-    
-    // Verify the JWT token
+
     $decoded = verifyJWT($_COOKIE['jwt']);
-    
+    if($decoded -> role === 'temp') {
+        return false;
+    }
     // If the token is valid, $decoded will be an object. Otherwise, verifyJWT() returns false.
     return $decoded !== false;
 }
@@ -316,4 +379,14 @@ function deleteUser($userId) {
     // Delete the user from the database
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
     return $stmt->execute(['id' => $userId]);
+}
+
+function logout() {
+    $_SESSION = [];
+    session_destroy();
+    setcookie(session_name(), '', time() - 3600);
+    setcookie('jwt', '', time() - 3600, '/'); // Destroy JWT cookie
+    unset($_COOKIE['jwt']); // Ensure it's removed from PHP's $_COOKIE array
+    
+    return true;
 }

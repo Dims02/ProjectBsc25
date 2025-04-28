@@ -19,15 +19,18 @@ if ($page !== null) {
     }
 }
 
-$user_id= getUserFromJWT()->id ?? null;
-if(!$user_id) {
-    registerTempUser();
-    dd(getUserFromJWT());
-    loginUser(getUserFromJWT()->email,"tempuser");
-
-}
-$tempUser = isset(getUserFromJWT()->temp_user) ? getUserFromJWT()->temp_user : true;
 $user = getUserFromJWT();
+$user_id = $user ? $user->id : null;
+
+if (! $user_id) {
+    $newUserId = registerTempUser();  
+    $user    = getUserFromId($newUserId);
+    $user_id = $newUserId;
+    loginUser($user->email, "tempuser"); 
+}
+
+$NewTempUser = ($user->role === 'temp' && $user->phone === null);
+
 // 4) Fallback: next‑unanswered or first group
 if($user_id) {
     $currentGroup = $currentGroup

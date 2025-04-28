@@ -96,6 +96,7 @@
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Name</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Email</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Registered At</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Contact</th>
             <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
@@ -111,6 +112,8 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 <?= htmlspecialchars($user->created_at); ?>
               </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <?= htmlspecialchars("+" . $user->phone_code . " " . $user->phone); ?>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                 <form action="" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
                   <input type="hidden" name="user_id" value="<?= $user->id; ?>">

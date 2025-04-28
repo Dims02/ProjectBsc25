@@ -14,6 +14,7 @@ if ($uri === '') { $uri = '/'; }
 
 if (!isset($routes[$uri])) {
     http_response_code(404);
+    $_SESSION['error_message'] = "Page not found.";
     require __DIR__ . "/views/404.php";
     exit;
 }
@@ -36,6 +37,7 @@ if (!empty($route['admin']) && !isAdminFromJWT()) {
 $methods = $route['methods'] ?? ['GET'];
 if (!in_array($_SERVER['REQUEST_METHOD'], $methods, true)) {
     http_response_code(405);
+    $_SESSION['error_message'] = "Method not allowed.";
     header('Allow: ' . implode(', ', $methods));
     require __DIR__ . "/views/405.php";
     exit;

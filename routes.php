@@ -50,7 +50,7 @@ return [
         "controller" => "controllers/headers/profile.php",
         "auth"       => true,
         "admin"      => false,
-        "methods"    => ["GET"],
+        "methods"    => ["GET","POST"],
     ],
 
     "/login" => [
@@ -69,7 +69,7 @@ return [
 
     "/logout" => [
         "controller" => "controllers/session/logout.php",
-        "auth"       => true,
+        "auth"       => false,
         "admin"      => false,
         "methods"    => ["GET"],
     ],

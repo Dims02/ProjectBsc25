@@ -1,24 +1,32 @@
 <?php
 // controllers/surveys/submit.php
+$survey_id   = $_POST['survey_id']    ?? null;
+$groupIndex  = $_POST['group_index']  ?? null;
+$groupId     = $_POST['group_id']     ?? null;
+$action      = $_POST['action']       ?? '';
+$answers     = $_POST['answers']      ?? [];
+$user        = getUserFromJWT();
+$userId      = $user?->id             ?? null;
 
-// Retrieve posted data
-$survey_id    = $_POST['survey_id']   ?? null;
-$groupIndex  = $_POST['group_index']                   ?? null;
-$groupId     = $_POST['group_id']                      ?? null;
-$action      = $_POST['action']                        ?? '';
-$answers     = $_POST['answers']                       ?? [];
-$userId      = getUserFromJWT()?->id                   ?? null;
+// 2) Save/update contact info if present
+$phone_code = trim($_POST['phone_code'] ?? '');
+$phone      = trim($_POST['phone']      ?? '');
 
+if ($userId && $phone_code !== '' && $phone !== '') {
+    $user->phone_code = $phone_code;
+    $user->phone      = $phone;
+    updateUser($user);
+}
 
-
-// Save each answer for the current group
+// 3) Save each answer for the current group
 foreach ($answers as $questionId => $answerText) {
     saveAnswer($questionId, $userId, $answerText);
 }
 
-// Fetch all question groups for the survey to decide navigation
+// 4) Fetch all question groups for this survey
 $groups = getQuestionGroupsBySurveyId($survey_id);
 
+// 5) Redirect based on action
 switch ($action) {
     case 'next':
         $nextIndex = (int)$groupIndex + 1;
@@ -32,11 +40,9 @@ switch ($action) {
 
     case 'previous':
         $prevIndex = (int)$groupIndex - 1;
-        if ($prevIndex >= 0) {
-            $page = $groups[$prevIndex]->page;
-        } else {
-            $page = $groups[$groupIndex]->page;
-        }
+        $page = ($prevIndex >= 0)
+            ? $groups[$prevIndex]->page
+            : $groups[$groupIndex]->page;
         header("Location: /survey?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($page));
         break;
 
@@ -45,6 +51,7 @@ switch ($action) {
         break;
 
     default:
+        // fallback: stay on the same page
         $page = $groups[$groupIndex]->page;
         header("Location: /survey?id=" . urlencode(encodeSurveyId($survey_id)) . "&page=" . urlencode($page));
         break;
