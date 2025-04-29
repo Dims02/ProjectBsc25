@@ -1,13 +1,16 @@
 <?php
 // Check if the user is logged in via JWT
-$decodedJWT = isset($_COOKIE['jwt']) ? verifyJWT($_COOKIE['jwt']) : false;
-if ($decodedJWT !== false) {
-  $isLoggedIn = !str_contains($decodedJWT->email, "temp"); // Temporary users are not logged in
-  $role = $decodedJWT->role ?? '';
+$user = getUserFromJWT();
+if ($user) {
+  $role = $user->role;
+  $isLoggedIn = $role === 'temp' ? false: true; // Temporary users are not logged in
+  $localPart = strstr($user->email, ' @', true) ?: $user->email; 
 } else {
     $isLoggedIn = false;
     $role = '';
+    
 }
+
 
   $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $isSurveys   = $currentPath === '/surveys' || $currentPath === '/survey';
@@ -38,8 +41,7 @@ $highlightColor = "bg-indigo-600 text-white";
       <!-- Right Section: Sign In & Profile Icon -->
       <div class="hidden md:flex items-center space-x-4">
 
-        <?php if (isset($decodedJWT->email)): 
-          $localPart = strstr($decodedJWT->email, '@', true) ?: $decodedJWT->email; ?>
+        <?php if (isset($user->email)): ?>
           <div class="flex items-center">
             <span
               class="inline-block bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"
@@ -107,7 +109,7 @@ $highlightColor = "bg-indigo-600 text-white";
 // Determine which style to use
 $mainStyle = isset($overrideStyle)
     ? $overrideStyle
-    : "background-image: url('media/bgf.jpg'); min-height: 100vh;background-size: auto; background-position: center; background-repeat: repeat;";
+    : "background-image: url('media/bgf.jpg'); background-size: auto; background-position: center; background-repeat: repeat;";
 ?>
 <main style="<?= htmlspecialchars($mainStyle, ENT_QUOTES) ?>">
 

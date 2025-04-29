@@ -4,7 +4,6 @@
 
 <form method="POST" action="">
   <div class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 pb-16">
-    
     <!-- Form Card -->
     <div class="bg-white shadow-md rounded-lg p-6">
       <h2 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -31,21 +30,6 @@
                  class="block w-full rounded-md bg-white border border-gray-300 px-3 py-1.5 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
         </div>
       </div>
-
-
-     <!-- Email Section -->
-    <div class="mb-6">
-      <label for="email" class="block text-sm font-medium text-gray-900">ID</label>
-      <div class="mt-2">
-        <input
-          type="email"
-          id="email"
-          value="<?= htmlspecialchars($user->id, ENT_QUOTES) ?>"
-          disabled
-          class="block w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-1.5 text-base text-gray-900 sm:text-sm cursor-not-allowed opacity-50"
-        >
-      </div>
-    </div>
 
 
     <!-- Email Section -->
@@ -127,7 +111,7 @@
           <label for="phone" class="block text-sm font-medium text-gray-900">Phone Number</label>
           <div class="mt-2">
             <input type="tel" name="phone" id="phone" 
-                   value="<?= htmlspecialchars($phone ?? '') ?>"
+                   value="<?= htmlspecialchars((!isset($phone) || $phone == 0 )? '' : $phone) ?>"
                    placeholder="912345678"
                    class="block w-full rounded-md bg-white border border-gray-300 px-3 py-1.5 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
           </div>
@@ -163,6 +147,52 @@
         <button type="button" class="px-4 py-2 rounded-md text-sm font-semibold text-gray-900">Cancel</button>
         <button type="submit" class="px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80 <?= $highlightColor; ?>">
           Save
+        </button>
+      </div>
+    </div>
+
+    <!-- Change Password Section -->
+    <div class="bg-white shadow-md rounded-lg p-6 mt-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-4">Change Password</h2>
+
+      <div class="mb-4">
+        <label for="current_password" class="block text-sm font-medium text-gray-900">Current Password</label>
+        <input
+          type="password"
+          name="current_password"
+          id="current_password"
+          value="<?= htmlspecialchars($currentPwd ?? '') ?>"
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        >
+      </div>
+
+      <div class="mb-4">
+        <label for="new_password" class="block text-sm font-medium text-gray-900">New Password</label>
+        <input
+          type="password"
+          name="new_password"
+          id="new_password"
+          value="<?= htmlspecialchars($newPwd ?? '') ?>"
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        >
+      </div>
+
+      <div class="mb-4">
+        <label for="confirm_password" class="block text-sm font-medium text-gray-900">Confirm New Password</label>
+        <input
+          type="password"
+          name="confirm_password"
+          id="confirm_password"
+          value="<?= htmlspecialchars($confirmPwd ?? '') ?>"
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        >
+      </div>
+
+            <!-- Action Buttons -->
+      <div class="mt-6 flex justify-end gap-x-4">
+        <button type="button" class="px-4 py-2 rounded-md text-sm font-semibold text-gray-900">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-80 <?= $highlightColor; ?>">
+          Submit
         </button>
       </div>
     </div>

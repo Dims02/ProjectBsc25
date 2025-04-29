@@ -114,8 +114,27 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 <?= htmlspecialchars("+" . $user->phone_code . " " . $user->phone); ?>
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                <form action="" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
+              <form method="POST" action="/admin" onsubmit="return confirm('Log in as this user?');" class="inline-block">
+                <input type="hidden" name="action" value="impersonate">
+                <input type="hidden" name="user_id"   value="<?= $user->id ?>">
+                <button
+                  type="button"
+                  onclick="openImpersonateModal(<?= $user->id ?>,'<?= htmlspecialchars($user->email) ?>')"
+                  class="px-3 py-1 rounded bg-green-50 text-green-600 hover:bg-green-100 inline-block">
+                  View
+                </button>
+              </form>
+                  <input type="hidden" name="user_id" value="<?= $user->id; ?>">
+                  <button
+                    type="button"
+                    onclick="openPasswordModal(<?= $user->id ?>)"
+                    class="px-3 py-1 rounded bg-blue-50 text-blue-600 hover:bg-blue-100"
+                  >
+                    Change Password
+                  </button>
+                  <form action="delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
                   <input type="hidden" name="user_id" value="<?= $user->id; ?>">
                   <button type="submit" class="px-3 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100">
                     Delete
@@ -129,5 +148,119 @@
     </div>
   </div>
 </main>
+
+<!-- Change Password Modal -->
+<div id="password-modal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg max-w-md w-full p-4">
+    <div class="flex justify-between mb-2">
+      <h2 class="text-lg font-medium">Change Password</h2>
+      <button onclick="closePasswordModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
+    </div>
+    <form method="POST" action="/admin" class="space-y-2">
+      <input type="hidden" name="action" value="password">
+      <input type="hidden" name="user_id" id="modal-user-id">
+      <input
+        type="password"
+        name="new_password"
+        id="new-password"
+        placeholder="New password"
+        required
+        class="w-full border rounded px-2 py-1"
+      >
+      <div class="flex justify-end space-x-2">
+        <button type="button" onclick="closePasswordModal()" class="px-3 py-1 border rounded">Cancel</button>
+        <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Impersonation Modal -->
+<div id="impersonate-modal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg max-w-sm w-full p-4">
+    <h2 class="text-lg font-medium mb-2">Confirm Impersonation</h2>
+    <p id="impersonate-msg" class="text-sm mb-4">Are you sure?</p>
+    <div class="flex justify-end space-x-2">
+      <button
+        type="button"
+        onclick="closeImpersonateModal()"
+        class="px-3 py-1 border rounded"
+      >Cancel</button>
+      <button
+        type="button"
+        onclick="confirmImpersonate()"
+        class="px-3 py-1 bg-green-600 text-white rounded"
+      >Yes, Login</button>
+    </div>
+    <form id="impersonate-form" method="POST" action="/admin" class="hidden">
+      <input type="hidden" name="action"    value="impersonate">
+      <input type="hidden" name="user_id"   id="impersonate-user-id">
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var modal = document.getElementById('password-modal'),
+      uid   = document.getElementById('modal-user-id'),
+      pwd   = document.getElementById('new-password');
+
+  window.openPasswordModal = function(id){
+    uid.value = id;
+    pwd.value = '';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  };
+
+  window.closePasswordModal = function(){
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  };
+});
+
+document.addEventListener('DOMContentLoaded',()=> {
+  let impModal = document.getElementById('impersonate-modal'),
+      impMsg   = document.getElementById('impersonate-msg'),
+      impForm  = document.getElementById('impersonate-form'),
+      impUid   = document.getElementById('impersonate-user-id');
+
+  window.openImpersonateModal = (id,name) => {
+    impUid.value = id;
+    impMsg.textContent = `Log in as ${name}?`;
+    impModal.classList.remove('hidden'); impModal.classList.add('flex');
+  };
+  window.closeImpersonateModal = () => {
+    impModal.classList.add('hidden'); impModal.classList.remove('flex');
+  };
+  window.confirmImpersonate = () => {
+    impForm.submit();
+  };
+});
+</script>
+
+
+<script>
+  const modal       = document.getElementById('password-modal');
+  const userIdInput = document.getElementById('modal-user-id');
+
+  function openPasswordModal(userId) {
+    userIdInput.value = userId;
+    modal.classList.remove('hidden');
+  }
+
+  function closePasswordModal() {
+    modal.classList.add('hidden');
+    userIdInput.value = '';
+    // clear the password field
+    document.getElementById('new-password').value = '';
+  }
+
+  // Optional: close modal when clicking outside the white box
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closePasswordModal();
+    }
+  });
+</script>
 
 <?php require "partials/footer.php"; ?>

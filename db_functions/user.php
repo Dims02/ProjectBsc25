@@ -390,3 +390,22 @@ function logout() {
     
     return true;
 }
+
+function verifyUserPassword($id, $password) { 
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    $user = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    if ($user && password_verify($password, $user->password)) {
+        return true;
+    }
+    
+    return false;
+}
+
+function changeUserPassword($userId, $newPassword) {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE users SET password = :password WHERE id = :id");
+    return $stmt->execute(['password' => $newPassword, 'id' => $userId]);
+}

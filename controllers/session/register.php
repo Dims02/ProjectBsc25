@@ -55,7 +55,6 @@ $overrideStyle = "
     background-repeat:    no-repeat;
     background-position:  bottom right;
     background-size:      contain;
-    min-height:           93vh;
 ";
 
 require "./views/session/registerView.php";

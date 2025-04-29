@@ -18,6 +18,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $country = $_POST['country'] ?? $user->country;
     $phone   = $_POST['phone']   ?? $user->phone;
     $phone_code = $_POST['phone_code'] ?? $user->phone_code;
+
+    $currentPwd = $_POST['current_password'] ?? '';
+    $newPwd     = $_POST['new_password']     ?? '';
+    $confirmPwd = $_POST['confirm_password'] ?? '';
+
+    $_SESSION['success_message'] = 'Data saved.';
+
+    if ($currentPwd || $newPwd || $confirmPwd) {
+        if (!$currentPwd) {
+            $_SESSION['error_message'] = 'Please enter your current password.';
+        } elseif (!$newPwd) {
+            $_SESSION['error_message'] = 'Please enter a new password.';
+        } elseif ($newPwd !== $confirmPwd) {
+            $_SESSION['error_message'] = 'New passwords do not match.';
+        } elseif (!verifyUserPassword($user->id, $currentPwd)) {
+            $_SESSION['error_message'] = 'Current password is incorrect.';
+        } else {
+            changeUserPassword($user->id, password_hash($newPwd, PASSWORD_DEFAULT));
+            $_SESSION['success_message'] = 'Password updated successfully.';
+            $currentPwd = $newPwd = $confirmPwd = '';
+        }
+    }
     
     $userData = (object)[
         'id'      => $user->id,
