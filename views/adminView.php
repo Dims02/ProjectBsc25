@@ -113,7 +113,7 @@
                 <?= htmlspecialchars($user->created_at); ?>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                <?= htmlspecialchars("+" . $user->phone_code . " " . $user->phone); ?>
+                <?= htmlspecialchars($user->phone_code . " " . $user->phone); ?>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
               <form method="POST" action="/admin" onsubmit="return confirm('Log in as this user?');" class="inline-block">
@@ -123,7 +123,7 @@
                   type="button"
                   onclick="openImpersonateModal(<?= $user->id ?>,'<?= htmlspecialchars($user->email) ?>')"
                   class="px-3 py-1 rounded bg-green-50 text-green-600 hover:bg-green-100 inline-block">
-                  View
+                  Impersonate
                 </button>
               </form>
                   <input type="hidden" name="user_id" value="<?= $user->id; ?>">

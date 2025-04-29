@@ -1,6 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+if($_SERVER['HTTP_HOST'] === "localhost") {
+    require_once __DIR__ . '/../vendor/autoload.php';
+} else {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
 require_once __DIR__ . '/config.php';
 
 foreach (glob(__DIR__ . "/db_functions/*.php") as $f) {
