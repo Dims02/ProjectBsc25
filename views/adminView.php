@@ -113,8 +113,12 @@
                 <?= htmlspecialchars($user->created_at); ?>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                <?php if(isset($user->phone)): ?>
-                  <?=htmlspecialchars("+" . $user->phone_code . " " . $user->phone);  ?>
+                <?php if(isset($user->phone)): 
+                  htmlspecialchars("+" . $user->phone_code . " " . $user->phone);  ?>
+                <?php else: ?>
+                  <span class="text-gray-400">No contact info</span>
+                <?php endif; ?>
+                
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
               <form method="POST" action="/admin" onsubmit="return confirm('Log in as this user?');" class="inline-block">
