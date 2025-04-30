@@ -1,12 +1,14 @@
 <?php
 global $pdo;
-if (!isset($_COOKIE['jwt'])) {
+if (!isLoggedIn()) {
+    $_SESSION['error_message'] = "You must be logged in to access this page.";
     header("Location: /login");
     exit;
 }
 
 // Get the user ID from the JWT.
-$user_id = getUserFromJWT()->id;
+$user = getUserFromJWT();
+$user_id = $user->id;
 
 // Get fully answered surveys for the user.
 $fullyAnsweredIds = getFullyAnsweredSurveyIds($user_id);
