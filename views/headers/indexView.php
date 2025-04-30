@@ -39,28 +39,39 @@
         </div>
     </div>
 
-    <!-- Recent Surveys Section -->
-    <div class="mt-8 bg-white shadow-md rounded-lg p-6">
-        <h2 class="text-lg font-semibold text-gray-900">Recent Surveys</h2>
-        <ul class="mt-4 space-y-3">
-            <?php if (!empty($recentSurveys)): ?>
-                <?php foreach ($recentSurveys as $survey): ?>
-                    <?php if ($survey->state == 1): // Only show enabled surveys ?>
-                        <li class="flex items-center justify-between bg-indigo-100 p-4 rounded-md">
-                            <div>
-                                <p class="text-gray-900 font-semibold"><?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?></p>
-                            </div>
-                            <a href="/reco?survey_id=<?= htmlspecialchars(encodeSurveyId($survey->id), ENT_QUOTES, 'UTF-8') ?>" class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80">
-                                View Results
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <li class="text-gray-600">No completed surveys found.</li>
-            <?php endif; ?>
-        </ul>
-    </div>
+<!-- Recent Surveys Section -->
+<div class="mt-8 bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-lg font-semibold text-gray-900">Recent Surveys</h2>
+    <ul class="mt-4 space-y-3">
+        <?php if (!empty($recentSurveys)): ?>
+            <?php foreach ($recentSurveys as $survey): ?>
+                <?php if ($survey->state == 1):  ?>
+                    <li class="flex items-center justify-between
+                               bg-gradient-to-r
+                               from-indigo-100
+                               via-purple-100
+                               to-pink-100
+                               p-4 rounded-md">
+                        <div>
+                            <p class="text-gray-900 font-semibold text-lg">
+                                <?= htmlspecialchars($survey->title, ENT_QUOTES, 'UTF-8') ?>
+                            </p>
+                        </div>
+                        <a
+                          href="/reco?survey_id=<?= htmlspecialchars(encodeSurveyId($survey->id), ENT_QUOTES, 'UTF-8') ?>"
+                          class="<?= $highlightColor; ?> px-3 py-1 rounded-md text-sm hover:bg-opacity-80 transition"
+                        >
+                            View Results
+                        </a>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li class="text-gray-600">No completed surveys found.</li>
+        <?php endif; ?>
+    </ul>
+</div>
+
 
 </main>
 

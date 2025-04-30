@@ -108,7 +108,16 @@ $highlightColor = "bg-indigo-600 text-white";
 <?php
 $mainStyle = isset($overrideStyle)
     ? $overrideStyle
-    : "background-image: url('media/bg5.jpg'); background-size: auto; background-position: center; background-repeat: repeat;";
+    :"background-image: 
+       linear-gradient(
+         135deg,
+         rgba(79, 70, 229, 0.7),
+         rgba(236, 72, 153, 0.7)
+       ),
+       url('media/bg5.jpg');
+     background-size: cover;
+     background-position: center;
+     background-repeat: no-repeat;";
 ?>
 <main style="<?= htmlspecialchars($mainStyle, ENT_QUOTES) ?>">
 

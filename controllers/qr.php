@@ -29,7 +29,7 @@ $builder = new Builder(
     margin: 20,
     roundBlockSizeMode: RoundBlockSizeMode::Margin,
     logoPath: file_exists($logoPath) ? $logoPath : null,
-    logoResizeToWidth: file_exists($logoPath) ? 225 : null,
+    logoResizeToWidth: file_exists($logoPath) ? 204 : null,
     logoPunchoutBackground: file_exists($logoPath)
 );
 $result  = $builder->build();

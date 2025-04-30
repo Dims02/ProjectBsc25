@@ -10,7 +10,7 @@ $bgcolor = 'bg-gray-100';
 <!-- Background Video -->
 <video
   autoplay muted loop playsinline poster="media/bgf.jpg"
-  class="fixed inset-0 w-full h-full object-cover pointer-events-none">
+  class="fixed inset-0 w-full h-full object-cover pointer-events-none -z-10">
   <source src="media/bg.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
@@ -18,8 +18,7 @@ $bgcolor = 'bg-gray-100';
 <main class="flex-grow flex items-center justify-center px-6 pt-14 lg:px-8">
   <div class="relative isolate flex items-center justify-center h-[90vh] w-full"> 
     <!-- Semi‑transparent card -->
-    <div class=" rounded-2xl p-8 mx-auto max-w-2xl text-center
-">
+    <div class=" rounded-2xl p-8 mx-auto max-w-2xl text-center">
       <h1
         class="text-5xl font-semibold tracking-tight text-white sm:text-7xl"
         style="text-shadow: 2px 2px 3px rgba(0,0,0,1);">
