@@ -7,6 +7,7 @@ $bgcolor = 'bg-gray-100';
 <?php require_once __DIR__ . '/../partials/header.php'; ?>
 <?php require_once __DIR__ . '/../partials/landingnav.php'; ?>
 
+
 <!-- Background Video -->
 <video
   autoplay muted loop playsinline poster="media/bgf.jpg"
@@ -15,8 +16,8 @@ $bgcolor = 'bg-gray-100';
   Your browser does not support the video tag.
 </video>
 
-<main class="flex-grow flex items-center justify-center px-6 pt-14 lg:px-8">
-  <div class="relative isolate flex items-center justify-center h-[90vh] w-full"> 
+<main class="flex-grow flex items-center justify-center px-6 pt-14 lg:px-8 mt-5">
+  <div class="relative isolate flex items-center justify-center h-[70vh] w-full"> 
     <!-- Semi‑transparent card -->
     <div class=" rounded-2xl p-8 mx-auto max-w-2xl text-center">
       <h1
