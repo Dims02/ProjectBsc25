@@ -114,7 +114,7 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 <?php if(isset($user->phone)): 
-                  echo htmlspecialchars("+" . $user->phone_code . " " . $user->phone);  ?>
+                  echo htmlspecialchars($user->phone_code . " " . $user->phone);  ?>
                 <?php else: ?>
                   <span class="text-gray-400">No contact info</span>
                 <?php endif; ?>
