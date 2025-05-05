@@ -16,15 +16,13 @@
     body {
       display: flex;
       flex-direction: column;
-      height: 100vh;        /* entire viewport */
-      overflow: hidden;     /* lock page‐level scrolling */
+      min-height: 100vh;        /* entire viewport */
     }
     nav, footer {
       flex: 0 0 auto;       /* only as tall as their content */
     }
     main {
       flex: 1 1 auto;       /* fill remaining space */
-      overflow: auto;       /* scroll inside main if needed */
     }
 
     /* Toast styles */
