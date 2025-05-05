@@ -67,20 +67,29 @@
             class="mt-1 block w-full rounded-md border border-gray-800 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-300 focus:ring focus:ring-indigo-200"
           >
         </div>
-        <div class="flex justify-end gap-4">
+        <div class="flex items-center w-full">
           <button
             type="button"
-            class="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400 transition"
-            onclick="window.location='/'"
+            class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-blue-500 transition"
+            onclick="window.location='/login'"
           >
-            Cancel
+            Login Instead
           </button>
-          <button
-            type="submit"
-            class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-500 transition"
-          >
-            Continue
-          </button>
+          <div class="flex gap-4 ml-auto">
+            <button
+              type="button"
+              class="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400 transition"
+              onclick="window.location='/surveys'"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-500 transition"
+            >
+              Continue
+            </button>
+          </div>
         </div>
       </form>
     </div>
@@ -239,5 +248,5 @@ document.addEventListener('DOMContentLoaded', () => {
     </form>
   </div>
 </main>
-
+<?php dd($user) ?>
 <?php require_once __DIR__ . '/../partials/footer.php'; ?>

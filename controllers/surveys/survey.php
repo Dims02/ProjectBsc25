@@ -27,6 +27,9 @@ if (! $user_id) {
     $user    = getUserFromId($newUserId);
     $user_id = $newUserId;
     loginUser($user->email, "tempuser"); 
+    //reload page
+    header("Location: /survey?id=" . encodeSurveyId($survey_id));
+    exit;
 }
 
 $NewTempUser = ($user->role === 'temp' && $user->phone === null);
