@@ -4,17 +4,16 @@ $user = getUserFromJWT();
 if ($user) {
   $role = $user->role;
   $isLoggedIn = $role === 'temp' ? false: true; // Temporary users are not logged in
-  $localPart = strstr($user->email, ' @', true) ?: $user->email; 
+  $localPart = strstr($user->email, '@', true) ?: $user->email; 
+
 } else {
     $isLoggedIn = false;
     $role = '';
     
 }
 
-
   $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $isSurveys   = $currentPath === '/surveys' || $currentPath === '/survey';
-
 
 $highlightColor = "bg-indigo-600 text-white";
 ?>
@@ -41,10 +40,10 @@ $highlightColor = "bg-indigo-600 text-white";
       <!-- Right Section: Sign In & Profile Icon -->
       <div class="hidden md:flex items-center space-x-4">
 
-        <?php if (isset($user->email)): ?>
+      <?php if (isset($user->email)): ?>
           <div class="flex items-center">
             <span
-              class="inline-block bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"
+              class="inline-block bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-base font-medium"
               title="Temporary user email"
             >
               <?= htmlspecialchars($localPart, ENT_QUOTES) ?>
