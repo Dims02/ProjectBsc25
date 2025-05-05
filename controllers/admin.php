@@ -14,8 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 
     switch ($action) {
         case 'delete':
+            $surveyId = decodeSurveyCode($_POST['survey_id']);
+            deleteSurvey($surveyId);
+            $_SESSION['success_message'] = 'Survey deleted.';
+            break;
+            
+        case 'deleteUser':
             $userId = (int) ($_POST['user_id'] ?? 0);
-
             if ($userId > 0 && deleteUser($userId)) {
                 $_SESSION['success_message'] = 'User deleted successfully.';
             } else {

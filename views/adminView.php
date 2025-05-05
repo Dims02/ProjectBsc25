@@ -64,8 +64,9 @@
                   <a href="/qr?survey_id=<?= encodeSurveyId($survey->id); ?>" target="_blank" class="px-3 py-1 rounded bg-yellow-50 text-yellow-600 hover:bg-yellow-100">
                     QR Code
                   </a>
-                  <form action="delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this survey?');" class="inline-block">
+                  <form action="/admin" method="POST" onsubmit="return confirm('Are you sure you want to delete this survey?');" class="inline-block">
                     <input type="hidden" name="survey_id" value="<?= encodeSurveyId($survey->id); ?>">
+                    <input type="hidden" name="action"      value="delete">
                     <button type="submit" class="px-3 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100">
                       Delete
                     </button>
@@ -139,8 +140,9 @@
                   >
                     Change Password
                   </button>
-                  <form action="delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
+                  <form action="/admin" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');" class="inline-block">
                   <input type="hidden" name="user_id" value="<?= $user->id; ?>">
+                  <input type="hidden" name="action"      value="deleteUser">
                   <button type="submit" class="px-3 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100">
                     Delete
                   </button>
