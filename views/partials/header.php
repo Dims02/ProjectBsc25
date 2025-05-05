@@ -12,17 +12,20 @@
     html, body {
       height: 100%;
       margin: 0;
+      overscroll-behavior: none;
     }
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;        /* entire viewport */
+
     }
     nav, footer {
       flex: 0 0 auto;       /* only as tall as their content */
     }
     main {
       flex: 1 1 auto;       /* fill remaining space */
+      overscroll-behavior: contain;
     }
 
     /* Toast styles */
