@@ -1,5 +1,5 @@
 <?php
-// controllers/admin.php
+// controllers/admin.php r
 $heading     = 'Admin Dashboard – Manage Surveys';
 $tabname     = 'Admin Dashboard';
 $pos         = 'max-w-7xl';
