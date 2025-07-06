@@ -13,7 +13,7 @@
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Title</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Created By</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Created At</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">State</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-900  uppercase tracking-wider">State</th>
             <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
