@@ -6,6 +6,7 @@ return <<<EOT
 \\usepackage{geometry}
 \\geometry{margin=1in}
 
+
 \\begin{document}
 
 % --------------------

@@ -9,6 +9,7 @@
  *  - methods   : (array) HTTP methods allowed for this route
  *  - survey    : (bool) whether a valid survey_id is required
  */
+
 return [
     "/" => [
         "controller" => "controllers/headers/landing.php",

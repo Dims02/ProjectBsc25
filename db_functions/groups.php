@@ -4,6 +4,7 @@ function getQuestionGroupsBySurveyId($survey_id) {
     // Order groups by page in ascending order
     $stmt = $pdo->prepare("SELECT * FROM question_groups WHERE survey_id = :survey_id ORDER BY page ASC");
     $stmt->execute(['survey_id' => $survey_id]);
+    
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 

@@ -46,6 +46,7 @@ foreach ($results as $row) {
     }
     
     
+    
     // Strip HTML tags from question and user's answer.
     $row['question']    = strip_tags($row['question']);
     $row['your_answer'] = strip_tags($row['your_answer']);

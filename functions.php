@@ -1,8 +1,6 @@
 <?php
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
-
 function dd($value)
 {
     echo "<pre>";

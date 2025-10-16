@@ -5,6 +5,7 @@ $tabname = "404";
 <?php require('partials/header.php'); ?>
 <?php require('partials/nav.php'); ?>
 
+
 <div class="flex items-center justify-center min-h-screen px-6">
   <div class="text-center">
     <h1 class="text-6xl font-extrabold text-gray-900">404</h1>

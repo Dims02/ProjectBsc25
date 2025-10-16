@@ -1,5 +1,7 @@
 # ComplianceCheck – Cybersecurity Survey Platform
+
 >This README was generated using copilot
+
 **ComplianceCheck** is a web-based platform developed for the creation and management of cybersecurity compliance surveys. It enables organizations to assess their alignment with the European NIS2 Directive and the Portuguese National Cybersecurity Framework (QNRCS). The platform provides an intuitive interface for users to answer surveys and receive automated, level-based recommendations.
 
 ## 📌 Project Context
